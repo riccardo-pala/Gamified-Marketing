@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Welcome to Gamified Marketing</title>
+</head>
+<body>
+	
+	<h1>Gamified Marketing</h1>
+	
+	<div>
+		<form action="CheckLogin" method="POST">
+			<input type="text" name="username" placeholder="Username" required><br>
+			<input type="password" name="password" placeholder="Password" required><br>
+			<input type="submit" value="Login">
+			<p th:text=" ${errorMsg}" style="color: red"></p>
+		</form>
+		<form action="registration.html">
+		    <input type="submit" value="Registration" />
+		</form>
+	</div>
+	
+</body>
+</html>

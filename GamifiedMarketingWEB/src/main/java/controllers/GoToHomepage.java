@@ -15,13 +15,12 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-/**
- * Servlet implementation class GoToHomePage
- */
+
 @WebServlet("/GoToHomepage")
 public class GoToHomepage extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
+	
 	private TemplateEngine templateEngine;
        
 	public void init() throws ServletException {
@@ -37,9 +36,6 @@ public class GoToHomepage extends HttpServlet {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String loginpath = getServletContext().getContextPath() + "/index.html";
@@ -60,5 +56,4 @@ public class GoToHomepage extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-
 }
