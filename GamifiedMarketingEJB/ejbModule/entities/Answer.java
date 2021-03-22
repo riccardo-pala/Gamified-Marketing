@@ -1,7 +1,5 @@
 package entities;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,17 +8,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
-
-
-
-
 @Entity
-@Table(name = "accesses", schema = "gmdb")
-@IdClass(AccessId.class)
-public class Accesses implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
+@Table(name="answers")
+@IdClass(AnswerId.class)
+public class Answer {
 	
 	@Id
 	@ManyToOne
@@ -28,18 +19,22 @@ public class Accesses implements Serializable {
 	private User user;
 	
 	@Id
-	private DateTime accessTime;
+	@ManyToOne
+	@JoinColumn(name="questionid")
+	private Question question;
 	
 	@Id
 	@ManyToOne
 	@JoinColumn(name="questionnaireid")
-	private Questionnaire questionare;
+	private Questionnaire questionnaire;
+	
+	
 
-	@Column(name="Submitted")
-	private Boolean submitted;
+
+
+	
 	
 	
 	
 
 }
-
