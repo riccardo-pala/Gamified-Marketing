@@ -13,13 +13,46 @@ import javax.persistence.Table;
 @Table(name = "products", schema = "gmdb")
 public class Product {
 	
+	private static final long serialVersionUID = 1L;
+	
 	@Id
-	@Column(name="idproduct")
 	private int id;
 	
 	private String name;
 	
 	@Lob
 	private byte[] photo;
+
 	
+	public Product() {
+	}
+
+	public Product(String name, byte[] photo) {
+		this.name = name;
+		this.photo = photo;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public byte[] getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
+	}
 }

@@ -1,9 +1,12 @@
 package entities;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,18 +17,31 @@ import javax.persistence.Table;
 @Table(name = "questionnaires", schema = "gmdb")
 public class Questionnaire {
 	
-	@Id
-	@Column(name="idquestionnaires")
-	private int Id;
+	private static final long serialVersionUID = 1L;
 	
-	@OneToMany(mappedBy="questionare")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+	
+	private Date date;
+	
+	@OneToMany(mappedBy="questionare") //TODO: "questionare???"
 	private List<Accesses> accesses;
 	
 	@ManyToOne
-	@JoinColumn(name="productId")
+	@JoinColumn(name="productid")
 	private Product product;
 	
 	@OneToMany(mappedBy="questionnaire")
 	private List<Question> questions;
+
+	
+	public Questionnaire() {
+	}
+
+	
+	
+	//TODO: constructor, getters and setters, add and remove methods
+	
 	
 }

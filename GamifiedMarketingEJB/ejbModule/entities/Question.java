@@ -2,6 +2,8 @@ package entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -11,17 +13,58 @@ import javax.persistence.Table;
 @Table(name="questions")
 public class Question {
 	
+	private static final long serialVersionUID = 1L;
+	
 	@Id
-	@Column(name="idquestions")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	private String content;
 	
+	private char section; 
+	
 	@ManyToOne
 	@JoinColumn(name="questionnaireid")
 	private Questionnaire questionnaire;
-	
-	
 
+	
+	public Question() {
+	}
 
+	public Question(String content, char section) {
+		this.content = content;
+		this.section = section;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public char getSection() {
+		return section;
+	}
+
+	public void setSection(char section) {
+		this.section = section;
+	}
+
+	public Questionnaire getQuestionnaire() {
+		return questionnaire;
+	}
+
+	public void setQuestionnaire(Questionnaire questionnaire) {
+		this.questionnaire = questionnaire;
+	}
 }

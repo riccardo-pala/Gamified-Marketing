@@ -31,7 +31,7 @@ public class UserService {
 					.getResultList();
 		} catch (PersistenceException e) {
 			//e.printStackTrace();
-			throw new CredentialsException("Could not verify credentals");
+			throw new CredentialsException("Could not verify credentials");
 		}
 		if (uList.isEmpty())
 			return null;
