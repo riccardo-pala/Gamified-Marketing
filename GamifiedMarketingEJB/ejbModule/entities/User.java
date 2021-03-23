@@ -1,13 +1,16 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.Access;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -35,16 +38,25 @@ public class User implements Serializable {
 	@Column(name = "admin")
 	private Boolean isAdmin;
 	
+	private int totalPoints;
 	
+	@OneToMany(orphanRemoval=true)
+	private List<Answer> answers;
+	
+	@OneToMany(orphanRemoval=true)
+	private List<Accesses> accesses;
+	
+
 	public User() {
 	}
 
-	public User(String username, String password, String email, Boolean isBanned, Boolean isAdmin) {
+	public User(String username, String password, String email, Boolean isBanned, Boolean isAdmin, int totalPoints) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.isBanned = isBanned;
 		this.isAdmin = isAdmin;
+		this.totalPoints=totalPoints;
 	}
 
 	public int getId() {
@@ -94,6 +106,18 @@ public class User implements Serializable {
 	public void setIsAdmin(Boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
+
+	public int getTotalpoints() {
+		return totalPoints;
+	}
+
+	public void setTotalpoints(int totalpoints) {
+		this.totalPoints = totalpoints;
+	}
+	
+	
+	
+	
 	
 	
 	
