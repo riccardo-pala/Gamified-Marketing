@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Access;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,10 +41,10 @@ public class User implements Serializable {
 	
 	private int totalPoints;
 	
-	@OneToMany(orphanRemoval=true)
+	@OneToMany(cascade=CascadeType.REMOVE)
 	private List<Answer> answers;
 	
-	@OneToMany(orphanRemoval=true)
+	@OneToMany(cascade=CascadeType.REMOVE)
 	private List<Accesses> accesses;
 	
 

@@ -3,6 +3,7 @@ package entities;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,7 +34,7 @@ public class Questionnaire {
 	@JoinColumn(name="productid")
 	private Product product;
 	
-	@OneToMany(mappedBy="questionnaire")
+	@OneToMany(mappedBy="questionnaire",fetch=FetchType.EAGER,cascade= {CascadeType.PERSIST,CascadeType.REMOVE})
 	private List<Question> questions;
 
 	
