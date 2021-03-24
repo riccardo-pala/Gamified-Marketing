@@ -12,11 +12,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "questionnaires", schema = "gmdb")
+@NamedQuery(name="Questionnaire.findByDate",query="SELECT q FROM Questionnaire q WHERE q.date=?1")
 public class Questionnaire {
 	
 	private static final long serialVersionUID = 1L;
@@ -27,7 +29,7 @@ public class Questionnaire {
 	
 	private Date date;
 	
-	@OneToMany(mappedBy="questionare") //TODO: "questionare???"
+	@OneToMany(mappedBy="questionnaire") //TODO: "questionare???"
 	private List<Accesses> accesses;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -41,9 +43,57 @@ public class Questionnaire {
 	public Questionnaire() {
 	}
 
+
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+	public Date getDate() {
+		return date;
+	}
+
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+
+	public List<Accesses> getAccesses() {
+		return accesses;
+	}
+
+
+	public void setAccesses(List<Accesses> accesses) {
+		this.accesses = accesses;
+	}
+
+
+	public Product getProduct() {
+		return product;
+	}
+
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+
+	public List<Question> getQuestions() {
+		return questions;
+	}
+
+
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
+
 	
-	
-	//TODO: constructor, getters and setters, add and remove methods
 	
 	
 }

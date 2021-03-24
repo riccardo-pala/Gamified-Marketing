@@ -15,7 +15,7 @@ public class AccessId implements Serializable {
 	
 	private DateTime accessTime;
 	
-	private int questionare;
+	private int questionnaire;
 
 	public AccessId() {
 		
@@ -47,14 +47,14 @@ public class AccessId implements Serializable {
 
 
 
-	public int getQuestionare() {
-		return questionare;
+	public int getQuestionnaire() {
+		return questionnaire;
 	}
 
 
 
-	public void setQuestionare(int questionare) {
-		this.questionare = questionare;
+	public void setQuestionnaire(int questionnaire) {
+		this.questionnaire = questionnaire;
 	}
 
 
@@ -68,7 +68,7 @@ public class AccessId implements Serializable {
 	public boolean equals(Object o) {
 	
 		return ((o instanceof AccessId) &&
-				questionare==((AccessId)o).getQuestionare())&&
+				questionnaire==((AccessId)o).getQuestionnaire())&&
 				accessTime.equals(((AccessId)o).getAccessTime());
 				}
 	
