@@ -30,13 +30,5 @@ public class Answer {
 	@JoinColumn(name="questionnaireid")
 	private Questionnaire questionnaire;
 	
-	
-
-
-
-	
-	
-	
-	
 
 }

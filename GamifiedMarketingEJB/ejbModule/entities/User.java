@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -27,11 +28,15 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	private String firstname;
+	
+	private String lastname;
+	
 	private String username;
 	
-	private String password;
-	
 	private String email;
+	
+	private String password;
 	
 	@Column(name = "banned")
 	private Boolean isBanned;
@@ -42,23 +47,29 @@ public class User implements Serializable {
 	private int totalPoints;
 	
 	@OneToMany(cascade=CascadeType.REMOVE)
+	@JoinColumn(name="userid")
 	private List<Answer> answers;
-	
+
 	@OneToMany(cascade=CascadeType.REMOVE)
+	@JoinColumn(name="userid")
 	private List<Accesses> accesses;
 	
 
 	public User() {
 	}
 
-	public User(String username, String password, String email, Boolean isBanned, Boolean isAdmin, int totalPoints) {
+	public User(String firstname, String lastname, String username, String email,
+			String password, Boolean isBanned, Boolean isAdmin, int totalPoints) {
+		this.firstname = firstname;
+		this.lastname = lastname;
 		this.username = username;
-		this.password = password;
 		this.email = email;
+		this.password = password;
 		this.isBanned = isBanned;
 		this.isAdmin = isAdmin;
-		this.totalPoints=totalPoints;
+		this.totalPoints = totalPoints;
 	}
+
 
 	public int getId() {
 		return id;
@@ -66,6 +77,22 @@ public class User implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
 	}
 
 	public String getUsername() {
@@ -115,12 +142,4 @@ public class User implements Serializable {
 	public void setTotalpoints(int totalpoints) {
 		this.totalPoints = totalpoints;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 }

@@ -21,7 +21,7 @@ public class Question {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	private String content;
+	private String text;
 	
 	private char section; 
 	
@@ -33,11 +33,12 @@ public class Question {
 	public Question() {
 	}
 
-	public Question(String content, char section) {
-		this.content = content;
+	public Question(String text, char section) {
+		this.text = text;
 		this.section = section;
 	}
 
+	
 	public int getId() {
 		return id;
 	}
@@ -46,12 +47,12 @@ public class Question {
 		this.id = id;
 	}
 
-	public String getContent() {
-		return content;
+	public String getText() {
+		return text;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setContent(String text) {
+		this.text = text;
 	}
 
 	public char getSection() {

@@ -15,6 +15,7 @@ public class Product {
 	
 	private static final long serialVersionUID = 1L;
 	
+	
 	@Id
 	private int id;
 	
@@ -32,6 +33,7 @@ public class Product {
 		this.photo = photo;
 	}
 
+	
 	public int getId() {
 		return id;
 	}

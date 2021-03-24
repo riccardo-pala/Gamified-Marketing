@@ -14,6 +14,7 @@ public class OffensiveWord {
 	
 	private static final long serialVersionUID = 1L;
 	
+	
 	@Id
 	private int id;
 	
@@ -27,6 +28,7 @@ public class OffensiveWord {
 		this.word = word;
 	}
 
+	
 	public int getId() {
 		return id;
 	}

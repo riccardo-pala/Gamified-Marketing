@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.openjpa.persistence.NonUniqueResultException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -28,7 +29,7 @@ public class CheckRegistration extends HttpServlet {
 	
 	private TemplateEngine templateEngine;
 	
-	@EJB(name = "project.clup.services/UserService")
+	@EJB(name = "services/UserService")
 	private UserService userService;
 	
     public CheckRegistration() {
@@ -70,32 +71,29 @@ public class CheckRegistration extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
 			return;
 		}
+
+		ServletContext servletContext = getServletContext();
+		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
 		User user = null;
 		
 		try {
 			user = userService.insertNewUser(firstname, lastname, username, email, password);
 		} catch (CredentialsException e) {
-			//e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_CONFLICT, "Could not verify credentials");
-			return;
+			ctx.setVariable("errorMsg", e.getMessage());
 		} catch (CreateProfileException e) {
-			//e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Could not create a new profile");
-			return;
+			ctx.setVariable("errorMsg", e.getMessage());
+		} catch (NonUniqueResultException e) {
+			ctx.setVariable("errorMsg", e.getMessage());;
 		}
-		
+
 		String path;
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		if (user == null) {
-			ctx.setVariable("errorMsg", "The username is already used by another account");
+		if (user == null)
 			path = "/registration.html";
-			templateEngine.process(path, ctx, response.getWriter());
-		} else {
+		else
 			path = "/index.html";
-			templateEngine.process(path, ctx, response.getWriter());
-		}
+		
+		templateEngine.process(path, ctx, response.getWriter());
 	}
 }

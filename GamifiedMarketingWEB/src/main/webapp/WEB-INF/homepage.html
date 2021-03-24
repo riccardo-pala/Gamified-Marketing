@@ -8,7 +8,16 @@
 	<h1>Homepage</h1>
 	
 	<div>
-		Questionnaire of the day
+		
+		<h1>Product of the day:</h1>
+		
+		<p th:text="${potdName}"></p>
+		<img th:src="${potdImgURI}" id="potdImg" alt="product of the day">
+		
+		<form action="GoToQuestionnaireOfTheDay">
+		    <input type="submit" value="Questionnaire of the day" />
+		</form>
+		
 	</div>
 </body>
 </html>

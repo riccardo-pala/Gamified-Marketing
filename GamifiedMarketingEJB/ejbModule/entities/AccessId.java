@@ -1,8 +1,7 @@
 package entities;
 
 import java.io.Serializable;
-
-
+import java.sql.Timestamp;
 
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
@@ -13,66 +12,46 @@ public class AccessId implements Serializable {
 	
 	private int user;
 	
-	private DateTime accessTime;
+	private Timestamp accessTime;
 	
 	private int questionnaire;
 
 	public AccessId() {
-		
 	}
-	
 	
 	
 	public int getUser() {
 		return user;
 	}
-
-
-
+	
 	public void setUser(int userId) {
 		this.user = userId;
 	}
 
-
-
-	public DateTime getAccessTime() {
+	public Timestamp getAccessTime() {
 		return accessTime;
 	}
 
-
-
-	public void setAccessTime(DateTime accessTime) {
+	public void setAccessTime(Timestamp accessTime) {
 		this.accessTime = accessTime;
 	}
-
-
 
 	public int getQuestionnaire() {
 		return questionnaire;
 	}
 
-
-
 	public void setQuestionnaire(int questionnaire) {
 		this.questionnaire = questionnaire;
 	}
 
-
-
 	public int hashCode() {
-		return accessTime.hashCode()+user;
+		return accessTime.hashCode() + user;
 	}
-	
-	
 	
 	public boolean equals(Object o) {
 	
 		return ((o instanceof AccessId) &&
-				questionnaire==((AccessId)o).getQuestionnaire())&&
-				accessTime.equals(((AccessId)o).getAccessTime());
-				}
-	
-	
-	
-
+				questionnaire == ((AccessId) o).getQuestionnaire()) &&
+				accessTime.equals(((AccessId) o).getAccessTime());
+	}
 }

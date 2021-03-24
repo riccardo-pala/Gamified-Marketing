@@ -52,16 +52,16 @@ public class CheckLogin extends HttpServlet {
 		
 		String username = null;
 		String password = null;
+
+		ServletContext servletContext = getServletContext();
+		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+	
+		username = request.getParameter("username");
+		password = request.getParameter("password");
 		
-		try {
-			username = request.getParameter("username");
-			password = request.getParameter("password");
-			if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
-				throw new Exception("Missing or empty credential value");
-			}
-		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
-			return;
+		if (username == null || password == null ||
+				username.isEmpty() || password.isEmpty()) {
+			ctx.setVariable("errorMsg", "Missing credential values!");
 		}
 		
 		User user = null;
@@ -69,20 +69,14 @@ public class CheckLogin extends HttpServlet {
 		try {
 			user = userService.checkCredentials(username, password);
 		} catch (NonUniqueResultException e) {
-			//e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_CONFLICT, "Could not verify credentials due to conflicting data");
-			return;
+			ctx.setVariable("errorMsg", e.getMessage());
 		} catch (CredentialsException e) {
-			//e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Could not verify credentials");
-			return;
+			ctx.setVariable("errorMsg", e.getMessage());
 		}
 
 		String path;
 		
 		if (user == null) {
-			ServletContext servletContext = getServletContext();
-			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 			ctx.setVariable("errorMsg", "Incorrect username or password");
 			path = "/index.html";
 			templateEngine.process(path, ctx, response.getWriter());

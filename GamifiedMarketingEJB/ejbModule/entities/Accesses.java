@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +35,7 @@ public class Accesses implements Serializable {
 	private User user;
 	
 	@Id
-	private DateTime accessTime;
+	private Timestamp accessTime;
 	
 	@Id
 	@ManyToOne
@@ -44,8 +45,5 @@ public class Accesses implements Serializable {
 	@Column(name="Submitted")
 	private Boolean submitted;
 	
-	
-	
-
 }
 

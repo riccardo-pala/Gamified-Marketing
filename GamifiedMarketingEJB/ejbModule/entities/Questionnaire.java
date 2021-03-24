@@ -29,71 +29,58 @@ public class Questionnaire {
 	
 	private Date date;
 	
-	@OneToMany(mappedBy="questionnaire") //TODO: "questionare???"
+	@OneToMany(mappedBy="questionnaire")
 	private List<Accesses> accesses;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="productid")
 	private Product product;
 	
-	@OneToMany(mappedBy="questionnaire",fetch=FetchType.EAGER,cascade= {CascadeType.PERSIST,CascadeType.REMOVE})
+	@OneToMany(mappedBy="questionnaire", fetch=FetchType.EAGER, cascade={CascadeType.PERSIST,CascadeType.REMOVE})
 	private List<Question> questions;
 
 	
 	public Questionnaire() {
 	}
 
-
+	
 	public int getId() {
 		return id;
 	}
-
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
-
 	public Date getDate() {
 		return date;
 	}
-
 
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
-
 	public List<Accesses> getAccesses() {
 		return accesses;
 	}
-
 
 	public void setAccesses(List<Accesses> accesses) {
 		this.accesses = accesses;
 	}
 
-
 	public Product getProduct() {
 		return product;
 	}
-
 
 	public void setProduct(Product product) {
 		this.product = product;
 	}
 
-
 	public List<Question> getQuestions() {
 		return questions;
 	}
 
-
 	public void setQuestions(List<Question> questions) {
 		this.questions = questions;
-	}
-
-	
-	
-	
+	}	
 }
