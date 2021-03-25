@@ -46,14 +46,13 @@ public class User implements Serializable {
 	
 	private int totalPoints;
 	
-	@OneToMany(cascade=CascadeType.REMOVE)
-	@JoinColumn(name="userid")
-	private List<Answer> answers;
-
-	@OneToMany(cascade=CascadeType.REMOVE)
-	@JoinColumn(name="userid")
+	@OneToMany(mappedBy="user")
 	private List<Accesses> accesses;
 	
+	@OneToMany(mappedBy="user", cascade=CascadeType.REMOVE)
+	private List<Answer> answers; //gli utenti vengono eliminati?
+
+
 
 	public User() {
 	}
@@ -135,11 +134,28 @@ public class User implements Serializable {
 		this.isAdmin = isAdmin;
 	}
 
-	public int getTotalpoints() {
+	public int getTotalPoints() {
 		return totalPoints;
 	}
 
-	public void setTotalpoints(int totalpoints) {
-		this.totalPoints = totalpoints;
+	public void setTotalPoints(int totalPoints) {
+		this.totalPoints = totalPoints;
 	}
+
+	public List<Accesses> getAccesses() {
+		return accesses;
+	}
+
+	public void setAccesses(List<Accesses> accesses) {
+		this.accesses = accesses;
+	}
+
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
+	}
+	
 }

@@ -2,8 +2,10 @@ package entities;
 
 
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -21,6 +23,7 @@ public class Product {
 	
 	private String name;
 	
+	@Basic(fetch=FetchType.LAZY)
 	@Lob
 	private byte[] photo;
 

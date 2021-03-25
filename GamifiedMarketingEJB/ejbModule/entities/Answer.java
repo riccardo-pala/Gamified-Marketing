@@ -15,6 +15,8 @@ import javax.persistence.Table;
 @IdClass(AnswerId.class)
 public class Answer {
 	
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@ManyToOne
 	@JoinColumn(name="userid")
@@ -30,5 +32,49 @@ public class Answer {
 	@JoinColumn(name="questionnaireid")
 	private Questionnaire questionnaire;
 	
+	private String text;
+	
+	
+	public Answer() {
+	}
 
+	public Answer(User user, Question question, Questionnaire questionnaire, String text) {
+		this.user = user;
+		this.question = question;
+		this.questionnaire = questionnaire;
+		this.text = text;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Question getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(Question question) {
+		this.question = question;
+	}
+
+	public Questionnaire getQuestionnaire() {
+		return questionnaire;
+	}
+
+	public void setQuestionnaire(Questionnaire questionnaire) {
+		this.questionnaire = questionnaire;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+	
 }

@@ -29,21 +29,30 @@ public class Questionnaire {
 	
 	private Date date;
 	
-	@OneToMany(mappedBy="questionnaire")
+	@OneToMany(mappedBy="questionnaire", cascade={CascadeType.REMOVE})
 	private List<Accesses> accesses;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name="productid")
 	private Product product;
 	
 	@OneToMany(mappedBy="questionnaire", fetch=FetchType.EAGER, cascade={CascadeType.PERSIST,CascadeType.REMOVE})
-	private List<Question> questions;
+	private List<Question> questions; //eager?
+	
+	@OneToMany(mappedBy="questionnaire", cascade={CascadeType.REMOVE})
+	private List<Answer> answers; 
+	// l'admin deve avere accesso a tutte le risposte per un determinato questionario 
+	// quando elimina il questionario tutti i dati relativi ad esso vengono eliminati answers e accesses
 
 	
 	public Questionnaire() {
 	}
-
 	
+	public Questionnaire(Date date, Product product) {
+		this.date = date;
+		this.product = product;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -83,4 +92,23 @@ public class Questionnaire {
 	public void setQuestions(List<Question> questions) {
 		this.questions = questions;
 	}	
+	
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
+	}
+
+	public void addQuestion(Question question) {
+		getQuestions().add(question);
+		question.setQuestionnaire(this);
+		// aligns both sides of the relationship
+		// if question is new, invoking persist() on reporter cascades also to Question
+	}
+
+	public void removeQuestion(Question question) {
+		getQuestions().remove(question);
+	}
 }
