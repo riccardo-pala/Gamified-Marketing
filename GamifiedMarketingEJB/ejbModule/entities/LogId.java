@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 
-public class AccessId implements Serializable {
+public class LogId implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -16,7 +16,8 @@ public class AccessId implements Serializable {
 	
 	private int questionnaire;
 
-	public AccessId() {
+	
+	public LogId() {
 	}
 	
 	
@@ -50,8 +51,8 @@ public class AccessId implements Serializable {
 	
 	public boolean equals(Object o) {
 	
-		return ((o instanceof AccessId) &&
-				questionnaire == ((AccessId) o).getQuestionnaire()) &&
-				accessTime.equals(((AccessId) o).getAccessTime());
+		return ((o instanceof LogId) &&
+				questionnaire == ((LogId) o).getQuestionnaire()) &&
+				accessTime.equals(((LogId) o).getAccessTime());
 	}
 }

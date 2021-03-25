@@ -28,7 +28,8 @@ public class UserService {
 		List<User> uList = null;
 		
 		try {
-			uList = em.createNamedQuery("User.checkCredentials", User.class).setParameter(1, username).setParameter(2, password)
+			uList = em.createNamedQuery("User.checkCredentials", User.class)
+					.setParameter(1, username).setParameter(2, password)
 					.getResultList();
 		} catch (PersistenceException e) {
 			//e.printStackTrace();

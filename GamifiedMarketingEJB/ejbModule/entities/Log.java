@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
@@ -20,12 +22,12 @@ import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 @Entity
 @Table(name = "accesses", schema = "gmdb")
-@IdClass(AccessId.class)
+@IdClass(LogId.class)
 @NamedQueries({
-	@NamedQuery(name="Accesses.findByQuestionnareSubmitted",query="SELECT a FROM Accesses a WHERE a.questionnaire.id=?1 AND a.submitted=true"),
-	@NamedQuery(name="Accesses.findByQuestionnareCancelled",query="SELECT a FROM Accesses a WHERE a.questionnaire.id=?1 AND a.submitted=false")	
+	@NamedQuery(name="Log.findByQuestionnareSubmitted",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=true"),
+	@NamedQuery(name="Log.findByQuestionnareCancelled",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=false")	
 })
-public class Accesses implements Serializable { // cambiare nome in -> Access
+public class Log implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -46,10 +48,10 @@ public class Accesses implements Serializable { // cambiare nome in -> Access
 	private Boolean submitted;
 
 	
-	public Accesses() {
+	public Log() {
 	}
 
-	public Accesses(User user, Timestamp accessTime, Questionnaire questionnaire, Boolean submitted) {
+	public Log(User user, Timestamp accessTime, Questionnaire questionnaire, Boolean submitted) {
 		this.user = user;
 		this.accessTime = accessTime;
 		this.questionnaire = questionnaire;

@@ -84,7 +84,7 @@ public class CheckRegistration extends HttpServlet {
 		} catch (CreateProfileException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 		} catch (NonUniqueResultException e) {
-			ctx.setVariable("errorMsg", e.getMessage());;
+			ctx.setVariable("errorMsg", e.getMessage());
 		}
 
 		String path;

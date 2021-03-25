@@ -15,6 +15,12 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import entities.Product;
+import entities.Questionnaire;
+import exceptions.BadRetrievalException;
+import services.ProductService;
+import services.QuestionnaireService;
+
 
 @WebServlet("/GoToHomepage")
 public class GoToHomepage extends HttpServlet {
@@ -22,7 +28,13 @@ public class GoToHomepage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private TemplateEngine templateEngine;
-       
+    
+	@EJB(name = "services/QuestionnaireService")
+	private QuestionnaireService questionnaireService;
+	
+	@EJB(name = "services/ProductService")
+	private ProductService productService;
+	
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
 		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
@@ -46,9 +58,22 @@ public class GoToHomepage extends HttpServlet {
 			response.sendRedirect(loginpath);
 			return;
 		}
-		
+
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		
+		Questionnaire qotd = null;
+		
+		try {
+			qotd = questionnaireService.getQuestionnaireOfTheDay();
+		} catch (BadRetrievalException e) {
+			ctx.setVariable("errorMsg", e.getMessage());
+		}
+		
+		if (qotd != null ) {
+			Product potd = qotd.getProduct();
+			ctx.setVariable("potd", potd);
+		}
 		
 		templateEngine.process("/WEB-INF/homepage.html", ctx, response.getWriter());		
 	}

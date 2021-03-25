@@ -8,11 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 
 @Entity
 @Table(name = "products", schema = "gmdb")
+@NamedQuery(name="Product.findById",query="SELECT p FROM Product p WHERE p.id=?1")
 public class Product {
 	
 	private static final long serialVersionUID = 1L;

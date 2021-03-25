@@ -1,6 +1,6 @@
 package entities;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "questionnaires", schema = "gmdb")
@@ -27,10 +29,11 @@ public class Questionnaire {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Temporal(value=TemporalType.DATE)
 	private Date date;
 	
 	@OneToMany(mappedBy="questionnaire", cascade={CascadeType.REMOVE})
-	private List<Accesses> accesses;
+	private List<Log> accesses;
 	
 	@ManyToOne
 	@JoinColumn(name="productid")
@@ -69,11 +72,11 @@ public class Questionnaire {
 		this.date = date;
 	}
 
-	public List<Accesses> getAccesses() {
+	public List<Log> getAccesses() {
 		return accesses;
 	}
 
-	public void setAccesses(List<Accesses> accesses) {
+	public void setAccesses(List<Log> accesses) {
 		this.accesses = accesses;
 	}
 
