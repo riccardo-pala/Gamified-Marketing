@@ -1,6 +1,8 @@
 package controllers;
 
 import java.io.IOException;
+
+
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -10,10 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+
+
 
 import entities.Product;
 import entities.Questionnaire;
@@ -72,7 +77,9 @@ public class GoToHomepage extends HttpServlet {
 		
 		if (qotd != null ) {
 			Product potd = qotd.getProduct();
+			String imgStr = Base64.encodeBase64String(potd.getPhoto());
 			ctx.setVariable("potd", potd);
+			ctx.setVariable("img", imgStr);
 		}
 		
 		templateEngine.process("/WEB-INF/homepage.html", ctx, response.getWriter());		

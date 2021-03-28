@@ -12,7 +12,8 @@
 		<h1>Product of the day:</h1>
 		
 		<p th:text="${potd.name}"></p>
-		<img id="potdImg" th:src="data:image/jpg;base64, ${potd.photo}" alt="product of the day">
+		
+		<img id="potdImg" th:src="'data:image/png;base64,'+ ${img}" alt="#" />
 		
 		<form action="GoToQuestionnaireOfTheDay">
 		    <input type="submit" value="Questionnaire of the day" />
