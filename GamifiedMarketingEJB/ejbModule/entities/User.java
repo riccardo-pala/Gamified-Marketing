@@ -44,11 +44,11 @@ public class User implements Serializable {
 	
 	private int totalPoints;
 	
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user", cascade=CascadeType.REMOVE)
 	private List<Log> accesses;
 	
 	@OneToMany(mappedBy="user", cascade=CascadeType.REMOVE)
-	private List<Answer> answers; //gli utenti vengono eliminati?
+	private List<Answer> answers;
 
 
 
