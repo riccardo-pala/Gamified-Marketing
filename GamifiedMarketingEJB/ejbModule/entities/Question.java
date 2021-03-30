@@ -7,12 +7,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="questions")
-@NamedQuery(name="Question.findByQuestionnaire", query="SELECT q FROM Question q WHERE q.questionnaire.id=?1")
+@NamedQueries({
+	@NamedQuery(name="Question.findByQuestionnaire", query="SELECT q FROM Question q WHERE q.questionnaire.id=?1"),
+	@NamedQuery(name="Question.findBySection", query="SELECT q FROM Question q WHERE q.section=?1")
+})
 public class Question {
 	
 	private static final long serialVersionUID = 1L;

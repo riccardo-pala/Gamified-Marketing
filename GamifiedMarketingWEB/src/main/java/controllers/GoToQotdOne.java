@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
@@ -16,26 +17,27 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import entities.Product;
+import entities.Question;
+import entities.Questionnaire;
+import exceptions.BadRetrievalException;
 import services.ProductService;
+import services.QuestionService;
 import services.QuestionnaireService;
 
-/**
- * Servlet implementation class GoToAdminHomePage
- */
-@WebServlet("/GoToAdminHomePage")
-public class GoToAdminHomePage extends HttpServlet {
+
+@WebServlet("/GoToQotdOne")
+public class GoToQotdOne extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 	
-
 	private TemplateEngine templateEngine;
     
 	@EJB(name = "services/QuestionnaireService")
 	private QuestionnaireService questionnaireService;
-	
-	@EJB(name = "services/ProductService")
-	private ProductService productService;
-	
-	
+
+	@EJB(name = "services/QuestionService")
+	private QuestionService questionService;
 	
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
@@ -46,12 +48,9 @@ public class GoToAdminHomePage extends HttpServlet {
 		templateResolver.setSuffix(".html");
 	}
 	
-       
-    public GoToAdminHomePage() {
+    public GoToQotdOne() {
         super();
-        // TODO Auto-generated constructor stub
     }
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -64,17 +63,35 @@ public class GoToAdminHomePage extends HttpServlet {
 			return;
 		}
 
+		//TODO: Segnarsi l'accesso al questionario!
+		
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		templateEngine.process("/WEB-INF/adminhomepage.html", ctx, response.getWriter());
+		Questionnaire qotd = null;
 		
+		try {
+			qotd = questionnaireService.getQuestionnaireOfTheDay();
+		} catch (BadRetrievalException e) {
+			ctx.setVariable("errorMsg", e.getMessage());
+		}
+		
+		if (qotd != null ) {
+			
+			List<Question> questions = null;
+			
+			try {
+				questions = questionService.getSectionOneQuestionsOfQuestionnaire(qotd.getId());
+			} catch (BadRetrievalException e) {
+				ctx.setVariable("errorMsg", e.getMessage());
+			}
+			ctx.setVariable("questions", questions);
+		}
+		
+		templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());		
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
 }

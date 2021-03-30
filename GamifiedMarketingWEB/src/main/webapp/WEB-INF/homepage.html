@@ -8,14 +8,14 @@
 	<h1>Homepage</h1>
 	
 	<div>
-		
+		<!-- TODO: errorMsg -->
 		<h1>Product of the day:</h1>
 		
 		<p th:text="${potd.name}"></p>
 		
 		<img id="potdImg" th:src="'data:image/png;base64,'+ ${img}" alt="#" />
 		
-		<form action="GoToQuestionnaireOfTheDay">
+		<form action="GoToQotdOne">
 		    <input type="submit" value="Questionnaire of the day" />
 		</form>
 		
