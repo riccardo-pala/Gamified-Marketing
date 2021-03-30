@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div id="welcomediv">
+		<p th:text="${'Nice to see you again ' + session.user.firstname + ' ' + session.user.lastname}"></p>
+	</div>
+	
+	
+		<form  action="GoToDeletionPage">
+		    <input type="submit"  value="Delete Questionnaire" />
+		</form>
+		<form action="index.html">
+		    <input type="submit"  value="Inspect Data" />
+		</form>
+		<form action="../WEB-INF/creationpage.html">
+		    <input type="submit"  value="Create Questionnaire" />
+		</form>
+
+</body>
+</html>
