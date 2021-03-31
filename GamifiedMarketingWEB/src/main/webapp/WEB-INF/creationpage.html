@@ -6,10 +6,44 @@
 </head>
 <body>
 
-<form action="/action_page.php">
-  <input type="file" id="productimage" name="productimage">
+
+<form  action="" id="questionnaire" method="POST">
+  <input type="file" id="productimage" name="productimage" required>
+   <input type="text" id="name" name="productname" placeholder="Name of the product" required>
+    <input type="date" id="date" name="productdate" placeholder="Date of the questionnaire" required>
   <input type="submit">
 </form>
+<button class="add_question_button">Add Question</button>
+<button class="remove_question_button">Remove Question</button>
+<div class="input_fields_wrap"></div>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+    var add_button      = $(".add_question_button"); //Add button ID
+    var remove_button      = $(".remove_question_button"); //Add button ID
+
+    var x=0; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        x++; //text box increment
+        $(wrapper).append('<div class="div'+x+'">' +
+            '<p name="mytext'+x+'">Question'+x+'<br>' +
+            '<textarea name="quest'+x+'" form="questionnaire"></textarea>' +
+            '</div>');
+   	 });
+
+    $(remove_button).click(function(e){ //user click on remove text
+        e.preventDefault();
+    	$(".div"+x).remove();
+    	x--;
+    })
+});
+</script>
 
 </body>
 </html>

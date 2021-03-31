@@ -2,7 +2,6 @@ package controllers;
 
 import java.io.IOException;
 
-import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,26 +15,13 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import services.ProductService;
-import services.QuestionnaireService;
 
-/**
- * Servlet implementation class GoToAdminHomepage
- */
-@WebServlet("/GoToAdminHomepage")
-public class GoToAdminHomepage extends HttpServlet {
-	
+@WebServlet("/GoToCreationPage")
+public class GoToCreationPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
-	
+       
 	private TemplateEngine templateEngine;
     
-	@EJB(name = "services/QuestionnaireService")
-	private QuestionnaireService questionnaireService;
-	
-	@EJB(name = "services/ProductService")
-	private ProductService productService;
-	
 	
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
@@ -46,13 +32,13 @@ public class GoToAdminHomepage extends HttpServlet {
 		templateResolver.setSuffix(".html");
 	}
 	
-    public GoToAdminHomepage() {
+	
+    public GoToCreationPage() {
         super();
-      
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		String loginpath = getServletContext().getContextPath() + "/index.html";
 		
 		HttpSession session = request.getSession();
@@ -65,13 +51,11 @@ public class GoToAdminHomepage extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		templateEngine.process("/WEB-INF/adminhomepage.html", ctx, response.getWriter());
-		
+		templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
 	}
 
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
