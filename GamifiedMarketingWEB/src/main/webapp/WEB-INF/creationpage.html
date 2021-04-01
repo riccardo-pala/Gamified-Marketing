@@ -7,11 +7,11 @@
 <body>
 
 
-<form  action="" id="questionnaire" method="POST">
+<form  action="CreateQuestionnaire" id="questionnaire" method="POST" enctype="multipart/form-data">
   <input type="file" id="productimage" name="productimage" required>
-   <input type="text" id="name" name="productname" placeholder="Name of the product" required>
-    <input type="date" id="date" name="productdate" placeholder="Date of the questionnaire" required>
-  <input type="submit">
+  <input type="text" id="name" name="productname" placeholder="Name of the product" required>
+  <input type="date" id="date" name="productdate" placeholder="Date of the questionnaire" required>
+  <input type="submit" value="Submit">
 </form>
 <button class="add_question_button">Add Question</button>
 <button class="remove_question_button">Remove Question</button>

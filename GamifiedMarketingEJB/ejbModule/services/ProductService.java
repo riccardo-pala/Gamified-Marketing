@@ -1,6 +1,8 @@
 package services;
 
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,17 +23,27 @@ public class ProductService {
 	}
 	
 	
-	public Product getProductById(int productId) throws BadRetrievalException {
+	public Product getProductByName(String productname) throws BadRetrievalException {
 		
-		Product p = null;
+		List<Product> p = null;
 		
 		try {
-			p = (Product) em.createNamedQuery("Product.findById", Product.class)
-					.setParameter(1, productId);			
+			p = em.createNamedQuery("Product.findByName", Product.class)
+					.setParameter(1,productname).getResultList();			
 		} catch(PersistenceException e) {
 			throw new BadRetrievalException("Unable to retrieve the product of the day.");
 		}
 		
-		return p;		
+		if(p.isEmpty())
+			return null;
+		else
+		return p.get(0);		
 	}
+	
+	public Product createProduct(String productname,byte[] photo) {
+		Product p = new Product(productname,photo);
+		em.persist(p);
+		return p;
+	}
+	
 }

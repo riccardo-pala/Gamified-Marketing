@@ -1,5 +1,6 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+import entities.Product;
+import entities.Question;
 import entities.Questionnaire;
 import exceptions.BadRetrievalException;
 
@@ -39,6 +42,21 @@ public class QuestionnaireService {
 		}
 		
 		return q;
+	}
+	
+	public void createQuestionnaire(int productid,Date date,ArrayList<Question> questions) {
+		
+		Product p=em.find(Product.class, productid);
+		
+		Questionnaire questionnaire = new Questionnaire(date,p);
+		
+		for(int i=0;i<questions.size();i++) {
+			
+			questionnaire.addQuestion(questions.get(i));
+		}
+		
+		em.persist(questionnaire);
+		
 	}
 	
 }

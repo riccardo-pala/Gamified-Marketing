@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class Questionnaire {
 	public Questionnaire(Date date, Product product) {
 		this.date = date;
 		this.product = product;
+		this.questions=new ArrayList<Question>();
 	}
 
 	public int getId() {

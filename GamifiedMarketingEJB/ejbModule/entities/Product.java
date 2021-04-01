@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "products", schema = "gmdb")
-@NamedQuery(name="Product.findById",query="SELECT p FROM Product p WHERE p.id=?1")
+@NamedQuery(name="Product.findByName",query="SELECT p FROM Product p WHERE p.name=?1")
 public class Product {
 	
 	private static final long serialVersionUID = 1L;

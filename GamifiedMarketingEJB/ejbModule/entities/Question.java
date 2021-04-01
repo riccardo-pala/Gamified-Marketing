@@ -27,7 +27,7 @@ public class Question {
 	
 	private String text;
 	
-	private char section; 
+	private int section; 
 	
 	@ManyToOne
 	@JoinColumn(name="questionnaireid")
@@ -37,7 +37,7 @@ public class Question {
 	public Question() {
 	}
 
-	public Question(String text, char section) {
+	public Question(String text, int section) {
 		this.text = text;
 		this.section = section;
 	}
@@ -59,11 +59,11 @@ public class Question {
 		this.text = text;
 	}
 
-	public char getSection() {
+	public int getSection() {
 		return section;
 	}
 
-	public void setSection(char section) {
+	public void setSection(int section) {
 		this.section = section;
 	}
 
