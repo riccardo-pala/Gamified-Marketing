@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -68,40 +69,60 @@ public class ManageQuestionnaire extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		//TODO: 3 situazioni diverse a seconda dei bottoni
+		String action = null;
 		
-		// PREVIOUS
-		String action = request.getParameter("button");
-		if(request.getParameter("button") == null) {
-			// do something
-		} 
+		if (request.getParameter("button") != null) {
+			action = request.getParameter("button");
+		}
+		else {
+			String path = getServletContext().getContextPath() + "/GoToQotdOne";
+			response.sendRedirect(path);
+			return;
+		}
 	
+		String[] answers2 = request.getParameterValues("answers2");
+		List<String> session_answers2 = new ArrayList<String>();
 		
-		if(action.equals("Previous") && session.getAttribute("questions1") != null 
-				&& session.getAttribute("answers1") != null) { // salvate in sessione dal servlet GoTOQotdTwo (ERROR)
+		if (answers2 != null)
+			for(int i = 0; i < answers2.length; i++)
+				session_answers2.add(answers2[i]);
+		
+		session.setAttribute("answers2", session_answers2);
+		
+		if (action.equals("Previous")) {
+
+			List<String> questions1 = null;
+			List<String> answers1 = null;
 			
-			List<String> answers1 = (List<String>) session.getAttribute("answers1");
-			List<String> questions1 = (List<String>) session.getAttribute("questions1");
-			System.out.println(questions1.size());
+			//System.out.println(session.getAttribute("questions1"));
+			//System.out.println(session.getAttribute("answers1"));
 			
-			if(answers1.size() == questions1.size()) {
-				
-				ctx.setVariable("answers1", answers1);
-				ctx.setVariable("questions1", questions1);
-				ctx.setVariable("new", false); // perché stiamo tornando nella sezione che abbiamo già compilato
-				//System.out.println("q: "+((String) questions1.get(0).toString())+" "+((String) questions1.get(1).toString()));
-				
-				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());	
-			}
-			else {
-				// do something}
-			}
+			if (session.getAttribute("questions1") != null)
+				questions1 = (List<String>) session.getAttribute("questions1");
+			
+			if (session.getAttribute("answers1") != null)
+				answers1 = (List<String>) session.getAttribute("answers1");
+
+			ctx.setVariable("questions1", questions1);
+			ctx.setVariable("answers1", answers1);
+			
+			templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
+		}
+		else if (action.equals("Submit")) {
+			//TODO: do something
+		}
+		else if (action.equals("Cancel")) {
+			session.setAttribute("questions1", null);
+			session.setAttribute("answers1", null);
+			session.setAttribute("questions2", null);
+			session.setAttribute("answers2", null);
+			String path = getServletContext().getContextPath() + "/GoToHomepage";
+			response.sendRedirect(path);
+			return;
 		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-	
-	
 }

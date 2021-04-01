@@ -19,6 +19,7 @@ import javax.servlet.http.Part;
 
 
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -76,50 +77,44 @@ public class CreateQuestionnaire extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String productname=null;
-		Date questdate=null;
-		ArrayList<Question> questions= new ArrayList<Question>();
+		String productname = null;
+		Date questdate = null;
+		ArrayList<Question> questions = new ArrayList<Question>();
 		
 		Part imgFile = request.getPart("productimage");
 		InputStream imgContent = imgFile.getInputStream();
 		byte[] imgByteArray = ImageUtils.readImage(imgContent);
 		
-		productname=request.getParameter("productname");
-		questdate= Date.valueOf(request.getParameter("productdate"));
+		productname = request.getParameter("productname");
+		questdate = Date.valueOf(request.getParameter("productdate"));
 		
 		Product p = new Product();
 		
-		int x=1;
+		int x = 1;
 		
-		while(request.getParameter("quest"+x+"") != null) {
-			
-			Question q = new Question(request.getParameter("quest"+x+""),1);
+		while(request.getParameter("quest" + x + "") != null) {
+			Question q = new Question(request.getParameter("quest" + x + ""),1);
 			questions.add(q);
 			x++;
 		}
 		
+		ServletContext servletContext = getServletContext();
+		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		
 		try {
-			if(productService.getProductByName(productname)==null) {
-				
+			if(productService.getProductByName(productname) == null) {
 				 p = productService.createProduct(productname, imgByteArray);
 				 questionnaireService.createQuestionnaire(p.getId(), questdate, questions);
 			}
-			
 			else {
-				
-				p=productService.getProductByName(productname);
-				 questionnaireService.createQuestionnaire(p.getId(), questdate, questions);
+				p = productService.getProductByName(productname);
+				questionnaireService.createQuestionnaire(p.getId(), questdate, questions);
 			}
 		} catch (BadRetrievalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ctx.setVariable("errorMsg", e.getMessage());
 		}
 		
-		
-
-		
-		
-		
+		String path = getServletContext().getContextPath() + "/GoToAdminHomepage";
+		response.sendRedirect(path);	
 	}
-
 }

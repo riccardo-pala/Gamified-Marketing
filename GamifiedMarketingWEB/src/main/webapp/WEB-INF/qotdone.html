@@ -9,23 +9,17 @@
 	
 	<div>
 		<!-- TODO: errorMsg -->
-		<h1>Answer the following questions about the POTD (mandatory!) :</h1>
+		<h1>Answer the following questions about the POTD (mandatory!):</h1>
 		
-		<form th:if="${new}" action="GoToQotdTwo">
-			<tr th:each="question: ${questions1}">
-    			<td th:text="${question.text}" />
-    			<input type="text" name="answer1" value="" />
-			</tr><br><br>
-			<tr>
-		    <input type="submit" value="Next" />  
-		    </tr>
-		</form>
-		
-		<form th:if="${!new}" action="GoToQotdTwo">
-			<tr th:each="question: ${questions1}">
-    			<td th:text="${question.text}" />
-    			<input type="text" value="" /> <!-- ${temp_answer} create temp_answer variable, it should be related to answers1-->
-			</tr><br><br>
+		<form action="GoToQotdTwo" method="POST">
+			<tr th:each="question, iter : ${questions1}">
+    			<td th:text="'Question n.' + ${iter.index + 1} + ': ' + ${question.text}" />
+    			<br>
+    			<input th:if="${answers1} != null" type="text" name="answers1" th:value="${answers1[iter.index]}" />
+    			<input th:if="${answers1} == null" type="text" name="answers1" />
+    			<br><br>
+			</tr>
+			<br><br>
 		    <input type="submit" value="Next" />
 		</form>
 		

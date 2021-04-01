@@ -65,12 +65,14 @@ public class GoToQotdTwo extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		String[] answers1 = request.getParameterValues("answer1"); // controllo è giusto
-		List<String> session_answers1 = new ArrayList<String>(); // si può?
-		for(int i = 0; i < answers1.length; i++)
-			session_answers1.add(answers1[i]);
-		session.setAttribute("answers1", session_answers1); //le salvo per il bottone previous
-		System.out.println(session_answers1.size());
+		String[] answers1 = request.getParameterValues("answers1");
+		List<String> session_answers1 = new ArrayList<String>();
+		
+		if (answers1 != null)
+			for(int i = 0; i < answers1.length; i++)
+				session_answers1.add(answers1[i]);
+		
+		session.setAttribute("answers1", session_answers1);
 		
 		Questionnaire qotd = null;
 		
@@ -89,7 +91,16 @@ public class GoToQotdTwo extends HttpServlet {
 			} catch (BadRetrievalException e) {
 				ctx.setVariable("errorMsg", e.getMessage());
 			}
+			
+			session.setAttribute("questions2", questions2);
 			ctx.setVariable("questions2", questions2);
+		}
+		
+		List<String> answers2 = null;
+		
+		if (session.getAttribute("answers2") != null) {
+			answers2 = (List<String>) session.getAttribute("answers2");
+			ctx.setVariable("answers2", answers2);
 		}
 		
 		templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());		

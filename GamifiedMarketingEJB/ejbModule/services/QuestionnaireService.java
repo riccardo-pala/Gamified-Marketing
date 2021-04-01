@@ -36,27 +36,30 @@ public class QuestionnaireService {
 					.setParameter(1, today).getResultList();
 			if(!qList.isEmpty())
 				q = qList.get(0);
-		}
-		catch(PersistenceException | NullPointerException e) {
+		} catch(PersistenceException | NullPointerException e) {
 			throw new BadRetrievalException("Unable to retrieve the questionnaire of the day.");
 		}
 		
 		return q;
 	}
 	
-	public void createQuestionnaire(int productid,Date date,ArrayList<Question> questions) {
+	public void createQuestionnaire(int productid, Date date, ArrayList<Question> questions) throws BadRetrievalException {
 		
-		Product p=em.find(Product.class, productid);
+		Product p = null;
+		 
+		try {
+			p = em.find(Product.class, productid);
+		}
+		catch(PersistenceException | NullPointerException e) {
+			throw new BadRetrievalException("Problems during the creation of the questionnaire, retry.");
+		}
 		
-		Questionnaire questionnaire = new Questionnaire(date,p);
+		Questionnaire questionnaire = new Questionnaire(date, p);
 		
-		for(int i=0;i<questions.size();i++) {
-			
+		for(int i=0; i<questions.size(); i++) {
 			questionnaire.addQuestion(questions.get(i));
 		}
 		
 		em.persist(questionnaire);
-		
 	}
-	
 }

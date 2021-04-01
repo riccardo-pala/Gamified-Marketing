@@ -71,7 +71,6 @@ public class GoToQotdOne extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		//Segnarsi l'accesso al questionario!
 		try{
 			User u = (User) session.getAttribute("user");
 			Questionnaire q = questionnaireService.getQuestionnaireOfTheDay();
@@ -79,7 +78,6 @@ public class GoToQotdOne extends HttpServlet {
 		} catch (BadRetrievalException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
-		//
 		
 		Questionnaire qotd = null;
 		
@@ -95,13 +93,11 @@ public class GoToQotdOne extends HttpServlet {
 			
 			try {
 				questions1 = questionService.getSectionOneQuestions(qotd.getId());
-				// TODO: check if not null
 			} catch (BadRetrievalException e) {
 				ctx.setVariable("errorMsg", e.getMessage());
 			}
-			session.setAttribute("questions1", questions1); // salvo per il bottone previous
+			session.setAttribute("questions1", questions1);
 			ctx.setVariable("questions1", questions1);
-			ctx.setVariable("new", true); // per sapere se devo stampare i values o no
 		}
 		
 		templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());		
