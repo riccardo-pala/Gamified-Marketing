@@ -24,8 +24,8 @@
 		<form th:if="${!new}" action="GoToQotdTwo">
 			<tr th:each="question: ${questions1}">
     			<td th:text="${question.text}" />
-    			<td><input type="text" value="${temp_answer}" /></td> <!-- create temp_answer variable, it should be related to answers1-->
-			</tr><br>
+    			<input type="text" value="" /> <!-- ${temp_answer} create temp_answer variable, it should be related to answers1-->
+			</tr><br><br>
 		    <input type="submit" value="Next" />
 		</form>
 		

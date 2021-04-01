@@ -56,7 +56,7 @@ public class ManageQuestionnaire extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String loginpath = getServletContext().getContextPath() + "/index.html"; // ?
+		String loginpath = getServletContext().getContextPath() + "/index.html"; 
 		
 		HttpSession session = request.getSession();
 		
@@ -75,22 +75,21 @@ public class ManageQuestionnaire extends HttpServlet {
 		if(request.getParameter("button") == null) {
 			// do something
 		} 
+	
 		
 		if(action.equals("Previous") && session.getAttribute("questions1") != null 
 				&& session.getAttribute("answers1") != null) { // salvate in sessione dal servlet GoTOQotdTwo (ERROR)
 			
-			String[] session_answers = (String[]) session.getAttribute("answers1");
-			List<String> answers1 = null;
-			for(int i = 0; i < session_answers.length; i++)
-				answers1.add(session_answers[i]);
-			
+			List<String> answers1 = (List<String>) session.getAttribute("answers1");
 			List<String> questions1 = (List<String>) session.getAttribute("questions1");
+			System.out.println(questions1.size());
 			
 			if(answers1.size() == questions1.size()) {
 				
 				ctx.setVariable("answers1", answers1);
 				ctx.setVariable("questions1", questions1);
 				ctx.setVariable("new", false); // perché stiamo tornando nella sezione che abbiamo già compilato
+				//System.out.println("q: "+((String) questions1.get(0).toString())+" "+((String) questions1.get(1).toString()));
 				
 				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());	
 			}

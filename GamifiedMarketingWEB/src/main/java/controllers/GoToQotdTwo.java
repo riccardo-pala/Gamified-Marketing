@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -64,8 +65,12 @@ public class GoToQotdTwo extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		String[] answers1 = request.getParameterValues("answer1"); // probabile errore qui!
-		session.setAttribute("answers1", answers1); //le salvo per il bottone previous
+		String[] answers1 = request.getParameterValues("answer1"); // controllo è giusto
+		List<String> session_answers1 = new ArrayList<String>(); // si può?
+		for(int i = 0; i < answers1.length; i++)
+			session_answers1.add(answers1[i]);
+		session.setAttribute("answers1", session_answers1); //le salvo per il bottone previous
+		System.out.println(session_answers1.size());
 		
 		Questionnaire qotd = null;
 		
