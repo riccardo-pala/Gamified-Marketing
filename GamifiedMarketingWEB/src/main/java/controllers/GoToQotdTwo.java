@@ -64,6 +64,9 @@ public class GoToQotdTwo extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
+		String[] answers1 = request.getParameterValues("answer1"); // probabile errore qui!
+		session.setAttribute("answers1", answers1); //le salvo per il bottone previous
+		
 		Questionnaire qotd = null;
 		
 		try {
@@ -74,14 +77,14 @@ public class GoToQotdTwo extends HttpServlet {
 		
 		if (qotd != null ) {
 			
-			List<Question> questions = null;
+			List<Question> questions2 = null;
 			
 			try {
-				questions = questionService.getSectionTwoQuestions();
+				questions2 = questionService.getSectionTwoQuestions();
 			} catch (BadRetrievalException e) {
 				ctx.setVariable("errorMsg", e.getMessage());
 			}
-			ctx.setVariable("questions", questions);
+			ctx.setVariable("questions2", questions2);
 		}
 		
 		templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());		

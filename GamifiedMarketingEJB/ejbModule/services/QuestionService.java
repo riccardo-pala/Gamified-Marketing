@@ -21,13 +21,14 @@ public class QuestionService {
 	}
 	
 	
-	public List<Question> getSectionOneQuestionsOfQuestionnaire(int questionnaireId) throws BadRetrievalException {
+	public List<Question> getSectionOneQuestions(int questionnaireId) throws BadRetrievalException {
 		
 		List<Question> qList = null;
 		
 		try {
-			qList = em.createNamedQuery("Question.findByQuestionnaire", Question.class)
-					.setParameter(1, questionnaireId).setParameter(2, 1).getResultList();
+			qList = em.createNamedQuery("Question.findSectionOneByQuestionnaire", Question.class)
+					.setParameter(1, questionnaireId).getResultList();
+			// TODO: check if not null
 		}
 		catch(PersistenceException | NullPointerException e) {
 			throw new BadRetrievalException("Unable to retrieve the questions.");
@@ -41,8 +42,8 @@ public class QuestionService {
 		List<Question> qList = null;
 		
 		try {
-			qList = em.createNamedQuery("Question.findBySection", Question.class)
-					.setParameter(1, 2).getResultList();
+			qList = em.createNamedQuery("Question.findSectionTwo", Question.class)
+					.getResultList();
 		}
 		catch(PersistenceException | NullPointerException e) {
 			throw new BadRetrievalException("Unable to retrieve the questions.");

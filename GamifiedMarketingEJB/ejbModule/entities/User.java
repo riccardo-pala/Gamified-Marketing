@@ -44,10 +44,10 @@ public class User implements Serializable {
 	
 	private int totalPoints;
 	
-	@OneToMany(mappedBy="user", cascade=CascadeType.REMOVE)
+	@OneToMany(mappedBy="user", cascade= {CascadeType.PERSIST,CascadeType.REMOVE})
 	private List<Log> accesses;
 	
-	@OneToMany(mappedBy="user", cascade=CascadeType.REMOVE)
+	@OneToMany(mappedBy="user", cascade= {CascadeType.PERSIST, CascadeType.REMOVE})
 	private List<Answer> answers;
 
 
@@ -157,4 +157,12 @@ public class User implements Serializable {
 		this.answers = answers;
 	}
 	
+	public void addAccess(Log access) {
+		this.getAccesses().add(access);
+		access.setUser(this);
+	}
+	
+	public void removeAccess(Log access) {
+		this.getAccesses().remove(access);
+	}
 }

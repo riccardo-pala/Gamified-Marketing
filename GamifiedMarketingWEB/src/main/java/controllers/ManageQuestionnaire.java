@@ -17,19 +17,16 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import entities.Product;
 import entities.Question;
 import entities.Questionnaire;
 import entities.User;
 import exceptions.BadRetrievalException;
 import services.AccessService;
-import services.ProductService;
 import services.QuestionService;
 import services.QuestionnaireService;
 
-
-@WebServlet("/GoToQotdOne")
-public class GoToQotdOne extends HttpServlet {
+@WebServlet("/ManageQuestionnaire")
+public class ManageQuestionnaire extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -53,13 +50,13 @@ public class GoToQotdOne extends HttpServlet {
 		templateResolver.setSuffix(".html");
 	}
 	
-    public GoToQotdOne() {
+    public ManageQuestionnaire() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String loginpath = getServletContext().getContextPath() + "/index.html";
+		String loginpath = getServletContext().getContextPath() + "/index.html"; // ?
 		
 		HttpSession session = request.getSession();
 		
@@ -71,43 +68,41 @@ public class GoToQotdOne extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		//TODO: Segnarsi l'accesso al questionario!
-		try{
-			User u = (User) session.getAttribute("user");
-			Questionnaire q = questionnaireService.getQuestionnaireOfTheDay();
-			accessService.insertAccess(u.getId(), q.getId());
-		} catch (BadRetrievalException e) {
-			ctx.setVariable("errorMsg", e.getMessage());
-		}
-		//
+		//TODO: 3 situazioni diverse a seconda dei bottoni
 		
-		Questionnaire qotd = null;
+		// PREVIOUS
+		String action = request.getParameter("button");
+		if(request.getParameter("button") == null) {
+			// do something
+		} 
 		
-		try {
-			qotd = questionnaireService.getQuestionnaireOfTheDay();
-		} catch (BadRetrievalException e) {
-			ctx.setVariable("errorMsg", e.getMessage());
-		}
-		
-		if (qotd != null ) {
+		if(action.equals("Previous") && session.getAttribute("questions1") != null 
+				&& session.getAttribute("answers1") != null) { // salvate in sessione dal servlet GoTOQotdTwo (ERROR)
 			
-			List<Question> questions1 = null;
+			String[] session_answers = (String[]) session.getAttribute("answers1");
+			List<String> answers1 = null;
+			for(int i = 0; i < session_answers.length; i++)
+				answers1.add(session_answers[i]);
 			
-			try {
-				questions1 = questionService.getSectionOneQuestions(qotd.getId());
-				// TODO: check if not null
-			} catch (BadRetrievalException e) {
-				ctx.setVariable("errorMsg", e.getMessage());
+			List<String> questions1 = (List<String>) session.getAttribute("questions1");
+			
+			if(answers1.size() == questions1.size()) {
+				
+				ctx.setVariable("answers1", answers1);
+				ctx.setVariable("questions1", questions1);
+				ctx.setVariable("new", false); // perché stiamo tornando nella sezione che abbiamo già compilato
+				
+				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());	
 			}
-			session.setAttribute("questions1", questions1);
-			ctx.setVariable("questions1", questions1);
-			ctx.setVariable("new", true); // per sapere se devo stampare i values o no
+			else {
+				// do something}
+			}
 		}
-		
-		templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
+	
+	
 }

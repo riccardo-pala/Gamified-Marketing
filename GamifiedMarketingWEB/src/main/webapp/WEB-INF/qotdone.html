@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>QOTD - Section 1</title>
+</head>
+<body>
+<h1>Section 1 - Marketing questions</h1>
+	
+	<div>
+		<!-- TODO: errorMsg -->
+		<h1>Answer the following questions about the POTD (mandatory!) :</h1>
+		
+		<form th:if="${new}" action="GoToQotdTwo">
+			<tr th:each="question: ${questions1}">
+    			<td th:text="${question.text}" />
+    			<input type="text" name="answer1" value="" />
+			</tr><br><br>
+			<tr>
+		    <input type="submit" value="Next" />  
+		    </tr>
+		</form>
+		
+		<form th:if="${!new}" action="GoToQotdTwo">
+			<tr th:each="question: ${questions1}">
+    			<td th:text="${question.text}" />
+    			<td><input type="text" value="${temp_answer}" /></td> <!-- create temp_answer variable, it should be related to answers1-->
+			</tr><br>
+		    <input type="submit" value="Next" />
+		</form>
+		
+	</div>
+</body>
+</html>

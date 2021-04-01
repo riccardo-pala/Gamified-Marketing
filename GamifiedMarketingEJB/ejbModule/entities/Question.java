@@ -14,8 +14,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name="questions")
 @NamedQueries({
-	@NamedQuery(name="Question.findByQuestionnaire", query="SELECT q FROM Question q WHERE q.questionnaire.id=?1"),
-	@NamedQuery(name="Question.findBySection", query="SELECT q FROM Question q WHERE q.section=?1")
+	@NamedQuery(name="Question.findSectionOneByQuestionnaire", query="SELECT q FROM Question q WHERE q.questionnaire.id=?1 AND q.section LIKE '1'"),
+	@NamedQuery(name="Question.findSectionTwo", query="SELECT q FROM Question q WHERE q.section LIKE '2'")
 })
 public class Question {
 	

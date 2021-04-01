@@ -24,8 +24,8 @@ import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 @Table(name = "accesses", schema = "gmdb")
 @IdClass(LogId.class)
 @NamedQueries({
-	@NamedQuery(name="Log.findByQuestionnareSubmitted",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=true"),
-	@NamedQuery(name="Log.findByQuestionnareCancelled",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=false")	
+	@NamedQuery(name="Log.findByQuestionnaireSubmitted",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=true"),
+	@NamedQuery(name="Log.findByQuestionnaireCancelled",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=false")	
 })
 public class Log implements Serializable {
 	
@@ -44,7 +44,6 @@ public class Log implements Serializable {
 	@JoinColumn(name="questionnaireid")
 	private Questionnaire questionnaire;
 
-	@Column(name="submitted")
 	private Boolean submitted;
 
 	
