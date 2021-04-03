@@ -62,4 +62,12 @@ public class QuestionnaireService {
 		
 		em.persist(questionnaire);
 	}
+	
+	public List<Questionnaire> getAllQuestionnaire() {
+		
+		
+		List<Questionnaire> p = em.createQuery("SELECT q FROM Questionnaire q").getResultList();
+		
+		return p;
+	}
 }

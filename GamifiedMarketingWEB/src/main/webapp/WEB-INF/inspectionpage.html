@@ -2,9 +2,24 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Inspection Page</title>
 </head>
 <body>
-
+	<table>
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Name of Product</th>
+				
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="q : ${questionnaires}">
+				<td th:text="${q.date}"></td>
+				<td th:text="${ q.product.name }"></td>
+				<td><a th:href="@{/GetMissionDetails(missionid=${m.id})}">Details</a></td>
+			</tr>
+		</tbody>
+	</table>
 </body>
 </html>
