@@ -17,7 +17,7 @@
 			<tr th:each="q : ${questionnaires}">
 				<td th:text="${q.date}"></td>
 				<td th:text="${ q.product.name }"></td>
-				<td><a th:href="@{/GetMissionDetails(missionid=${m.id})}">Details</a></td>
+				<td><a th:href="@{/GetQuestionnaireDetails(questionnaireid=${q.id})}">Details</a></td>
 			</tr>
 		</tbody>
 	</table>

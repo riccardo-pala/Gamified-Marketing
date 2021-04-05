@@ -43,7 +43,8 @@ public class User implements Serializable {
 	private Boolean isAdmin;
 	
 	private int totalPoints;
-	
+	                                     /* PERSIST non ha senso perchè non ci servirà mai avere tutti gli accessi di un user ma solo
+										 di un determinato questionnaire*/
 	@OneToMany(mappedBy="user", cascade= {CascadeType.PERSIST,CascadeType.REMOVE})
 	private List<Log> accesses;
 	

@@ -3,6 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -25,14 +26,14 @@ import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 @IdClass(LogId.class)
 @NamedQueries({
 	@NamedQuery(name="Log.findByQuestionnaireSubmitted",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=true"),
-	@NamedQuery(name="Log.findByQuestionnaireCancelled",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=false")	
+	@NamedQuery(name="Log.findByQuestionnaireCanceled",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=false")	
 })
 public class Log implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name="userid")
 	private User user;
 	
@@ -40,7 +41,7 @@ public class Log implements Serializable {
 	private Timestamp accessTime;
 	
 	@Id
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name="questionnaireid")
 	private Questionnaire questionnaire;
 

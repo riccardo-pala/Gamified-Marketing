@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Questionnaire Details</title>
+</head>
+<body>
+<h1> List of users that have submitted the questionnaire</h1>
+
+	<table>
+		<thead>
+			<tr>
+				<th>UserName</th>
+				<th>Firstname</th>
+				<th>Lastname</th>	
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="s : ${submitted}">
+				<td th:text="${s.user.username}"></td>
+				<td th:text="${s.user.firstname }"></td>
+				<td th:text="${s.user.lastname }"></td>
+				<td><a th:href="@{/GetAnswers(questionnaireid=${s.questionnaire.id},userid=${s.user.id})}">See Answers</a></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<h1> List of users that have canceled the questionnaire</h1>
+
+	<table>
+		<thead>
+			<tr>
+				<th>UserName</th>
+				<th>Firstname</th>
+				<th>Lastname</th>	
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="c : ${canceled}">
+				<td th:text="${c.user.username}"></td>
+				<td th:text="${c.user.firstname }"></td>
+				<td th:text="${c.user.lastname }"></td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>
