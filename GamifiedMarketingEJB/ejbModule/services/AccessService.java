@@ -26,22 +26,15 @@ public class AccessService {
 	public AccessService() {
 	}
 	
-	public void insertAccess(int userId, int questionnaireId) throws BadRetrievalException {
-		// Local.now() as accessTime
-		// Submitted is false initially
-		// Q of TODAY !
+	public void insertAccess(int userId, int questionnaireId, boolean sub, Timestamp ts) throws BadRetrievalException {
 		
 		User user = em.find(User.class, userId);
 		Questionnaire questionnaire = em.find(Questionnaire.class, questionnaireId);
-		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
-		Log access = new Log(user, ts, questionnaire, false);
+		Log access = new Log(user, ts, questionnaire,sub);
 		
 		user.addAccess(access);
-		em.persist(user); // cascade
-		
-		// non sono molto convinto se farlo così.. ho copiato MissionService
-		
+		em.persist(user); 		
 	}
 	
 	public List<Log> getAllSubmittedQuestionnaire(int questionnaireId) throws CredentialsException{

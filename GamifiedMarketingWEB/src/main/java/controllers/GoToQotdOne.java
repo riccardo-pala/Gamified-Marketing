@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -71,10 +72,14 @@ public class GoToQotdOne extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
+		Timestamp ts = null;
+		
 		try{
 			User u = (User) session.getAttribute("user");
 			Questionnaire q = questionnaireService.getQuestionnaireOfTheDay();
-			accessService.insertAccess(u.getId(), q.getId());
+			//accessService.insertAccess(u.getId(), q.getId());
+			 ts = new Timestamp(System.currentTimeMillis());
+			
 		} catch (BadRetrievalException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
@@ -96,7 +101,9 @@ public class GoToQotdOne extends HttpServlet {
 			} catch (BadRetrievalException e) {
 				ctx.setVariable("errorMsg", e.getMessage());
 			}
+			
 			session.setAttribute("questions1", questions1);
+			session.setAttribute("accessTime",ts);
 			ctx.setVariable("questions1", questions1);
 		}
 		

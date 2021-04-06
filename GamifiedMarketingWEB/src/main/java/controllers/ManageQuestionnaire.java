@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +71,16 @@ public class ManageQuestionnaire extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
 		String action = null;
+		User u = (User) session.getAttribute("user");
+		Timestamp ts= (Timestamp) session.getAttribute("accessTime");
+		Questionnaire q = null;
+	
+		try {
+			q = questionnaireService.getQuestionnaireOfTheDay();
+		} catch (BadRetrievalException e) {
+			e.printStackTrace();
+		}
+		
 		
 		if (request.getParameter("button") != null) {
 			action = request.getParameter("button");
@@ -109,9 +120,20 @@ public class ManageQuestionnaire extends HttpServlet {
 			templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
 		}
 		else if (action.equals("Submit")) {
-			//TODO: do something
+			try {
+				accessService.insertAccess(u.getId(),q.getId(),true,ts);
+			} catch (BadRetrievalException e) {
+				
+				e.printStackTrace();
+			}	
 		}
 		else if (action.equals("Cancel")) {
+			
+			try {
+				accessService.insertAccess(u.getId(),q.getId(),false,ts);
+			} catch (BadRetrievalException e) {
+				e.printStackTrace();
+			}
 			session.setAttribute("questions1", null);
 			session.setAttribute("answers1", null);
 			session.setAttribute("questions2", null);
