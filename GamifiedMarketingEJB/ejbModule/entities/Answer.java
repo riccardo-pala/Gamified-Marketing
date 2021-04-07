@@ -1,5 +1,6 @@
 package entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="answers")
-@NamedQuery(name="Answer.findByUser",query="SELECT a FROM Answer a WHERE a.questionnaire.id=?1 AND a.user.id=?2 ")
+@NamedQuery(name="Answer.findByUserandQuestionnaire",query="SELECT a FROM Answer a WHERE a.questionnaire.id=?1 AND a.user.id=?2 ")
 @IdClass(AnswerId.class)
 public class Answer {
 	
@@ -23,7 +24,7 @@ public class Answer {
 	private User user;
 	
 	@Id
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name="questionid")
 	private Question question;
 	
