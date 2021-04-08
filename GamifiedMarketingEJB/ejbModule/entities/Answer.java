@@ -24,7 +24,7 @@ public class Answer {
 	private User user;
 	
 	@Id
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@ManyToOne //(cascade=CascadeType.PERSIST) lo levo perché salvando le answers crea delle questions nuove anzichè prendere l'id di quelle esistenti
 	@JoinColumn(name="questionid")
 	private Question question;
 	

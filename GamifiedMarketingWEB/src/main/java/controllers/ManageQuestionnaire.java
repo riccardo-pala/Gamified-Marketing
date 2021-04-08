@@ -24,6 +24,7 @@ import entities.Questionnaire;
 import entities.User;
 import exceptions.BadRetrievalException;
 import services.AccessService;
+import services.AnswerService;
 import services.QuestionService;
 import services.QuestionnaireService;
 
@@ -42,6 +43,9 @@ public class ManageQuestionnaire extends HttpServlet {
 	
 	@EJB(name = "services/AccessService")
 	private AccessService accessService;
+	
+	@EJB(name = "services/AnswerService")
+	private AnswerService answerService;
 	
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
@@ -72,7 +76,7 @@ public class ManageQuestionnaire extends HttpServlet {
 		
 		String action = null;
 		User u = (User) session.getAttribute("user");
-		Timestamp ts= (Timestamp) session.getAttribute("accessTime");
+		Timestamp ts = (Timestamp) session.getAttribute("accessTime");
 		Questionnaire q = null;
 	
 		try {
@@ -81,11 +85,10 @@ public class ManageQuestionnaire extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		
 		if (request.getParameter("button") != null) {
 			action = request.getParameter("button");
 		}
-		else {
+		else { // perché va qui? non dovrebbe dare errore?
 			String path = getServletContext().getContextPath() + "/GoToQotdOne";
 			response.sendRedirect(path);
 			return;
@@ -93,20 +96,15 @@ public class ManageQuestionnaire extends HttpServlet {
 	
 		String[] answers2 = request.getParameterValues("answers2");
 		List<String> session_answers2 = new ArrayList<String>();
-		
 		if (answers2 != null)
 			for(int i = 0; i < answers2.length; i++)
 				session_answers2.add(answers2[i]);
-		
 		session.setAttribute("answers2", session_answers2);
 		
 		if (action.equals("Previous")) {
 
 			List<String> questions1 = null;
 			List<String> answers1 = null;
-			
-			//System.out.println(session.getAttribute("questions1"));
-			//System.out.println(session.getAttribute("answers1"));
 			
 			if (session.getAttribute("questions1") != null)
 				questions1 = (List<String>) session.getAttribute("questions1");
@@ -120,12 +118,36 @@ public class ManageQuestionnaire extends HttpServlet {
 			templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
 		}
 		else if (action.equals("Submit")) {
+			
+			List<String> answers_text = null; // lista delle risposte
+			if (session.getAttribute("answers1") != null)
+				answers_text = (List<String>) session.getAttribute("answers1"); // aggiungo prima risposte sezione 1
+			for(String answer_text : session_answers2)
+				answers_text.add(answer_text); // poi aggiungo risposte sezione 2
+			
+			List<Question> questions = null; // servono gli ID delle domande per salvare le risposte
 			try {
-				accessService.insertAccess(u.getId(),q.getId(),true,ts);
-			} catch (BadRetrievalException e) {
+				questions = questionService.getSectionOneQuestions(q.getId());
+				questions.addAll(questionService.getSectionTwoQuestions());
 				
+				if(answers_text.size() != questions.size()) {
+					// do sth
+				}
+				
+				answerService.insertAnswers(u.getId(), q.getId(), answers_text, questions);
+				accessService.insertAccess(u.getId(),q.getId(),true,ts);
+				
+			} catch (BadRetrievalException e) {
 				e.printStackTrace();
-			}	
+			}
+			// cancello domande e risposte dalla sessione anche nel caso Submit non solo nel caso Cancel
+			session.setAttribute("questions1", null);
+			session.setAttribute("answers1", null);
+			session.setAttribute("questions2", null);
+			session.setAttribute("answers2", null);
+			String path = getServletContext().getContextPath() + "/GoToHomepage";
+			response.sendRedirect(path);
+			return;
 		}
 		else if (action.equals("Cancel")) {
 			

@@ -5,13 +5,18 @@
 <title>QOTD - Section 1</title>
 </head>
 <body>
-<h1>Section 1 - Marketing questions</h1>
 	
 	<div>
-		<!-- TODO: errorMsg -->
-		<h1>Answer the following questions about the POTD (mandatory!):</h1>
+		<form th:if="${warningMsg != null}" action="GoToHomepage" method="GET">
+			<p th:text="${warningMsg}" />
+			<br>
+		    <input type="submit" value="Home" />
+		</form>
 		
-		<form action="GoToQotdTwo" method="POST">
+		
+		<form th:if="${warningMsg == null}" action="GoToQotdTwo" method="POST">
+			<h1>Section 1 - Marketing questions</h1>
+			<h2>Answer the following mandatory questions about the POTD:</h2>
 			<tr th:each="question, iter : ${questions1}">
     			<td th:text="'Question n.' + ${iter.index + 1} + ': ' + ${question.text}" />
     			<br>

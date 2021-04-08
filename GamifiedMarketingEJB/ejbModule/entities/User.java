@@ -45,6 +45,7 @@ public class User implements Serializable {
 	private int totalPoints;
 	                                     /* PERSIST non ha senso perchè non ci servirà mai avere tutti gli accessi di un user ma solo
 										 di un determinato questionnaire*/
+	// AccessService.insertAccess funzionerebbe lo stesso se non ci fosse Cascade.PERSIST? L'ho aggiunto perché l'ho fatto in quel modo
 	@OneToMany(mappedBy="user", cascade= {CascadeType.PERSIST,CascadeType.REMOVE})
 	private List<Log> accesses;
 	
@@ -165,5 +166,14 @@ public class User implements Serializable {
 	
 	public void removeAccess(Log access) {
 		this.getAccesses().remove(access);
+	}
+	
+	public void addAnswer(Answer answer) {
+		this.getAnswers().add(answer);
+		answer.setUser(this);
+	}
+	
+	public void removeAnswer(Answer answer) {
+		this.getAnswers().remove(answer);
 	}
 }

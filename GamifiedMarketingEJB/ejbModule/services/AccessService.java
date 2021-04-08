@@ -2,6 +2,7 @@ package services;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -35,6 +36,20 @@ public class AccessService {
 		
 		user.addAccess(access);
 		em.persist(user); 		
+	}
+	
+	public boolean checkSubmittedAccess(int userId, int questionnaireId) throws BadRetrievalException {
+		
+		User user = em.find(User.class, userId);
+		List<Log> submittedAccesses= em.createNamedQuery("Log.findByQuestionnaireSubmitted",Log.class)
+				.setParameter(1, questionnaireId).getResultList();
+
+		for(Log access : submittedAccesses) {
+			if(access.getUser().equals(user) && access.getSubmitted())
+				return true; // l'utente ha già compilato e inviato il questionario
+		}
+		
+		return false;
 	}
 	
 	public List<Log> getAllSubmittedQuestionnaire(int questionnaireId) throws CredentialsException{

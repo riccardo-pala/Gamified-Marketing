@@ -5,13 +5,20 @@
 <title>QOTD - Section 2</title>
 </head>
 <body>
-<h1>Section 2 - Statistical questions</h1>
+
 	
 	<div>
 		<!-- TODO: errorMsg -->
-		<h1>Some statistical data:</h1>
 		
-		<form action="ManageQuestionnaire" method="POST">
+		<form th:if="${warningMsg != null}" action="GoToHomepage" method="GET">
+			<p th:text="${warningMsg}" />
+			<br>
+		    <input type="submit" value="Home" />
+		</form>
+		
+		<form th:if="${warningMsg == null}" action="ManageQuestionnaire" method="POST">
+			<h1>Section 2 - Statistical questions</h1>
+			<h2>Some statistical data:</h2>
 			<tr th:each="question, iter : ${questions2}">
     			<td th:text="${question.text}" />
     			<br>

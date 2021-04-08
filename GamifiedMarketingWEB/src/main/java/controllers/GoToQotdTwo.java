@@ -20,7 +20,9 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Question;
 import entities.Questionnaire;
+import entities.User;
 import exceptions.BadRetrievalException;
+import services.AccessService;
 import services.QuestionService;
 import services.QuestionnaireService;
 
@@ -37,6 +39,9 @@ public class GoToQotdTwo extends HttpServlet {
 
 	@EJB(name = "services/QuestionService")
 	private QuestionService questionService;
+	
+	@EJB(name = "services/AccessService")
+	private AccessService accessService;
 	
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
@@ -65,6 +70,23 @@ public class GoToQotdTwo extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
+		Questionnaire q = null;
+		try {
+			User u = (User) session.getAttribute("user");
+			q = questionnaireService.getQuestionnaireOfTheDay();
+			
+			if(accessService.checkSubmittedAccess(u.getId(), q.getId())) { 
+				// l'utente ha già compilato il questionario
+				ctx.setVariable("warningMsg", "You have already filled the questionnaire today!");
+				templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
+				return;
+			}
+			
+		} catch (BadRetrievalException e) {
+			ctx.setVariable("errorMsg", e.getMessage());
+		}
+		
+		
 		String[] answers1 = request.getParameterValues("answers1");
 		List<String> session_answers1 = new ArrayList<String>();
 		
@@ -74,18 +96,9 @@ public class GoToQotdTwo extends HttpServlet {
 		
 		session.setAttribute("answers1", session_answers1);
 		
-		Questionnaire qotd = null;
 		
-		try {
-			qotd = questionnaireService.getQuestionnaireOfTheDay();
-		} catch (BadRetrievalException e) {
-			ctx.setVariable("errorMsg", e.getMessage());
-		}
-		
-		if (qotd != null ) {
-			
+		if (q != null ) {
 			List<Question> questions2 = null;
-			
 			try {
 				questions2 = questionService.getSectionTwoQuestions();
 			} catch (BadRetrievalException e) {
