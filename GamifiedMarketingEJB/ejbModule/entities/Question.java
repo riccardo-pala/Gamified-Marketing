@@ -1,5 +1,8 @@
 package entities;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -32,6 +36,12 @@ public class Question {
 	@ManyToOne
 	@JoinColumn(name="questionnaireid")
 	private Questionnaire questionnaire;
+	
+	/*non lo avevamo implementato ma è fondamentale per poter eliminare tutte le risposte
+	 * senza di questo non è possibile eliminarle perchè si viola il constraints delle foreign keys question_answer
+	 */
+	@OneToMany(mappedBy="question", cascade= CascadeType.REMOVE)
+	private List<Answer> answers;
 
 	
 	public Question() {

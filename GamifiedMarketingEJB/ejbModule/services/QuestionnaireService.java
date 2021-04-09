@@ -43,12 +43,12 @@ public class QuestionnaireService {
 		return q;
 	}
 	
-	public void createQuestionnaire(int productid, Date date, ArrayList<Question> questions) throws BadRetrievalException {
+	public void createQuestionnaire(int productId, Date date, ArrayList<Question> questions) throws BadRetrievalException {
 		
 		Product p = null;
 		 
 		try {
-			p = em.find(Product.class, productid);
+			p = em.find(Product.class, productId);
 		}
 		catch(PersistenceException | NullPointerException e) {
 			throw new BadRetrievalException("Problems during the creation of the questionnaire, retry.");
@@ -69,5 +69,12 @@ public class QuestionnaireService {
 		List<Questionnaire> p = em.createQuery("SELECT q FROM Questionnaire q").getResultList();
 		
 		return p;
+	}
+	
+	public void deleteQuestionnaire(int questionnaireId) {
+		
+		Questionnaire q = em.find(Questionnaire.class, questionnaireId);
+		em.remove(q);
+		
 	}
 }
