@@ -32,7 +32,6 @@ public class UserService {
 					.setParameter(1, username).setParameter(2, password)
 					.getResultList();
 		} catch (PersistenceException e) {
-			//e.printStackTrace();
 			throw new CredentialsException("Could not verify credentials.");
 		}
 		if (uList.isEmpty())
@@ -54,20 +53,18 @@ public class UserService {
 			emailList = em.createQuery("SELECT u FROM User u WHERE u.email = ?1", User.class)
 					.setParameter(1, email).getResultList();
 		} catch (PersistenceException e) {
-			//e.printStackTrace();
 			throw new CredentialsException("Could not verify credentials, retry");
 		}
 
 		if (!usernameList.isEmpty())
-			throw new NonUniqueResultException("The username " + username + " is not available!");
+			throw new CreateProfileException("The username " + username + " is not available!");
 		else if (!emailList.isEmpty())
-			throw new NonUniqueResultException("The email " + email + " is registered with another account!");	
+			throw new CreateProfileException("The email " + email + " is registered with another account!");	
 		else {
 			User user = new User(firstname, lastname, username, email, password, false, false, 0);
 			try {
 				em.persist(user);
 			} catch (PersistenceException e) {
-				//e.printStackTrace();
 				throw new CreateProfileException("Could not create a new profile, retry");
 			}
 			return user;
@@ -81,14 +78,14 @@ public class UserService {
 			uList = (List<User>) em.createQuery("SELECT u FROM User u WHERE u.username=?1", User.class)
 					.setParameter(1, username).getResultList();
 		} catch (PersistenceException e) {
-			//e.printStackTrace();
 			throw new BadRetrievalException("Could not retrieve user information");
 		}
 		if (uList.isEmpty())
 			return null;
 		else if (uList.size() == 1)
 			return uList.get(0);
-		throw new NonUniqueResultException("More than one user registered with same credentials");
+		
+		throw new NonUniqueResultException("More than one user registered with same credentials, please contact system administrator.");
 	}
 	
 	public User findByEmail (String email) throws BadRetrievalException {

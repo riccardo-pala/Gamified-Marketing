@@ -10,13 +10,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 
 @Entity
 @Table(name = "products", schema = "gmdb")
-@NamedQuery(name="Product.findByName",query="SELECT p FROM Product p WHERE p.name=?1")
+@NamedQueries({
+	@NamedQuery(name="Product.findByName", query="SELECT p FROM Product p WHERE p.name=?1"),
+	@NamedQuery(name="Product.findById", query="SELECT p FROM Product p WHERE p.id=?1"),
+	@NamedQuery(name="Product.findAll", query="SELECT p FROM Product p")
+})
 public class Product {
 	
 	private static final long serialVersionUID = 1L;

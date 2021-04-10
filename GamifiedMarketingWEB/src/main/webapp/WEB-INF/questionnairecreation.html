@@ -2,17 +2,25 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>CreationPage</title>
+<title>Create a new Questionnaire</title>
 </head>
 <body>
 
 
 <form  action="CreateQuestionnaire" id="questionnaire" method="POST" enctype="multipart/form-data">
-  <input type="file" id="productimage" name="productimage" required>
-  <input type="text" id="name" name="productname" placeholder="Name of the product" required>
-  <input type="date" id="date" name="productdate" placeholder="Date of the questionnaire" required>
-  <input type="submit" value="Submit">
+	
+	<label>Select the product:</label>
+	<select name="productid" required>
+		<option disabled selected value> -- select an option -- </option>
+		<option th:if="${p.id!=1}" th:each="p : ${products}" th:text="${p.name}"  th:attr="value = ${p.id}">
+	</select>
+	<br>
+	<input type="date" id="date" name="productdate" placeholder="Date of the questionnaire" required>
+	<br>
+	<input type="submit" value="Submit">
+	<p th:text=" ${errorMsg}"></p>
 </form>
+
 <button class="add_question_button">Add Question</button>
 <button class="remove_question_button">Remove Question</button>
 <div class="input_fields_wrap"></div>

@@ -51,6 +51,9 @@ public class CheckRegistration extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		ServletContext servletContext = getServletContext();
+		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		
 		String firstname = null;
 		String lastname = null;
 		String username = null;
@@ -68,12 +71,10 @@ public class CheckRegistration extends HttpServlet {
 				throw new Exception("Missing or empty credential value");
 			}
 		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			ctx.setVariable("errorMsg", e.getMessage());
+			templateEngine.process("/registration.html", ctx, response.getWriter());
 			return;
 		}
-
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
 		User user = null;
 		
@@ -82,8 +83,6 @@ public class CheckRegistration extends HttpServlet {
 		} catch (CredentialsException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 		} catch (CreateProfileException e) {
-			ctx.setVariable("errorMsg", e.getMessage());
-		} catch (NonUniqueResultException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
 

@@ -1,9 +1,7 @@
 package controllers;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.util.ArrayList;
-
+import java.io.InputStream;
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -12,37 +10,27 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import entities.Product;
-import entities.Question;
 import exceptions.BadRetrievalException;
+import exceptions.CreateProductException;
 import services.ProductService;
-import services.QuestionService;
-import services.QuestionnaireService;
+import utils.ImageUtils;
 
-/**
- * Servlet implementation class CreateQuestionnaire
- */
-@WebServlet("/CreateQuestionnaire")
+@WebServlet("/CreateProduct")
 @MultipartConfig
-public class CreateQuestionnaire extends HttpServlet {
+public class CreateProduct extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	private TemplateEngine templateEngine;
 	
 	@EJB(name="services/ProductService")
-	private ProductService productService;
-	
-	@EJB(name="services/QuestionnaireService")
-	private QuestionnaireService questionnaireService;
-	
-	@EJB(name="services/QuestionService")
-	private QuestionService questionService;
-    
+	private ProductService productService;    
 	
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
@@ -53,7 +41,7 @@ public class CreateQuestionnaire extends HttpServlet {
 		templateResolver.setSuffix(".html");
 	}
 	
-    public CreateQuestionnaire() {
+    public CreateProduct() {
         super();
        
     }
@@ -65,37 +53,24 @@ public class CreateQuestionnaire extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		ArrayList<Question> questions = new ArrayList<Question>();
+		Part imgFile = request.getPart("productimage");
+		InputStream imgContent = imgFile.getInputStream();
+		byte[] imgByteArray = ImageUtils.readImage(imgContent);
 		
-		int productid = Integer.parseInt(request.getParameter("productid"));
-		Date questdate = Date.valueOf(request.getParameter("productdate"));
+		String productname = request.getParameter("productname");
 		
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		Product p = null;
-		
 		try {
-			p = productService.getProductById(productid);
+			productService.createProduct(productname, imgByteArray);
 		} catch (BadRetrievalException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
-			templateEngine.process("/WEB-INF/questionnairecreation.html", ctx, response.getWriter());
+			templateEngine.process("/WEB-INF/productcreation.html", ctx, response.getWriter());
 			return;
-		}
-		
-		int x = 1;
-		
-		while(request.getParameter("quest" + x + "") != null) {
-			Question q = new Question(request.getParameter("quest" + x + ""),1);
-			questions.add(q);
-			x++;
-		}
-		
-		try {
-			questionnaireService.createQuestionnaire(p.getId(), questdate, questions);
-		} catch (BadRetrievalException e) {
+		} catch (CreateProductException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
-			templateEngine.process("/WEB-INF/questionnairecreation.html", ctx, response.getWriter());
+			templateEngine.process("/WEB-INF/productcreation.html", ctx, response.getWriter());
 			return;
 		}
 		

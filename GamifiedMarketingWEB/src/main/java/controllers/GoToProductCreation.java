@@ -1,7 +1,7 @@
 package controllers;
 
 import java.io.IOException;
-
+import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,13 +15,16 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import services.ProductService;
 
-@WebServlet("/GoToCreationPage")
-public class GoToCreationPage extends HttpServlet {
+@WebServlet("/GoToProductCreation")
+public class GoToProductCreation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	private TemplateEngine templateEngine;
     
+	@EJB(name = "services/ProductService")
+	private ProductService productService;
 	
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
@@ -33,7 +36,7 @@ public class GoToCreationPage extends HttpServlet {
 	}
 	
 	
-    public GoToCreationPage() {
+    public GoToProductCreation() {
         super();
     }
 
@@ -47,11 +50,11 @@ public class GoToCreationPage extends HttpServlet {
 			response.sendRedirect(loginpath);
 			return;
 		}
-
+		
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		
-		templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
+				
+		templateEngine.process("/WEB-INF/productcreation.html", ctx, response.getWriter());
 	}
 
 
