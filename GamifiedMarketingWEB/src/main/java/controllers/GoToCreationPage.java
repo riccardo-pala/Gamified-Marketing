@@ -23,8 +23,8 @@ import services.AccessService;
 import services.ProductService;
 
 
-@WebServlet("/GoToQuestionnaireCreation")
-public class GoToQuestionnaireCreation extends HttpServlet {
+@WebServlet("/GoToCreationPage")
+public class GoToCreationPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	private TemplateEngine templateEngine;
@@ -42,7 +42,7 @@ public class GoToQuestionnaireCreation extends HttpServlet {
 	}
 	
 	
-    public GoToQuestionnaireCreation() {
+    public GoToCreationPage() {
         super();
     }
 
@@ -70,7 +70,7 @@ public class GoToQuestionnaireCreation extends HttpServlet {
 		
 		ctx.setVariable("products", products);
 		
-		templateEngine.process("/WEB-INF/questionnairecreation.html", ctx, response.getWriter());
+		templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
 	}
 
 

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="ISO-8859-1">
+<title>Create a new Questionnaire</title>
+</head>
+
+<body>
+	
+<script>
+function spawnForm() {
+
+	document.getElementById("newproductbutton").style.display = "none";
+	document.getElementById("existingproductbutton").style.display = "inline-block";
+	
+	document.getElementById("existingproductdiv").style.display = "none";
+	document.getElementById("newproductdiv").style.display = "inline-block";
+	
+	document.getElementById("existingproductselect").required = false;
+	document.getElementById("newproductimage").required = true;
+	document.getElementById("newproductname").required = true;
+	
+	document.getElementById("noneselect").selected = true;
+}
+
+function spawnSelect() {
+
+	document.getElementById("newproductbutton").style.display = "inline-block";
+	document.getElementById("existingproductbutton").style.display = "none";
+	
+	document.getElementById("existingproductdiv").style.display = "inline-block";
+	document.getElementById("newproductdiv").style.display = "none";
+	
+	document.getElementById("existingproductselect").required = true;
+	document.getElementById("newproductimage").required = false;
+	document.getElementById("newproductname").required = false;
+	
+	document.getElementById("newproductname").value = "";
+}
+</script>
+
+	<form  action="GoToAdminHomepage">
+	    <input type="submit"  value="<- Go back" />
+	</form>
+	
+	<br>
+	
+	<button
+	onclick="spawnForm()"
+	id="newproductbutton">
+	Insert a new product
+	</button>
+	
+	<button
+	onclick="spawnSelect()"
+	id="existingproductbutton"
+	style="display : none">
+	Select an existing product
+	</button>
+	
+	<br>
+	
+	<form  action="CreateQuestionnaire" id="questionnaire" method="POST" enctype="multipart/form-data">
+		
+		<div id="existingproductdiv">
+			<select
+			name="productid"
+			id="existingproductselect"
+			required>
+				<option disabled id="noneselect" selected value> -- select an option -- </option>
+				<option th:if="${p.id!=1}" th:each="p : ${products}" th:text="${p.name}"  th:attr="value = ${p.id}">
+			</select>
+		</div>
+		
+		<div id="newproductdiv" style="display : none;">
+			<input type="file" name="newproductimage" id="newproductimage">
+			<br><br>
+			<input type="text" name="newproductname" id="newproductname" placeholder="Name of the product">
+		</div>
+		
+		<br><br>
+		
+		<input
+		type="date"
+		id="date"
+		name="questionnairedate"
+		placeholder="Date of the questionnaire"
+		required>
+		
+		<br>
+		
+		<input type="submit" value="Submit">
+		
+		<p th:text=" ${errorMsg}"></p>
+		
+	</form>
+
+	<button class="add_question_button">Add Question</button>
+	
+	<button class="remove_question_button">Remove Question</button>
+	
+	<div class="input_fields_wrap"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+    var add_button      = $(".add_question_button"); //Add button ID
+    var remove_button      = $(".remove_question_button"); //Add button ID
+
+    var x=0; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        x++; //text box increment
+        $(wrapper).append('<div class="div'+x+'">' +
+            '<p name="mytext'+x+'">Question'+x+'<br>' +
+            '<textarea name="quest'+x+'" form="questionnaire"></textarea>' +
+            '</div>');
+   	 });
+
+    $(remove_button).click(function(e){ //user click on remove text
+        e.preventDefault();
+    	$(".div"+x).remove();
+    	x--;
+    })
+});
+</script>
+
+</body>
+</html>

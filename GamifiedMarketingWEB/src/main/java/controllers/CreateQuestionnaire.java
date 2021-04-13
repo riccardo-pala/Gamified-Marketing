@@ -1,8 +1,10 @@
 package controllers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
@@ -12,6 +14,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -20,9 +24,11 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import entities.Product;
 import entities.Question;
 import exceptions.BadRetrievalException;
+import exceptions.CreateProductException;
 import services.ProductService;
 import services.QuestionService;
 import services.QuestionnaireService;
+import utils.ImageUtils;
 
 /**
  * Servlet implementation class CreateQuestionnaire
@@ -64,24 +70,72 @@ public class CreateQuestionnaire extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		ArrayList<Question> questions = new ArrayList<Question>();
-		
-		int productid = Integer.parseInt(request.getParameter("productid"));
-		Date questdate = Date.valueOf(request.getParameter("productdate"));
-		
+
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		Product p = null;
-		
+		// Nel caso bisognasse tornare a creationpage.html per qualche errore
+		List<Product> products = null;
 		try {
-			p = productService.getProductById(productid);
+			products = productService.getAllProducts();
 		} catch (BadRetrievalException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
-			templateEngine.process("/WEB-INF/questionnairecreation.html", ctx, response.getWriter());
+		}
+		ctx.setVariable("products", products);
+		//-------------------------------------------------------------------
+		
+		String newProductName = request.getParameter("newproductname");
+
+		Product p = null;
+
+		if(newProductName != null && !newProductName.isEmpty()) {
+			
+			Part imgFile = request.getPart("newproductimage");
+			InputStream imgContent = imgFile.getInputStream();
+			byte[] imgByteArray = ImageUtils.readImage(imgContent);
+			
+			try {
+				p = productService.createProduct(newProductName, imgByteArray);
+			} catch (BadRetrievalException e) {
+				ctx.setVariable("errorMsg", e.getMessage());
+				templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
+				return;
+			} catch (CreateProductException e) {
+				ctx.setVariable("errorMsg", e.getMessage());
+				templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
+				return;
+			}
+		}
+		else {
+			
+			int productid;
+			
+			try {
+				productid = Integer.parseInt(request.getParameter("productid"));
+			} catch (NumberFormatException e) {
+				ctx.setVariable("errorMsg", "Invalid data, please retry.");
+				templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
+				return;
+			}
+			
+			try {
+				p = productService.getProductById(productid);
+			} catch (BadRetrievalException e) {
+				ctx.setVariable("errorMsg", e.getMessage());
+				templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
+				return;
+			}
+		}
+		
+		if (p == null) {
+			ctx.setVariable("errorMsg", "There was a problem during the creation of the questionnaire, please retry.");
+			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
 			return;
 		}
+		
+		ArrayList<Question> questions = new ArrayList<Question>();
+		
+		Date questionnaireDate = Date.valueOf(request.getParameter("questionnairedate"));
 		
 		int x = 1;
 		
@@ -92,10 +146,10 @@ public class CreateQuestionnaire extends HttpServlet {
 		}
 		
 		try {
-			questionnaireService.createQuestionnaire(p.getId(), questdate, questions);
+			questionnaireService.createQuestionnaire(p.getId(), questionnaireDate, questions);
 		} catch (BadRetrievalException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
-			templateEngine.process("/WEB-INF/questionnairecreation.html", ctx, response.getWriter());
+			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
 			return;
 		}
 		
