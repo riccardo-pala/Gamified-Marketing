@@ -71,7 +71,7 @@ public class UserService {
 		}	
 	}
 	
-	public User findByUsername (String username) throws BadRetrievalException {
+	public User findByUsername(String username) throws BadRetrievalException {
 		
 		List<User> uList = null;
 		try {
@@ -88,7 +88,8 @@ public class UserService {
 		throw new NonUniqueResultException("More than one user registered with same credentials, please contact system administrator.");
 	}
 	
-	public User findByEmail (String email) throws BadRetrievalException {
+	/*
+	public User findByEmail(String email) throws BadRetrievalException {
 		
 		List<User> uList = null;
 		try {
@@ -104,7 +105,27 @@ public class UserService {
 			return uList.get(0);
 		throw new NonUniqueResultException("More than one user registered with same credentials");
 	}
-	/*
+	*/
+	
+	public List<User> getUsersOrderedByPoints() throws BadRetrievalException {
+		
+		List<User> uList = null;
+		try {
+			uList = (List<User>) em.createQuery("SELECT u FROM User u ORDER BY u.totalPoints DESC", User.class)
+					.getResultList();
+		} catch (PersistenceException e) {
+			throw new BadRetrievalException("Could not retrieve user information");
+		}
+		if (uList.isEmpty())
+			return null;
+		else
+			return uList;
+		
+	}
+	
+	
+	
+	/* 
 	public User updateUser(String username, String newusername, String firstname, String lastname, String password, Supermarket favSupermarket) throws UpdateProfileException, BadRetrievalException{
 		
 		User user = findByUserName(username);

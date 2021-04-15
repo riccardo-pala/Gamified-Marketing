@@ -120,8 +120,27 @@ public class ManageQuestionnaire extends HttpServlet {
 		else if (action.equals("Submit")) {
 			
 			List<String> answers_text = null; // lista delle risposte
+			
 			if (session.getAttribute("answers1") != null)
-				answers_text = (List<String>) session.getAttribute("answers1"); // aggiungo prima risposte sezione 1
+				answers_text = (List<String>) session.getAttribute("answers1"); // aggiungo prima risposte sezione 1 (mandatory)
+			
+			for(String mandatory_answer : answers_text) // check if they are filled
+				if(mandatory_answer.isBlank()) { // even if only one is blank... (how we consider an answer to be valid?)
+					// same behaviour as action = "Previous"
+					List<String> questions1 = null;
+					if (session.getAttribute("questions1") != null)
+						questions1 = (List<String>) session.getAttribute("questions1");
+
+					ctx.setVariable("questions1", questions1);
+					ctx.setVariable("answers1", answers_text);
+					ctx.setVariable("requiredMsg", "You MUST answer all the questions to submit the questionnaire!");
+					
+					templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
+					
+					return;
+				}
+				
+				
 			for(String answer_text : session_answers2)
 				answers_text.add(answer_text); // poi aggiungo risposte sezione 2
 			
@@ -145,8 +164,10 @@ public class ManageQuestionnaire extends HttpServlet {
 			session.setAttribute("answers1", null);
 			session.setAttribute("questions2", null);
 			session.setAttribute("answers2", null);
-			String path = getServletContext().getContextPath() + "/GoToHomepage";
-			response.sendRedirect(path);
+			
+			ctx.setVariable("submitted", true);
+			templateEngine.process("/WEB-INF/greetings.html", ctx, response.getWriter());
+			
 			return;
 		}
 		else if (action.equals("Cancel")) {
@@ -160,8 +181,10 @@ public class ManageQuestionnaire extends HttpServlet {
 			session.setAttribute("answers1", null);
 			session.setAttribute("questions2", null);
 			session.setAttribute("answers2", null);
+			
 			String path = getServletContext().getContextPath() + "/GoToHomepage";
 			response.sendRedirect(path);
+			 
 			return;
 		}
 	}

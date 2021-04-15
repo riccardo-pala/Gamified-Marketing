@@ -24,7 +24,10 @@
     			<input th:if="${answers1} == null" type="text" name="answers1" />
     			<br><br>
 			</tr>
+
+			<p th:if="${requiredMsg != null}" style="color: red" th:text="${requiredMsg}" />
 			<br><br>
+				
 		    <input type="submit" value="Next" />
 		</form>
 		

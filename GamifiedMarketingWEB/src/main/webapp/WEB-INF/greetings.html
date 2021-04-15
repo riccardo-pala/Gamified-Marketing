@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Thanks!</title>
+</head>
+<body>
+	<form th:if="${submitted}" action="GoToHomepage" method="GET">
+		<h1>Thank you for filling the questionnaire</h1>
+		<br>
+		<h3>Go back to the homepage and glance at the leaderboard!</h3>
+		<br>
+		<input type="submit" value="Home" />
+	</form>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Leaderboard</title>
+</head>
+<body>
+	<div> 
+	
+	<!--  TODO: ERROR -- 
+	
+	<form th:if="${warningMsg != null}" action="GoToHomepage" method="GET">
+		<p th:text="${warningMsg}" />
+		<br>
+	    <input type="submit" value="Home" />
+	</form> -->
+		
+		<h1>Overall leaderboard:</h1>
+		<table>
+		<tr th:each="user, iter : ${ordered_users}">
+			<td th:if="${!user.isAdmin}" th:style="${user.username == curr_username} ? 'font-weight: bold'" th:text="${iter.index + 1} + '. ' + ${user.username} + ' - ' + ${user.totalPoints}"/>	
+		</tr>
+		</table>
+
+		<br>
+		<form action="GoToHomepage" method="GET">
+		    <input type="submit" value="Home" />
+		</form>
+		
+	</div>
+</body>
+</html>
