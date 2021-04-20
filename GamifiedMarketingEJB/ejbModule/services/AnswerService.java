@@ -32,7 +32,7 @@ public class AnswerService {
 		return answers;
 	}
 	
-	public void insertAnswers(int userId, int questionnaireId, List<String> answersText, List<Question> questions) {
+	public User insertAnswers(int userId, int questionnaireId, List<String> answersText, List<Question> questions) {
 		
 		User user = em.find(User.class, userId);
 		Questionnaire questionnaire = em.find(Questionnaire.class, questionnaireId);
@@ -45,6 +45,8 @@ public class AnswerService {
 			}
 		}
 		em.persist(user); // cascade sulle answers
+		
+		return user;
 	}
 	
 

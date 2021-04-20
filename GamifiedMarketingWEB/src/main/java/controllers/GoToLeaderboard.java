@@ -66,7 +66,7 @@ public class GoToLeaderboard extends HttpServlet {
 			users = userService.getUsersOrderedByPoints();
 			
 		} catch (BadRetrievalException e) {
-			e.printStackTrace();
+			ctx.setVariable("errorMsg", e.getMessage());
 		}
 	
 		if(users != null) {
@@ -74,8 +74,9 @@ public class GoToLeaderboard extends HttpServlet {
 			ctx.setVariable("ordered_users", users);
 			ctx.setVariable("curr_username", u.getUsername());
 		}
-		//for(User i : users) TODO: ERROR
-			//System.out.println(i.getId()+" "+i.getTotalPoints());
+		for(User i : users)
+			System.out.println(i.getId()+" "+i.getTotalPoints());
+		
 		templateEngine.process("/WEB-INF/leaderboard.html", ctx, response.getWriter());
 	
 	}

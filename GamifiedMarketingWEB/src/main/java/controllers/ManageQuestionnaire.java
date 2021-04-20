@@ -153,8 +153,8 @@ public class ManageQuestionnaire extends HttpServlet {
 					// do sth
 				}
 				
-				answerService.insertAnswers(u.getId(), q.getId(), answers_text, questions);
-				accessService.insertAccess(u.getId(),q.getId(),true,ts);
+				u = answerService.insertAnswers(u.getId(), q.getId(), answers_text, questions);
+				u = accessService.insertAccess(u.getId(),q.getId(),true,ts);
 				
 			} catch (BadRetrievalException e) {
 				e.printStackTrace();
@@ -173,7 +173,7 @@ public class ManageQuestionnaire extends HttpServlet {
 		else if (action.equals("Cancel")) {
 			
 			try {
-				accessService.insertAccess(u.getId(),q.getId(),false,ts);
+				u = accessService.insertAccess(u.getId(),q.getId(),false,ts);
 			} catch (BadRetrievalException e) {
 				e.printStackTrace();
 			}

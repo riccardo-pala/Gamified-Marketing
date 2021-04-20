@@ -17,11 +17,12 @@
 		
 		<h1>Overall leaderboard:</h1>
 		<table>
-		<tr th:each="user, iter : ${ordered_users}">
-			<td th:if="${!user.isAdmin}" th:style="${user.username == curr_username} ? 'font-weight: bold'" th:text="${iter.index + 1} + '. ' + ${user.username} + ' - ' + ${user.totalPoints}"/>	
+		<tr th:each="u, iter : ${ordered_users}">
+			<td th:if="${!u.isAdmin}" th:style="${u.username == curr_username} ? 'font-weight: bold'" th:text="${iter.index + 1} + '. ' + ${u.username} + ' - ' + ${u.totalPoints}"/>	
 		</tr>
 		</table>
 
+		<p th:if="${errorMsg != null}" style="color : red;" th:text="${errorMsg}" />
 		<br>
 		<form action="GoToHomepage" method="GET">
 		    <input type="submit" value="Home" />
