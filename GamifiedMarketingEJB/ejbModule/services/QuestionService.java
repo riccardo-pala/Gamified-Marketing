@@ -7,7 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
-import entities.Question;
+import entities.QuestionOne;
+import entities.QuestionTwo;
 import exceptions.BadRetrievalException;
 
 @Stateless
@@ -21,12 +22,12 @@ public class QuestionService {
 	}
 	
 	
-	public List<Question> getSectionOneQuestions(int questionnaireId) throws BadRetrievalException {
+	public List<QuestionOne> getSectionOneQuestions(int questionnaireId) throws BadRetrievalException {
 		
-		List<Question> qList = null;
+		List<QuestionOne> qList = null;
 		
 		try {
-			qList = em.createNamedQuery("Question.findSectionOneByQuestionnaire", Question.class)
+			qList = em.createNamedQuery("Question.findSectionOneByQuestionnaire", QuestionOne.class)
 					.setParameter(1, questionnaireId).getResultList();
 			// TODO: check if not null
 		}
@@ -37,12 +38,12 @@ public class QuestionService {
 		return qList;
 	}
 	
-	public List<Question> getSectionTwoQuestions() throws BadRetrievalException {
+	public List<QuestionTwo> getSectionTwoQuestions() throws BadRetrievalException {
 		
-		List<Question> qList = null;
+		List<QuestionTwo> qList = null;
 		
 		try {
-			qList = em.createNamedQuery("Question.findSectionTwo", Question.class)
+			qList = em.createNamedQuery("Question.findSectionTwo", QuestionTwo.class)
 					.getResultList();
 		}
 		catch(PersistenceException | NullPointerException e) {

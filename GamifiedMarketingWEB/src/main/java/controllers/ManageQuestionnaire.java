@@ -20,6 +20,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Question;
+import entities.QuestionOne;
 import entities.Questionnaire;
 import entities.User;
 import exceptions.BadRetrievalException;
@@ -144,9 +145,9 @@ public class ManageQuestionnaire extends HttpServlet {
 			for(String answer_text : session_answers2)
 				answers_text.add(answer_text); // poi aggiungo risposte sezione 2
 			
-			List<Question> questions = null; // servono gli ID delle domande per salvare le risposte
+			List<Question> questions = new ArrayList<Question>(); // servono gli ID delle domande per salvare le risposte
 			try {
-				questions = questionService.getSectionOneQuestions(q.getId());
+				questions.addAll(questionService.getSectionOneQuestions(q.getId()));
 				questions.addAll(questionService.getSectionTwoQuestions());
 				
 				if(answers_text.size() != questions.size()) {

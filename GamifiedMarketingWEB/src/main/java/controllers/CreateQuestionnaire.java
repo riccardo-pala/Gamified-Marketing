@@ -22,7 +22,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Product;
-import entities.Question;
+import entities.QuestionOne;
 import exceptions.BadRetrievalException;
 import exceptions.CreateProductException;
 import services.ProductService;
@@ -133,14 +133,14 @@ public class CreateQuestionnaire extends HttpServlet {
 			return;
 		}
 		
-		ArrayList<Question> questions = new ArrayList<Question>();
+		ArrayList<QuestionOne> questions = new ArrayList<QuestionOne>();
 		
 		Date questionnaireDate = Date.valueOf(request.getParameter("questionnairedate"));
 		
 		int x = 1;
 		
 		while(request.getParameter("quest" + x + "") != null) {
-			Question q = new Question(request.getParameter("quest" + x + ""),1);
+			QuestionOne q = new QuestionOne(request.getParameter("quest" + x + ""),1);
 			questions.add(q);
 			x++;
 		}

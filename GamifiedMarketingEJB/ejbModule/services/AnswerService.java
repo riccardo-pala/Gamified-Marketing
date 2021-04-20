@@ -9,6 +9,7 @@ import javax.persistence.PersistenceException;
 
 import entities.Answer;
 import entities.Question;
+import entities.QuestionOne;
 import entities.Questionnaire;
 import entities.User;
 import exceptions.CredentialsException;

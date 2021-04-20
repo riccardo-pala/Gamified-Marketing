@@ -1,7 +1,7 @@
 package entities;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Table(name="answers")
 @NamedQuery(name="Answer.findByUserandQuestionnaire",query="SELECT a FROM Answer a WHERE a.questionnaire.id=?1 AND a.user.id=?2 ")
 @IdClass(AnswerId.class)
-public class Answer {
+public class Answer implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
