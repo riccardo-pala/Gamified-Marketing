@@ -41,7 +41,7 @@ public class Questionnaire {
 	private Product product;
 	
 	@OneToMany(mappedBy="questionnaire", fetch=FetchType.EAGER, cascade={CascadeType.PERSIST,CascadeType.REMOVE})
-	private List<Question> questions; //eager?
+	private List<QuestionOne> questions; //eager?
 	
 	@OneToMany(mappedBy="questionnaire", cascade={CascadeType.REMOVE})
 	private List<Answer> answers; 
@@ -55,7 +55,7 @@ public class Questionnaire {
 	public Questionnaire(Date date, Product product) {
 		this.date = date;
 		this.product = product;
-		this.questions=new ArrayList<Question>();
+		this.questions=new ArrayList<QuestionOne>();
 	}
 
 	public int getId() {
@@ -90,11 +90,11 @@ public class Questionnaire {
 		this.product = product;
 	}
 
-	public List<Question> getQuestions() {
+	public List<QuestionOne> getQuestions() {
 		return questions;
 	}
 
-	public void setQuestions(List<Question> questions) {
+	public void setQuestions(List<QuestionOne> questions) {
 		this.questions = questions;
 	}	
 	
@@ -106,14 +106,14 @@ public class Questionnaire {
 		this.answers = answers;
 	}
 
-	public void addQuestion(Question question) {
+	public void addQuestion(QuestionOne question) {
 		getQuestions().add(question);
 		question.setQuestionnaire(this);
 		// aligns both sides of the relationship
 		// if question is new, invoking persist() on reporter cascades also to Question
 	}
 
-	public void removeQuestion(Question question) {
+	public void removeQuestion(QuestionOne question) {
 		getQuestions().remove(question);
 	}
 }

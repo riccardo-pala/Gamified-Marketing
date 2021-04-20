@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
 import entities.Product;
-import entities.Question;
+import entities.QuestionOne;
 import entities.Questionnaire;
 import exceptions.BadRetrievalException;
 
@@ -43,7 +43,7 @@ public class QuestionnaireService {
 		return q;
 	}
 	
-	public void createQuestionnaire(int productId, Date date, ArrayList<Question> questions) throws BadRetrievalException {
+	public void createQuestionnaire(int productId, Date date, ArrayList<QuestionOne> questions) throws BadRetrievalException {
 		
 		Product p = null;
 		 

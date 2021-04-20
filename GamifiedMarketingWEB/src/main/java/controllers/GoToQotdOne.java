@@ -19,7 +19,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Product;
-import entities.Question;
+import entities.QuestionOne;
 import entities.Questionnaire;
 import entities.User;
 import exceptions.BadRetrievalException;
@@ -102,7 +102,7 @@ public class GoToQotdOne extends HttpServlet {
 		
 		if (qotd != null ) {
 			
-			List<Question> questions1 = null;
+			List<QuestionOne> questions1 = null;
 			
 			try {
 				questions1 = questionService.getSectionOneQuestions(qotd.getId());

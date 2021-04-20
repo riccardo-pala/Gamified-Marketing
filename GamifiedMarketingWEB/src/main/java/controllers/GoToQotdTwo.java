@@ -18,7 +18,8 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import entities.Question;
+import entities.QuestionOne;
+import entities.QuestionTwo;
 import entities.Questionnaire;
 import entities.User;
 import exceptions.BadRetrievalException;
@@ -98,7 +99,7 @@ public class GoToQotdTwo extends HttpServlet {
 		
 		
 		if (q != null ) {
-			List<Question> questions2 = null;
+			List<QuestionTwo> questions2 = null;
 			try {
 				questions2 = questionService.getSectionTwoQuestions();
 			} catch (BadRetrievalException e) {
