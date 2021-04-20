@@ -27,7 +27,7 @@ public class AccessService {
 	public AccessService() {
 	}
 	
-	public void insertAccess(int userId, int questionnaireId, boolean sub, Timestamp ts) throws BadRetrievalException {
+	public User insertAccess(int userId, int questionnaireId, boolean sub, Timestamp ts) throws BadRetrievalException {
 		
 		User user = em.find(User.class, userId);
 		Questionnaire questionnaire = em.find(Questionnaire.class, questionnaireId);
@@ -35,7 +35,9 @@ public class AccessService {
 		Log access = new Log(user, ts, questionnaire,sub);
 		
 		user.addAccess(access);
-		em.persist(user); 		
+		em.persist(user);
+		
+		return user;
 	}
 	
 	public boolean checkSubmittedAccess(int userId, int questionnaireId) throws BadRetrievalException {
