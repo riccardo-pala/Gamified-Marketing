@@ -26,9 +26,6 @@ public abstract class Question {
 	
 	private String text;
 	
-	private int section; 
-	
-	
 	@OneToMany(mappedBy="question", cascade= CascadeType.REMOVE)
 	private List<Answer> answers;
 
@@ -49,13 +46,7 @@ public abstract class Question {
 		this.text = text;
 	}
 
-	public int getSection() {
-		return section;
-	}
-
-	public void setSection(int section) {
-		this.section = section;
-	}
+	
 
 	
 }

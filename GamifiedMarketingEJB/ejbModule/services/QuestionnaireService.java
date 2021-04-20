@@ -58,6 +58,7 @@ public class QuestionnaireService {
 		
 		for(int i=0; i<questions.size(); i++) {
 			questionnaire.addQuestion(questions.get(i));
+			System.out.println(questions.get(i).getText());
 		}
 		
 		em.persist(questionnaire);

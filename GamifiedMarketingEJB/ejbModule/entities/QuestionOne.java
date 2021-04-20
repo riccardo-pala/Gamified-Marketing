@@ -36,9 +36,8 @@ public class QuestionOne extends Question implements Serializable {
 	public QuestionOne() {
 	}
 
-	public QuestionOne(String text, int section) {
+	public QuestionOne(String text) {
 		this.text = text;
-		this.section = section;
 	}
 
 	
@@ -48,14 +47,6 @@ public class QuestionOne extends Question implements Serializable {
 
 	public void setContent(String text) {
 		this.text = text;
-	}
-
-	public int getSection() {
-		return section;
-	}
-
-	public void setSection(int section) {
-		this.section = section;
 	}
 
 	public Questionnaire getQuestionnaire() {

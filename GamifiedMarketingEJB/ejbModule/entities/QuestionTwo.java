@@ -8,5 +8,13 @@ import javax.persistence.NamedQuery;
 @DiscriminatorValue("2")
 @NamedQuery(name="Question.findAll", query="SELECT q FROM QuestionTwo q")
 public class QuestionTwo extends Question {
+	
+	
+	public QuestionTwo() {
+		}
+	
+	public QuestionTwo(String text) {
+		this.setContent(text);
+		}
 
 }

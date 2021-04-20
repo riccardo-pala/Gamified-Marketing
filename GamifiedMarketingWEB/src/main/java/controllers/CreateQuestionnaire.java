@@ -140,7 +140,8 @@ public class CreateQuestionnaire extends HttpServlet {
 		int x = 1;
 		
 		while(request.getParameter("quest" + x + "") != null) {
-			QuestionOne q = new QuestionOne(request.getParameter("quest" + x + ""),1);
+			QuestionOne q = new QuestionOne(request.getParameter("quest" + x + ""));
+			System.out.println(q.getText());
 			questions.add(q);
 			x++;
 		}
