@@ -27,12 +27,12 @@ public class AccessService {
 	public AccessService() {
 	}
 	
-	public User insertAccess(int userId, int questionnaireId, boolean sub, Timestamp ts) throws BadRetrievalException {
+	public User insertAccess(int userId, int questionnaireId) throws BadRetrievalException {
 		
 		User user = em.find(User.class, userId);
 		Questionnaire questionnaire = em.find(Questionnaire.class, questionnaireId);
 		
-		Log access = new Log(user, ts, questionnaire,sub);
+		Log access = new Log(user, new Timestamp(System.currentTimeMillis()), questionnaire, false);
 		
 		user.addAccess(access);
 		em.persist(user);

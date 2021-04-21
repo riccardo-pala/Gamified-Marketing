@@ -155,7 +155,7 @@ public class ManageQuestionnaire extends HttpServlet {
 				}
 				
 				u = answerService.insertAnswers(u.getId(), q.getId(), answers_text, questions);
-				u = accessService.insertAccess(u.getId(),q.getId(),true,ts);
+				//TODO: u = accessService.insertAccess(u.getId(),q.getId(),true,ts);
 				
 			} catch (BadRetrievalException e) {
 				e.printStackTrace();
@@ -173,11 +173,12 @@ public class ManageQuestionnaire extends HttpServlet {
 		}
 		else if (action.equals("Cancel")) {
 			
+			/*
 			try {
-				u = accessService.insertAccess(u.getId(),q.getId(),false,ts);
+				//TODO: u = accessService.insertAccess(u.getId(),q.getId(),false,ts);
 			} catch (BadRetrievalException e) {
 				e.printStackTrace();
-			}
+			}*/
 			session.setAttribute("questions1", null);
 			session.setAttribute("answers1", null);
 			session.setAttribute("questions2", null);

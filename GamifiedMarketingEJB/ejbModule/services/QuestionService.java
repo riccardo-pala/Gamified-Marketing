@@ -27,7 +27,7 @@ public class QuestionService {
 		List<QuestionOne> qList = null;
 		
 		try {
-			qList = em.createNamedQuery("Question.findSectionOneByQuestionnaire", QuestionOne.class)
+			qList = em.createNamedQuery("QuestionOne.findByQuestionnaire", QuestionOne.class)
 					.setParameter(1, questionnaireId).getResultList();
 			// TODO: check if not null
 		}
@@ -43,7 +43,7 @@ public class QuestionService {
 		List<QuestionTwo> qList = null;
 		
 		try {
-			qList = em.createNamedQuery("Question.findSectionTwo", QuestionTwo.class)
+			qList = em.createNamedQuery("QuestionTwo.findAll", QuestionTwo.class)
 					.getResultList();
 		}
 		catch(PersistenceException | NullPointerException e) {

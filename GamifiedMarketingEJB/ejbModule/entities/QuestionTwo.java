@@ -1,20 +1,29 @@
 package entities;
 
+import java.io.Serializable;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 
 @Entity
 @DiscriminatorValue("2")
-@NamedQuery(name="Question.findAll", query="SELECT q FROM QuestionTwo q")
-public class QuestionTwo extends Question {
+@NamedQuery(name="QuestionTwo.findAll", query="SELECT q FROM QuestionTwo q")
+public class QuestionTwo extends Question implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+	
+	
+	/**
+	 * CONSTRUCTORS
+	 */
 	
 	public QuestionTwo() {
-		}
+		super();
+	}
 	
 	public QuestionTwo(String text) {
-		this.setContent(text);
-		}
+		super(text);
+	}
 
 }

@@ -13,47 +13,29 @@ import javax.persistence.OneToMany;
 
 @Entity
 @DiscriminatorValue("1")
-@NamedQuery(name="QuestionOne.findSectionOneByQuestionnaire", query="SELECT q FROM QuestionOne q WHERE q.questionnaire.id=?1")
+@NamedQuery(name="QuestionOne.findByQuestionnaire", query="SELECT q FROM QuestionOne q WHERE q.questionnaire.id=?1")
 public class QuestionOne extends Question implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private String text;
-	
-	private int section; 
-	
-	@ManyToOne
-	@JoinColumn(name="questionnaireid")
-	private Questionnaire questionnaire;
-	
 	/*non lo avevamo implementato ma è fondamentale per poter eliminare tutte le risposte
 	 * senza di questo non è possibile eliminarle perchè si viola il constraints delle foreign keys question_answer
-	 */
+	 *
 	@OneToMany(mappedBy="question", cascade= CascadeType.REMOVE)
-	private List<Answer> answers;
-
+	private List<Answer> answers; 
+	*/ //non basta quello nella classe padre?
+	
+	/**
+	 * CONSTRUCTORS
+	 */
 	
 	public QuestionOne() {
+		super();
 	}
-
+	
 	public QuestionOne(String text) {
-		this.text = text;
+		super(text);
 	}
 
 	
-	public String getText() {
-		return text;
-	}
-
-	public void setContent(String text) {
-		this.text = text;
-	}
-
-	public Questionnaire getQuestionnaire() {
-		return questionnaire;
-	}
-
-	public void setQuestionnaire(Questionnaire questionnaire) {
-		this.questionnaire = questionnaire;
-	}
 }

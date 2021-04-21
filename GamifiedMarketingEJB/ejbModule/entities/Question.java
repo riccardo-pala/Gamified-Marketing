@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -20,15 +22,41 @@ import javax.persistence.Table;
 @DiscriminatorColumn(name="section")
 public abstract class Question {
 	
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * CONSTRUCTORS
+	 */
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	private String text;
+
+	@ManyToOne
+	@JoinColumn(name="questionnaireid")
+	private Questionnaire questionnaire;
 	
 	@OneToMany(mappedBy="question", cascade= CascadeType.REMOVE)
 	private List<Answer> answers;
-
+	
+	
+	/**
+	 * CONSTRUCTORS
+	 */
+	
+	public Question() {
+	}
+	
+	public Question(String text) {
+		this.text = text;
+	}
+	
+	
+	/**
+	 * GETTERS & SETTERS
+	 */
 	
 	public int getId() {
 		return id;
@@ -42,11 +70,15 @@ public abstract class Question {
 		return text;
 	}
 
-	public void setContent(String text) {
+	public void setText(String text) {
 		this.text = text;
 	}
 
-	
+	public Questionnaire getQuestionnaire() {
+		return questionnaire;
+	}
 
-	
+	public void setQuestionnaire(Questionnaire questionnaire) {
+		this.questionnaire = questionnaire;
+	}
 }

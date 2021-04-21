@@ -79,13 +79,12 @@ public class GoToQotdOne extends HttpServlet {
 			Questionnaire q = questionnaireService.getQuestionnaireOfTheDay();
 			
 			if(accessService.checkSubmittedAccess(u.getId(), q.getId())) { 
-				// l'utente ha già compilato il questionario
 				ctx.setVariable("warningMsg", "You have already filled the questionnaire today!");
 				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
 				return;
 			}
 			
-			//accessService.insertAccess(u.getId(), q.getId());
+			accessService.insertAccess(u.getId(), q.getId());
 			ts = new Timestamp(System.currentTimeMillis());
 			
 		} catch (BadRetrievalException e) {
