@@ -123,6 +123,14 @@ public class UserService {
 		
 	}
 	
+	public void banUser(int userId) {
+		
+		User user = em.find(User.class,userId);
+		user.setIsBanned(true);
+		em.persist(user);
+
+	}
+	
 	
 	
 	/* 

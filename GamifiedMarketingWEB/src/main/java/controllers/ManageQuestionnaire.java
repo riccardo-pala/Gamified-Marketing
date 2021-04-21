@@ -26,8 +26,10 @@ import entities.User;
 import exceptions.BadRetrievalException;
 import services.AccessService;
 import services.AnswerService;
+import services.BadWordService;
 import services.QuestionService;
 import services.QuestionnaireService;
+import services.UserService;
 
 @WebServlet("/ManageQuestionnaire")
 public class ManageQuestionnaire extends HttpServlet {
@@ -47,6 +49,12 @@ public class ManageQuestionnaire extends HttpServlet {
 	
 	@EJB(name = "services/AnswerService")
 	private AnswerService answerService;
+	
+	@EJB(name = "services/BadWordService")
+	private BadWordService badWordService;
+	
+	@EJB(name = "services/UserService")
+	private UserService userService;
 	
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
@@ -151,6 +159,22 @@ public class ManageQuestionnaire extends HttpServlet {
 			for(String answer_text : session_answers2)
 				answers_text.add(answer_text); // poi aggiungo risposte sezione 2
 			
+			if(!badWordService.checkOffensiveWords((ArrayList<String>) answers_text)) {
+				
+				User user = (User) session.getAttribute("user");
+				userService.banUser(user.getId());
+				
+				session.setAttribute("questions1", null);
+				session.setAttribute("answers1", null);
+				session.setAttribute("questions2", null);
+				session.setAttribute("answers2", null);
+				
+				ctx.setVariable("BanMsg", "Due to the insertion of offensive words in the answers you have provided, you are banned from the site");
+				templateEngine.process("/WEB-INF/bannedpage.html", ctx, response.getWriter());
+			}
+			else {
+				
+			
 			List<Question> questions = new ArrayList<Question>(); // servono gli ID delle domande per salvare le risposte
 			try {
 				questions.addAll(questionService.getSectionOneQuestions(q.getId()));
@@ -178,6 +202,7 @@ public class ManageQuestionnaire extends HttpServlet {
 			templateEngine.process("/WEB-INF/greetings.html", ctx, response.getWriter());
 			
 			return;
+			}
 		}
 		
 		else if (action.equals("Cancel")) {
