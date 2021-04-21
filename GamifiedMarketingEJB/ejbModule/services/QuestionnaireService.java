@@ -66,8 +66,7 @@ public class QuestionnaireService {
 	
 	public List<Questionnaire> getAllQuestionnaire() {
 		
-		
-		List<Questionnaire> p = em.createQuery("SELECT q FROM Questionnaire q").getResultList();
+		List<Questionnaire> p = em.createQuery("SELECT q FROM Questionnaire q", Questionnaire.class).getResultList();
 		
 		return p;
 	}

@@ -27,7 +27,7 @@ public class AccessService {
 	public AccessService() {
 	}
 	
-	public User insertAccess(int userId, int questionnaireId) throws BadRetrievalException {
+	public void insertAccess(int userId, int questionnaireId) throws BadRetrievalException {
 		
 		User user = em.find(User.class, userId);
 		Questionnaire questionnaire = em.find(Questionnaire.class, questionnaireId);
@@ -36,8 +36,24 @@ public class AccessService {
 		
 		user.addAccess(access);
 		em.persist(user);
+	}
+	
+	public void updateAccessAfterSubmit(int userId, int questionnaireId) throws BadRetrievalException {
 		
-		return user;
+		User user = em.find(User.class, userId);
+		Questionnaire questionnaire = em.find(Questionnaire.class, questionnaireId);
+		
+		List<Log> logs = em.createQuery("SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.user.id=?2 ORDER BY a.accessTime DESC", Log.class)
+				.setParameter(1, questionnaireId).setParameter(2, userId).getResultList();
+		
+		Log submittedAccess = null;
+		if(logs != null) {
+			user.removeAccess(logs.get(0));
+			submittedAccess = logs.get(0);
+			submittedAccess.setSubmitted(true);
+			user.addAccess(submittedAccess);
+		}
+		em.persist(user);
 	}
 	
 	public boolean checkSubmittedAccess(int userId, int questionnaireId) throws BadRetrievalException {
@@ -60,8 +76,7 @@ public class AccessService {
 		
 		try {
 			submittedAccesses = em.createNamedQuery("Log.findByQuestionnaireSubmitted",Log.class).setParameter(1, questionnaireId).getResultList();
-			} catch (PersistenceException e) {
-			//e.printStackTrace();
+		} catch (PersistenceException e) {
 			throw new CredentialsException("Could not verify credentials.");
 		}
 		

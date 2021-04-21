@@ -26,14 +26,14 @@ public class AnswerService {
 	
 	public List<Answer> getAnswersByUserAndQuestionnaire(int userId, int questionnaireId){
 		List<Answer> answers = null;
-		answers=em.createNamedQuery("Answer.findByUserandQuestionnaire",Answer.class)
+		answers = em.createNamedQuery("Answer.findByUserandQuestionnaire",Answer.class)
 								.setParameter(1, questionnaireId)
 								.setParameter(2, userId)
 								.getResultList();
 		return answers;
 	}
 	
-	public User insertAnswers(int userId, int questionnaireId, List<String> answersText, List<Question> questions) {
+	public void insertAnswers(int userId, int questionnaireId, List<String> answersText, List<Question> questions) {
 		
 		User user = em.find(User.class, userId);
 		Questionnaire questionnaire = em.find(Questionnaire.class, questionnaireId);
@@ -46,8 +46,6 @@ public class AnswerService {
 			}
 		}
 		em.persist(user); // cascade sulle answers
-		
-		return user;
 	}
 	
 

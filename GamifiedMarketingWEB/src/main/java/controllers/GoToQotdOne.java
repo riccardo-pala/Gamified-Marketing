@@ -72,27 +72,9 @@ public class GoToQotdOne extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		Timestamp ts = null;
-		
-		try {
-			User u = (User) session.getAttribute("user");
-			Questionnaire q = questionnaireService.getQuestionnaireOfTheDay();
-			
-			if(accessService.checkSubmittedAccess(u.getId(), q.getId())) { 
-				ctx.setVariable("warningMsg", "You have already filled the questionnaire today!");
-				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
-				return;
-			}
-			
-			accessService.insertAccess(u.getId(), q.getId());
-			ts = new Timestamp(System.currentTimeMillis());
-			
-		} catch (BadRetrievalException e) {
-			ctx.setVariable("errorMsg", e.getMessage());
-		}
+		User u = (User) session.getAttribute("user");
 		
 		Questionnaire qotd = null;
-		
 		try {
 			qotd = questionnaireService.getQuestionnaireOfTheDay();
 		} catch (BadRetrievalException e) {
@@ -100,6 +82,18 @@ public class GoToQotdOne extends HttpServlet {
 		}
 		
 		if (qotd != null ) {
+			
+			try {
+				if(accessService.checkSubmittedAccess(u.getId(), qotd.getId())) { 
+					ctx.setVariable("warningMsg", "You have already filled the questionnaire today!");
+					templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
+					return;
+				}
+				// altrimenti procediamo iniziando a salveare l' accesso in tabella
+				accessService.insertAccess(u.getId(), qotd.getId());
+			} catch (BadRetrievalException e) {
+				ctx.setVariable("errorMsg", e.getMessage());
+			}
 			
 			List<QuestionOne> questions1 = null;
 			
@@ -110,7 +104,6 @@ public class GoToQotdOne extends HttpServlet {
 			}
 			
 			session.setAttribute("questions1", questions1);
-			session.setAttribute("accessTime",ts);
 			ctx.setVariable("questions1", questions1);
 		}
 		

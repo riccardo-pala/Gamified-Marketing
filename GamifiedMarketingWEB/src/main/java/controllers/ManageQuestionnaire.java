@@ -77,30 +77,34 @@ public class ManageQuestionnaire extends HttpServlet {
 		
 		String action = null;
 		User u = (User) session.getAttribute("user");
-		Timestamp ts = (Timestamp) session.getAttribute("accessTime");
+		
 		Questionnaire q = null;
-	
 		try {
 			q = questionnaireService.getQuestionnaireOfTheDay();
 		} catch (BadRetrievalException e) {
-			e.printStackTrace();
+			ctx.setVariable("errorMsg", e.getMessage());
 		}
 		
 		if (request.getParameter("button") != null) {
 			action = request.getParameter("button");
 		}
-		else { // perché va qui? non dovrebbe dare errore?
+		else { // perché se il button è nullo si va nella pagina della sezione 1? non dovrebbe dare errore?
 			String path = getServletContext().getContextPath() + "/GoToQotdOne";
 			response.sendRedirect(path);
 			return;
 		}
 	
+		// salviamo in sessione le risposte della sezione 1 in caso si tornasse indietro
+		
 		String[] answers2 = request.getParameterValues("answers2");
 		List<String> session_answers2 = new ArrayList<String>();
+		
 		if (answers2 != null)
 			for(int i = 0; i < answers2.length; i++)
 				session_answers2.add(answers2[i]);
+		
 		session.setAttribute("answers2", session_answers2);
+		
 		
 		if (action.equals("Previous")) {
 
@@ -118,6 +122,7 @@ public class ManageQuestionnaire extends HttpServlet {
 			
 			templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
 		}
+		
 		else if (action.equals("Submit")) {
 			
 			List<String> answers_text = null; // lista delle risposte
@@ -125,7 +130,8 @@ public class ManageQuestionnaire extends HttpServlet {
 			if (session.getAttribute("answers1") != null)
 				answers_text = (List<String>) session.getAttribute("answers1"); // aggiungo prima risposte sezione 1 (mandatory)
 			
-			for(String mandatory_answer : answers_text) // check if they are filled
+			// CONTROLLO SU DOMANDE OBBLIGATORIE SEZIONE 1
+			for(String mandatory_answer : answers_text)
 				if(mandatory_answer.isBlank()) { // even if only one is blank... (how we consider an answer to be valid?)
 					// same behaviour as action = "Previous"
 					List<String> questions1 = null;
@@ -150,16 +156,18 @@ public class ManageQuestionnaire extends HttpServlet {
 				questions.addAll(questionService.getSectionOneQuestions(q.getId()));
 				questions.addAll(questionService.getSectionTwoQuestions());
 				
-				if(answers_text.size() != questions.size()) {
-					// do sth
+				// controllo che combacino domande e risposte
+				if(answers_text.size() == questions.size()) {
+					// aggiungo domande
+					answerService.insertAnswers(u.getId(), q.getId(), answers_text, questions);
+					// aggiorno l'accesso vito che il questionario è stato inviato
+					accessService.updateAccessAfterSubmit(u.getId(),q.getId());
 				}
 				
-				u = answerService.insertAnswers(u.getId(), q.getId(), answers_text, questions);
-				//TODO: u = accessService.insertAccess(u.getId(),q.getId(),true,ts);
-				
 			} catch (BadRetrievalException e) {
-				e.printStackTrace();
+				ctx.setVariable("errorMsg", e.getMessage());
 			}
+			
 			// cancello domande e risposte dalla sessione anche nel caso Submit non solo nel caso Cancel
 			session.setAttribute("questions1", null);
 			session.setAttribute("answers1", null);
@@ -171,14 +179,9 @@ public class ManageQuestionnaire extends HttpServlet {
 			
 			return;
 		}
+		
 		else if (action.equals("Cancel")) {
 			
-			/*
-			try {
-				//TODO: u = accessService.insertAccess(u.getId(),q.getId(),false,ts);
-			} catch (BadRetrievalException e) {
-				e.printStackTrace();
-			}*/
 			session.setAttribute("questions1", null);
 			session.setAttribute("answers1", null);
 			session.setAttribute("questions2", null);

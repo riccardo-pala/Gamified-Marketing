@@ -71,12 +71,13 @@ public class GoToQotdTwo extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		Questionnaire q = null;
+		User u = (User) session.getAttribute("user");
+		
+		Questionnaire qotd = null;
 		try {
-			User u = (User) session.getAttribute("user");
-			q = questionnaireService.getQuestionnaireOfTheDay();
+			qotd = questionnaireService.getQuestionnaireOfTheDay();
 			
-			if(accessService.checkSubmittedAccess(u.getId(), q.getId())) { 
+			if(accessService.checkSubmittedAccess(u.getId(), qotd.getId())) { 
 				// l'utente ha già compilato il questionario
 				ctx.setVariable("warningMsg", "You have already filled the questionnaire today!");
 				templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
@@ -98,7 +99,7 @@ public class GoToQotdTwo extends HttpServlet {
 		session.setAttribute("answers1", session_answers1);
 		
 		
-		if (q != null ) {
+		if (qotd != null ) {
 			List<QuestionTwo> questions2 = null;
 			try {
 				questions2 = questionService.getSectionTwoQuestions();
