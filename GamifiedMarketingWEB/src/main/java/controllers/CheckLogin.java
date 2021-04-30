@@ -73,14 +73,21 @@ public class CheckLogin extends HttpServlet {
 		} catch (CredentialsException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
-
+		
+		
 		String path;
 		
 		if (user == null) {
 			ctx.setVariable("errorMsg", "Incorrect username or password");
 			path = "/index.html";
 			templateEngine.process(path, ctx, response.getWriter());
-		} else if (!user.getIsAdmin()) {
+		} 
+		else if(user.getIsBanned()) {
+			ctx.setVariable("errorMsg", "You are not allowed to log in since you were banned from this site");
+			path = "/index.html";
+			templateEngine.process(path, ctx, response.getWriter());
+		}
+		else if (!user.getIsAdmin()) {
 			request.getSession().setAttribute("user", user);
 			path = getServletContext().getContextPath() + "/GoToHomepage";
 			response.sendRedirect(path);
