@@ -9,28 +9,47 @@
 	
 	<div>
 		<!-- TODO: errorMsg -->
-		<h1>Product of the day:</h1>
-		
-		<p th:text="${potd.name}"></p>
-		
-		<img id="potdImg" th:src="'data:image/png;base64,'+ ${img}" alt="#" height=300px  width=400px  />
-		
-		<br><br>
-		
-		<form action="GoToQotdOne">
-		    <input type="submit" value="Questionnaire of the day" />
-		</form>
-		
-		<br>
-		
-		<form action="GoToLeaderboard">
-		    <input type="submit" value="Leaderboard" />
-		</form>
-		
+		<span>
+			<h1>Product of the day:</h1>
+			
+			<p th:text="${potd.name}" style="font-size: 16px"></p>
+			
+			<img id="potdImg" th:src="'data:image/png;base64,'+ ${img}" alt="#" height=300px  width=400px  />
+			
+			<br><br>
+			
+			<form action="GoToQotdOne">
+			    <input type="submit" value="Questionnaire of the day" />
+			</form>
+			
+			<br>
+			
+			<form action="GoToLeaderboard">
+			    <input type="submit" value="Leaderboard" />
+			</form>
+			
+			<br>
+			
+			<form action="Logout">
+			    <input type="submit" value="Logout" />
+			</form>
+		</span>
+	
+		<span>
+			<h1>Reviews:</h1>
+			<table>
+			<tr th:each="q, i : ${questions}">
+				<td th:text="${i.index + 1} + ') ' + ${q.text}" style="font-size: 16px"></td>
+				<tr th:each="a : ${answers}">
+					<td th:if="${q.id == 1}" th:text="'- [' + ${a.user.username} + ']  ' + ${a.text}" style="font-style: italic"></td>	
+				</tr>
+				<!--  th:if="${q.id == a.question.id} -->
+			</tr>
+			</table>
+		</span>
+	
 	</div>
 	
-	<form action="Logout">
-		    <input type="submit" value="Logout" />
-		</form>
+
 </body>
 </html>

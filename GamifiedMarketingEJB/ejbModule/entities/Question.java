@@ -81,4 +81,12 @@ public abstract class Question {
 	public void setQuestionnaire(Questionnaire questionnaire) {
 		this.questionnaire = questionnaire;
 	}
+	
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
+	}
 }

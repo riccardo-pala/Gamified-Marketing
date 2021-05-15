@@ -1,7 +1,7 @@
 package controllers;
 
 import java.io.IOException;
-
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
@@ -18,11 +18,12 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-
-
+import entities.Answer;
 import entities.Product;
+import entities.QuestionOne;
 import entities.Questionnaire;
 import exceptions.BadRetrievalException;
+import services.AnswerService;
 import services.ProductService;
 import services.QuestionnaireService;
 
@@ -36,6 +37,9 @@ public class GoToHomepage extends HttpServlet {
     
 	@EJB(name = "services/QuestionnaireService")
 	private QuestionnaireService questionnaireService;
+	
+	@EJB(name = "services/AnswerService")
+	private AnswerService answerService;
 	
 	@EJB(name = "services/ProductService")
 	private ProductService productService;
@@ -68,7 +72,6 @@ public class GoToHomepage extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
 		Questionnaire qotd = null;
-		
 		try {
 			qotd = questionnaireService.getQuestionnaireOfTheDay();
 		} catch (BadRetrievalException e) {
@@ -76,10 +79,20 @@ public class GoToHomepage extends HttpServlet {
 		}
 		
 		if (qotd != null ) {
+			
 			Product potd = qotd.getProduct();
 			String imgStr = Base64.encodeBase64String(potd.getPhoto());
 			ctx.setVariable("potd", potd);
 			ctx.setVariable("img", imgStr);
+			
+			// Users REVIEW of the current product
+			
+			List<QuestionOne> q_questions = qotd.getQuestions();
+			ctx.setVariable("questions", q_questions);
+			
+			List<Answer> q_answers = answerService.getAnswersByQuestionnaire(qotd.getId());
+			ctx.setVariable("answers", q_answers);
+			
 		}
 		
 		templateEngine.process("/WEB-INF/homepage.html", ctx, response.getWriter());		

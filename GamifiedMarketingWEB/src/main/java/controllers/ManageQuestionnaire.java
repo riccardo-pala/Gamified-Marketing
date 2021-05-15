@@ -171,37 +171,38 @@ public class ManageQuestionnaire extends HttpServlet {
 				
 				ctx.setVariable("BanMsg", "Due to the insertion of offensive words in the answers you have provided, you are banned from the site");
 				templateEngine.process("/WEB-INF/bannedpage.html", ctx, response.getWriter());
+				
+				return;
 			}
 			else {
 				
-			
-			List<Question> questions = new ArrayList<Question>(); // servono gli ID delle domande per salvare le risposte
-			try {
-				questions.addAll(questionService.getSectionOneQuestions(q.getId()));
-				questions.addAll(questionService.getSectionTwoQuestions());
-				
-				// controllo che combacino domande e risposte
-				if(answers_text.size() == questions.size()) {
-					// aggiungo domande
-					answerService.insertAnswers(u.getId(), q.getId(), answers_text, questions);
-					// aggiorno l'accesso vito che il questionario è stato inviato
-					accessService.updateAccessAfterSubmit(u.getId(),q.getId());
+				List<Question> questions = new ArrayList<Question>(); // servono gli ID delle domande per salvare le risposte
+				try {
+					questions.addAll(questionService.getSectionOneQuestions(q.getId()));
+					questions.addAll(questionService.getSectionTwoQuestions());
+					
+					// controllo che combacino domande e risposte
+					if(answers_text.size() == questions.size()) {
+						// aggiungo domande
+						answerService.insertAnswers(u.getId(), q.getId(), answers_text, questions);
+						// aggiorno l'accesso vito che il questionario è stato inviato
+						accessService.updateAccessAfterSubmit(u.getId(),q.getId());
+					}
+					
+				} catch (BadRetrievalException e) {
+					ctx.setVariable("errorMsg", e.getMessage());
 				}
 				
-			} catch (BadRetrievalException e) {
-				ctx.setVariable("errorMsg", e.getMessage());
-			}
-			
-			// cancello domande e risposte dalla sessione anche nel caso Submit non solo nel caso Cancel
-			session.setAttribute("questions1", null);
-			session.setAttribute("answers1", null);
-			session.setAttribute("questions2", null);
-			session.setAttribute("answers2", null);
-			
-			ctx.setVariable("submitted", true);
-			templateEngine.process("/WEB-INF/greetings.html", ctx, response.getWriter());
-			
-			return;
+				// cancello domande e risposte dalla sessione anche nel caso Submit non solo nel caso Cancel
+				session.setAttribute("questions1", null);
+				session.setAttribute("answers1", null);
+				session.setAttribute("questions2", null);
+				session.setAttribute("answers2", null);
+				
+				ctx.setVariable("submitted", true);
+				templateEngine.process("/WEB-INF/greetings.html", ctx, response.getWriter());
+				
+				return;
 			}
 		}
 		

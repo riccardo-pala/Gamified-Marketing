@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="answers")
-@NamedQuery(name="Answer.findByUserandQuestionnaire",query="SELECT a FROM Answer a WHERE a.questionnaire.id=?1 AND a.user.id=?2 ")
+@NamedQuery(name="Answer.findByQuestionnaire",query="SELECT a FROM Answer a WHERE a.questionnaire.id=?1 ")
 @IdClass(AnswerId.class)
 public class Answer implements Serializable {
 	
