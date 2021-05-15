@@ -45,7 +45,7 @@ public class AnswerService {
 				user.addAnswer(answer);
 			}
 		}
-		em.persist(user); // cascade sulle answers
+		em.persist(user);
 	}
 	
 

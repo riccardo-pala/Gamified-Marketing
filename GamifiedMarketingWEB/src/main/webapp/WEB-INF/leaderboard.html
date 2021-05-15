@@ -21,7 +21,6 @@
 			<td th:if="${!u.isAdmin}" th:style="${u.username == curr_username} ? 'font-weight: bold'" th:text="${iter.index + 1} + '. ' + ${u.username} + ' - ' + ${u.totalPoints}"/>	
 		</tr>
 		</table>
-
 		<p th:if="${errorMsg != null}" style="color : red;" th:text="${errorMsg}" />
 		<br>
 		<form action="GoToHomepage" method="GET">

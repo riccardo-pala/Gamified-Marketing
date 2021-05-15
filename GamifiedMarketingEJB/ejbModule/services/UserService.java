@@ -107,7 +107,10 @@ public class UserService {
 	}
 	*/
 	
-	public List<User> getUsersOrderedByPoints() throws BadRetrievalException {
+	public List<User> getUsersOrderedByPoints(int id) throws BadRetrievalException {
+		
+		User u=em.find(User.class,id);
+		em.refresh(u);
 		
 		List<User> uList = null;
 		try {
