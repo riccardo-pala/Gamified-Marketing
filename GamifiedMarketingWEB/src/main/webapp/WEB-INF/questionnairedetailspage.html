@@ -21,7 +21,7 @@
 				<td th:text="${s.user.username}"></td>
 				<td th:text="${s.user.firstname}"></td>
 				<td th:text="${s.user.lastname}"></td>
-				<td th:text="${#strings.substring(s.accesstime, 0, 16)}"></td>
+				<td th:text="${#dates.format(s.accesstime,'dd/MM/yyyy hh:mm')}"></td>
 				<td><a th:href="@{/GetAnswers(questionnaireid=${s.questionnaire.id},userid=${s.user.id})}">See Answers</a></td>
 			</tr>
 		</tbody>
@@ -43,7 +43,7 @@
 				<td th:text="${c.user.username}"></td>
 				<td th:text="${c.user.firstname}"></td>
 				<td th:text="${c.user.lastname}"></td>
-				<td th:text="${#strings.substring(c.accesstime, 0, 16)}"></td>
+				<td th:text="${#dates.format(c.accesstime,'dd/MM/yyyy hh:mm')}"></td>
 			</tr>
 		</tbody>
 	</table>

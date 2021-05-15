@@ -24,7 +24,6 @@ public class QuestionnaireService {
 	public QuestionnaireService() {
 	}
 	
-	
 	public Questionnaire getQuestionnaireOfTheDay() throws BadRetrievalException {
 		
 		Questionnaire q = null;
@@ -66,7 +65,7 @@ public class QuestionnaireService {
 	
 	public List<Questionnaire> getAllQuestionnaire() {
 		
-		List<Questionnaire> p = em.createQuery("SELECT q FROM Questionnaire q", Questionnaire.class).getResultList();
+		List<Questionnaire> p = em.createQuery("SELECT q FROM Questionnaire q ORDER BY q.date ASC", Questionnaire.class).getResultList();
 		
 		return p;
 	}
@@ -75,6 +74,5 @@ public class QuestionnaireService {
 		
 		Questionnaire q = em.find(Questionnaire.class, questionnaireId);
 		em.remove(q);
-		
 	}
 }
