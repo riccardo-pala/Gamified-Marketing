@@ -67,11 +67,8 @@ public class GoToInspectionPage extends HttpServlet {
 		
 		ctx.setVariable("questionnaires", questionnaires);
 		templateEngine.process("/WEB-INF/inspectionpage.html", ctx, response.getWriter());
-		
-		
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}

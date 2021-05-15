@@ -19,6 +19,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Log;
+import exceptions.BadRetrievalException;
 import exceptions.CredentialsException;
 import services.AccessService;
 
@@ -56,37 +57,30 @@ public class GetQuestionnaireDetails extends HttpServlet {
 			return;
 		}
 		
-		List<Log> submitted=null;
-		List<Log> canceled=null;
-		int questionnaireId= Integer.parseInt(request.getParameter("questionnaireid"));
+		ServletContext servletContext = getServletContext();
+		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		
+		List<Log> submitted = null;
+		List<Log> canceled = null;
+		
+		int questionnaireId = Integer.parseInt(request.getParameter("questionnaireid"));
 		
 		try {
 			submitted = accessService.getAllSubmittedQuestionnaire(questionnaireId);
-		} catch (CredentialsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
 			canceled = accessService.getAllCancelledQuestionnaire(questionnaireId);
-		} catch (CredentialsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (BadRetrievalException e) {
+			ctx.setVariable("errorMsg", e.getMessage());
 		}
 		
 		String path = "/WEB-INF/questionnairedetailspage.html";
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		
 		ctx.setVariable("submitted", submitted);
 		ctx.setVariable("canceled", canceled);
+		
 		templateEngine.process(path, ctx, response.getWriter());
-		
-		
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		doGet(request, response);
 	}
-
 }

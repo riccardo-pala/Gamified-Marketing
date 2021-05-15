@@ -70,28 +70,27 @@ public class AccessService {
 		return false;
 	}
 	
-	public List<Log> getAllSubmittedQuestionnaire(int questionnaireId) throws CredentialsException{
+	public List<Log> getAllSubmittedQuestionnaire(int questionnaireId) throws BadRetrievalException {
 		
 		List<Log> submittedAccesses= null;
 		
 		try {
 			submittedAccesses = em.createNamedQuery("Log.findByQuestionnaireSubmitted",Log.class).setParameter(1, questionnaireId).getResultList();
 		} catch (PersistenceException e) {
-			throw new CredentialsException("Could not verify credentials.");
+			throw new BadRetrievalException("Failed to retrieve accesses information.");
 		}
 		
 		return submittedAccesses;
 	}
 	
-	public List<Log> getAllCancelledQuestionnaire(int questionnaireId) throws CredentialsException{
+	public List<Log> getAllCancelledQuestionnaire(int questionnaireId) throws BadRetrievalException {
 		
 		List<Log> submittedAccesses= null;
 		
 		try {
 			submittedAccesses = em.createNamedQuery("Log.findByQuestionnaireCanceled",Log.class).setParameter(1, questionnaireId).getResultList();
 			} catch (PersistenceException e) {
-			//e.printStackTrace();
-			throw new CredentialsException("Could not verify credentials.");
+			throw new BadRetrievalException("Failed to retrieve accesses information.");
 		}
 		
 		return submittedAccesses;

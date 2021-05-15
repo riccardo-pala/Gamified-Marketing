@@ -10,16 +10,18 @@
 	<table>
 		<thead>
 			<tr>
-				<th>UserName</th>
+				<th>Username</th>
 				<th>Firstname</th>
-				<th>Lastname</th>	
+				<th>Lastname</th>
+				<th>Time</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="s : ${submitted}">
 				<td th:text="${s.user.username}"></td>
-				<td th:text="${s.user.firstname }"></td>
-				<td th:text="${s.user.lastname }"></td>
+				<td th:text="${s.user.firstname}"></td>
+				<td th:text="${s.user.lastname}"></td>
+				<td th:text="${#strings.substring(s.accesstime, 0, 16)}"></td>
 				<td><a th:href="@{/GetAnswers(questionnaireid=${s.questionnaire.id},userid=${s.user.id})}">See Answers</a></td>
 			</tr>
 		</tbody>
@@ -30,16 +32,18 @@
 	<table>
 		<thead>
 			<tr>
-				<th>UserName</th>
+				<th>Username</th>
 				<th>Firstname</th>
-				<th>Lastname</th>	
+				<th>Lastname</th>
+				<th>Time</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="c : ${canceled}">
 				<td th:text="${c.user.username}"></td>
-				<td th:text="${c.user.firstname }"></td>
-				<td th:text="${c.user.lastname }"></td>
+				<td th:text="${c.user.firstname}"></td>
+				<td th:text="${c.user.lastname}"></td>
+				<td th:text="${#strings.substring(c.accesstime, 0, 16)}"></td>
 			</tr>
 		</tbody>
 	</table>
