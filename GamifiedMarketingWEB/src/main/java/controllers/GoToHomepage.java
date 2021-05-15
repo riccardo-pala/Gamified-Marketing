@@ -93,6 +93,8 @@ public class GoToHomepage extends HttpServlet {
 			List<Answer> q_answers = answerService.getAnswersByQuestionnaire(qotd.getId());
 			ctx.setVariable("answers", q_answers);
 			
+			System.out.println(qotd.getDate()+"   "+qotd.getProduct().getName());
+			
 		}
 		
 		templateEngine.process("/WEB-INF/homepage.html", ctx, response.getWriter());		

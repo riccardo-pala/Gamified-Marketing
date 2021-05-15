@@ -64,7 +64,7 @@ public class GoToLeaderboard extends HttpServlet {
 		User u = (User) session.getAttribute("user");
 		
 		try {
-			users = userService.getUsersOrderedByPoints(u.getId());
+			users = userService.getUsersOrderedByPoints();
 			
 			
 		} catch (BadRetrievalException e) {

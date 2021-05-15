@@ -107,14 +107,15 @@ public class UserService {
 	}
 	*/
 	
-	public List<User> getUsersOrderedByPoints(int id) throws BadRetrievalException {
+	public List<User> getUsersOrderedByPoints() throws BadRetrievalException {
 		
-		User u=em.find(User.class,id);
-		em.refresh(u);
-		
+	
+		em.clear();
 		List<User> uList = null;
 		try {
-			uList = (List<User>) em.createQuery("SELECT u FROM User u ORDER BY u.totalPoints DESC", User.class)
+			uList = (List<User>) em.createQuery("SELECT u FROM User u WHERE u.isBanned =?1 AND u.isAdmin =?2 ORDER BY u.totalPoints DESC", User.class)
+					.setParameter(1,false)
+					.setParameter(2,false)
 					.getResultList();
 		} catch (PersistenceException e) {
 			throw new BadRetrievalException("Could not retrieve user information");

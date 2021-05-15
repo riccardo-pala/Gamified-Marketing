@@ -26,6 +26,7 @@ public class QuestionnaireService {
 	
 	public Questionnaire getQuestionnaireOfTheDay() throws BadRetrievalException {
 		
+		
 		Questionnaire q = null;
 		
 		Date today = new Date(); // new instance of Date object returns the current date

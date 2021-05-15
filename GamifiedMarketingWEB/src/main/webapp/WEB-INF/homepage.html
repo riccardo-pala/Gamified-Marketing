@@ -22,8 +22,9 @@
 			    <input type="submit" value="Questionnaire of the day" />
 			</form>
 			
-			<br>
-			
+			<br>		
+		</span>
+		
 			<form action="GoToLeaderboard">
 			    <input type="submit" value="Leaderboard" />
 			</form>
@@ -33,7 +34,6 @@
 			<form action="Logout">
 			    <input type="submit" value="Logout" />
 			</form>
-		</span>
 	
 		<span>
 			<h1>Reviews:</h1>
@@ -41,7 +41,7 @@
 			<tr th:each="q, i : ${questions}">
 				<td th:text="${i.index + 1} + ') ' + ${q.text}" style="font-size: 16px"></td>
 				<tr th:each="a : ${answers}">
-					<td th:if="${q.id == 1}" th:text="'- [' + ${a.user.username} + ']  ' + ${a.text}" style="font-style: italic"></td>	
+		<!--  			<td th:if="${q.id == 1}" th:text="'- [' + ${a.user.username} + ']  ' + ${a.text}" style="font-style: italic"></td>-->	
 				</tr>
 				<!--  th:if="${q.id == a.question.id} -->
 			</tr>
