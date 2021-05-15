@@ -61,7 +61,6 @@ public class GoToLeaderboard extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
 		List<User> users = null;
-		List<User> users1 = null;
 		User u = (User) session.getAttribute("user");
 		
 		try {
