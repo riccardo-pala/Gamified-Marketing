@@ -1,7 +1,8 @@
 package controllers;
 
 import java.io.IOException;
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -65,17 +66,25 @@ public class GoToDeletionPage extends HttpServlet {
 		
 		List<Questionnaire> questionnaires = questionnaireService.getAllQuestionnaire();
 		
-		Date date=Date.valueOf(LocalDate.now());
-		// per evitare che venga eliminato il questionario del giorno stesso
-	/*	for(int i=0;i<questionnaires.size();i++) {
-			if(questionnaires.get(i).getDate().equals(date))
-				questionnaires.remove(i);
-		}*/
+		Date date= new Date();
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
+		
+		System.out.println(date.toString());
+		ArrayList<Questionnaire> questionn= new ArrayList<Questionnaire>();
+		
+		for(Questionnaire quest : questionnaires) {
+			if(quest.getDate().before(date) && !quest.getDate().toString().equals(date.toString())) {
+				questionn.add(quest);
+				System.out.println(quest.getDate().toString());
+			}
+		}
 		
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		ctx.setVariable("questionnaires", questionnaires);
+		ctx.setVariable("questionnaires", questionn);
 		templateEngine.process("/WEB-INF/deletionpage.html", ctx, response.getWriter());
 		
 		

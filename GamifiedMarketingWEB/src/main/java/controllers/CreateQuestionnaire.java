@@ -136,6 +136,8 @@ public class CreateQuestionnaire extends HttpServlet {
 		ArrayList<QuestionOne> questions = new ArrayList<QuestionOne>();
 		
 		Date questionnaireDate = Date.valueOf(request.getParameter("questionnairedate"));
+		System.out.println(request.getParameter("questionnairedate"));
+		
 		
 		int x = 1;
 		

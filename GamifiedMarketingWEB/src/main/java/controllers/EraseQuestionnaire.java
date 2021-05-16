@@ -62,11 +62,12 @@ private static final long serialVersionUID = 1L;
 		}
 		
 		int questionnaireId= Integer.parseInt(request.getParameter("questionnaireid"));
-		
+	
 		questionnaireService.deleteQuestionnaire(questionnaireId);
 		
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		
 		
 		templateEngine.process("/WEB-INF/adminhomepage.html", ctx, response.getWriter());
 		
