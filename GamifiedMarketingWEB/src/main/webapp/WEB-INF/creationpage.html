@@ -7,38 +7,37 @@
 </head>
 
 <body>
+	<script>
+	function spawnForm() {
 	
-<script>
-function spawnForm() {
-
-	document.getElementById("newproductbutton").style.display = "none";
-	document.getElementById("existingproductbutton").style.display = "inline-block";
+		document.getElementById("newproductbutton").style.display = "none";
+		document.getElementById("existingproductbutton").style.display = "inline-block";
+		
+		document.getElementById("existingproductdiv").style.display = "none";
+		document.getElementById("newproductdiv").style.display = "inline-block";
+		
+		document.getElementById("existingproductselect").required = false;
+		document.getElementById("newproductimage").required = true;
+		document.getElementById("newproductname").required = true;
+		
+		document.getElementById("noneselect").selected = true;
+	}
 	
-	document.getElementById("existingproductdiv").style.display = "none";
-	document.getElementById("newproductdiv").style.display = "inline-block";
+	function spawnSelect() {
 	
-	document.getElementById("existingproductselect").required = false;
-	document.getElementById("newproductimage").required = true;
-	document.getElementById("newproductname").required = true;
-	
-	document.getElementById("noneselect").selected = true;
-}
-
-function spawnSelect() {
-
-	document.getElementById("newproductbutton").style.display = "inline-block";
-	document.getElementById("existingproductbutton").style.display = "none";
-	
-	document.getElementById("existingproductdiv").style.display = "inline-block";
-	document.getElementById("newproductdiv").style.display = "none";
-	
-	document.getElementById("existingproductselect").required = true;
-	document.getElementById("newproductimage").required = false;
-	document.getElementById("newproductname").required = false;
-	
-	document.getElementById("newproductname").value = "";
-}
-</script>
+		document.getElementById("newproductbutton").style.display = "inline-block";
+		document.getElementById("existingproductbutton").style.display = "none";
+		
+		document.getElementById("existingproductdiv").style.display = "inline-block";
+		document.getElementById("newproductdiv").style.display = "none";
+		
+		document.getElementById("existingproductselect").required = true;
+		document.getElementById("newproductimage").required = false;
+		document.getElementById("newproductname").required = false;
+		
+		document.getElementById("newproductname").value = "";
+	}
+	</script>
 
 	<form  action="GoToAdminHomepage">
 	    <input type="submit"  value="<- Go back" />
@@ -103,32 +102,31 @@ function spawnSelect() {
 	<div class="input_fields_wrap"></div>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
-<script type="text/javascript">
-
-$(document).ready(function() {
-    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
-    var add_button      = $(".add_question_button"); //Add button ID
-    var remove_button      = $(".remove_question_button"); //Add button ID
-
-    var x=0; //initlal text box count
-    $(add_button).click(function(e){ //on add input button click
-        e.preventDefault();
-        x++; //text box increment
-        $(wrapper).append('<div class="div'+x+'">' +
-            '<p name="mytext'+x+'">Question'+x+'<br>' +
-            '<textarea name="quest'+x+'" form="questionnaire"></textarea>' +
-            '</div>');
-   	 });
-
-    $(remove_button).click(function(e){ //user click on remove text
-        e.preventDefault();
-    	$(".div"+x).remove();
-    	x--;
-    })
-});
-</script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+	    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+	    var add_button      = $(".add_question_button"); //Add button ID
+	    var remove_button      = $(".remove_question_button"); //Add button ID
+	
+	    var x=0; //initlal text box count
+	    $(add_button).click(function(e){ //on add input button click
+	        e.preventDefault();
+	        x++; //text box increment
+	        $(wrapper).append('<div class="div'+x+'">' +
+	            '<p name="mytext'+x+'">Question'+x+'<br>' +
+	            '<textarea name="quest'+x+'" form="questionnaire"></textarea>' +
+	            '</div>');
+	   	 });
+	
+	    $(remove_button).click(function(e){ //user click on remove text
+	        e.preventDefault();
+	    	$(".div"+x).remove();
+	    	x--;
+	    })
+	});
+	</script>
 
 </body>
 </html>

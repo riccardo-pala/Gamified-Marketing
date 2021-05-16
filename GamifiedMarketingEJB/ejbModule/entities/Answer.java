@@ -7,12 +7,16 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="answers")
-@NamedQuery(name="Answer.findByQuestionnaire",query="SELECT a FROM Answer a WHERE a.questionnaire.id=?1 ")
+@NamedQueries({
+	@NamedQuery(name="Answer.findByQuestionnaire",query="SELECT a FROM Answer a WHERE a.questionnaire.id = ?1 "),
+	@NamedQuery(name="Answer.findByQuestionnaireAndUser",query="SELECT a FROM Answer a WHERE a.questionnaire.id = ?1 and a.user.id = ?2 ")
+})
 @IdClass(AnswerId.class)
 public class Answer implements Serializable {
 	

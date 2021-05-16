@@ -5,16 +5,11 @@
 <title>Leaderboard</title>
 </head>
 <body>
+	<form action="GoToHomepage" method="GET">
+	    <input type="submit" value="<- Go Back" />
+	</form>
+	<br>
 	<div> 
-	
-	<!--  TODO: ERROR -- 
-	
-	<form th:if="${warningMsg != null}" action="GoToHomepage" method="GET">
-		<p th:text="${warningMsg}" />
-		<br>
-	    <input type="submit" value="Home" />
-	</form> -->
-		
 		<h1>Overall leaderboard:</h1>
 		<table>
 		<tr th:each="u, iter : ${ordered_users}">
@@ -22,11 +17,6 @@
 		</tr>
 		</table>
 		<p th:if="${errorMsg != null}" style="color : red;" th:text="${errorMsg}" />
-		<br>
-		<form action="GoToHomepage" method="GET">
-		    <input type="submit" value="Home" />
-		</form>
-		
 	</div>
 </body>
 </html>

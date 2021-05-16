@@ -5,13 +5,15 @@
 <title>answers Page</title>
 </head>
 <body>
-
-<table>
+	<form action="GetQuestionnaireDetails">
+	    <input type="submit" value="<- Go Back" />
+	</form>
+	<br>
+	<table>
 		<thead>
 			<tr>
 				<th>Question</th>
 				<th>Answer</th>
-				
 			</tr>
 		</thead>
 		<tbody>
@@ -20,9 +22,6 @@
 				<td th:text="${a.text }"></td>
 			</tr>
 		</tbody>
-	</table>
-	
-
-
+	</table>	
 </body>
 </html>

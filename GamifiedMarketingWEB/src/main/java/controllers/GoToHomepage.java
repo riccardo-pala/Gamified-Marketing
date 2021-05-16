@@ -96,6 +96,9 @@ public class GoToHomepage extends HttpServlet {
 			System.out.println(qotd.getDate()+"   "+qotd.getProduct().getName());
 			
 		}
+		else {
+			ctx.setVariable("noPotdMsg", "There is no Product of the Day for the current date!");
+		}
 		
 		templateEngine.process("/WEB-INF/homepage.html", ctx, response.getWriter());		
 	}

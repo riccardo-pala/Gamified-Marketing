@@ -27,8 +27,17 @@ public class AnswerService {
 	
 	public List<Answer> getAnswersByQuestionnaire(int questionnaireId){
 		List<Answer> answers = null;
-		answers = em.createNamedQuery("Answer.findByQuestionnaire",Answer.class)
+		answers = em.createNamedQuery("Answer.findByQuestionnaire", Answer.class)
 								.setParameter(1, questionnaireId)
+								.getResultList();
+		return answers;
+	}
+	
+	public List<Answer> getAnswersByQuestionnaireAndUser(int questionnaireId, int userId){
+		List<Answer> answers = null;
+		answers = em.createNamedQuery("Answer.findByQuestionnaireAndUser", Answer.class)
+								.setParameter(1, questionnaireId)
+								.setParameter(2, userId)
 								.getResultList();
 		return answers;
 	}

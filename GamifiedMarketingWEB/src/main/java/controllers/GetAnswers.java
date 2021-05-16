@@ -61,18 +61,17 @@ public class GetAnswers extends HttpServlet {
 		int questionnaireId = Integer.parseInt(request.getParameter("questionnaireid"));
 		int userId = Integer.parseInt(request.getParameter("userid"));
 		
-		List<Answer> answers = answerService.getAnswersByQuestionnaire(questionnaireId);
-		
+		List<Answer> answers = answerService.getAnswersByQuestionnaireAndUser(questionnaireId, userId);
+		/*
 		for(Answer a : answers)
 			if(a.getUser().getId() != userId)
 				answers.remove(a); // restano quelle relative all'utente interessato
-		
+		*/
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
 		ctx.setVariable("answers", answers);
 		templateEngine.process("/WEB-INF/answerspage.html", ctx, response.getWriter());
-			
 	}
 
 	
