@@ -76,4 +76,15 @@ public class QuestionnaireService {
 		Questionnaire q = em.find(Questionnaire.class, questionnaireId);
 		em.remove(q);
 	}
+	
+	public boolean checkDateOfQuestionnaire(Date date) {
+		
+	List<Questionnaire> list= null;
+	list= em.createNamedQuery("Questionnaire.findByDate",Questionnaire.class).setParameter(1,date).getResultList();
+	
+	if(list.isEmpty())
+		return true;
+	else 
+		return false;
+	}
 }

@@ -3,6 +3,7 @@ package controllers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,6 +138,18 @@ public class CreateQuestionnaire extends HttpServlet {
 		
 		Date questionnaireDate = Date.valueOf(request.getParameter("questionnairedate"));
 		System.out.println(request.getParameter("questionnairedate"));
+		Date date = Date.valueOf(LocalDate.now());
+		
+		if(questionnaireDate.equals(date) || questionnaireDate.before(date)) {
+			
+			ctx.setVariable("errorMsg","The selected date is before or equal the current date");
+			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
+			return;	
+		}
+		
+		
+		
+		if(questionnaireService.checkDateOfQuestionnaire(questionnaireDate)) {
 		
 		
 		int x = 1;
@@ -158,5 +171,13 @@ public class CreateQuestionnaire extends HttpServlet {
 		
 		String path = getServletContext().getContextPath() + "/GoToAdminHomepage";
 		response.sendRedirect(path);	
+		
+		}
+		
+		else {
+			ctx.setVariable("errorMsg","In the selected date there is already a questionnaire");
+			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
+			return;
+		}
 	}
 }
