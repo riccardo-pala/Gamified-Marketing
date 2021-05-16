@@ -141,37 +141,32 @@ public class CreateQuestionnaire extends HttpServlet {
 		Date date = Date.valueOf(LocalDate.now());
 		
 		if(questionnaireDate.equals(date) || questionnaireDate.before(date)) {
-			
-			ctx.setVariable("errorMsg","The selected date is before or equal the current date");
+			ctx.setVariable("errorMsg","You can only create questionnaires starting from tomorrow!");
 			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
 			return;	
 		}
 		
-		
-		
 		if(questionnaireService.checkDateOfQuestionnaire(questionnaireDate)) {
-		
-		
-		int x = 1;
-		
-		while(request.getParameter("quest" + x + "") != null) {
-			QuestionOne q = new QuestionOne(request.getParameter("quest" + x + ""));
-			System.out.println(q.getText());
-			questions.add(q);
-			x++;
-		}
-		
-		try {
-			questionnaireService.createQuestionnaire(p.getId(), questionnaireDate, questions);
-		} catch (BadRetrievalException e) {
-			ctx.setVariable("errorMsg", e.getMessage());
-			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
-			return;
-		}
-		
-		String path = getServletContext().getContextPath() + "/GoToAdminHomepage";
-		response.sendRedirect(path);	
-		
+			
+			int x = 1;
+			
+			while(request.getParameter("quest" + x + "") != null) {
+				QuestionOne q = new QuestionOne(request.getParameter("quest" + x + ""));
+				//System.out.println(q.getText());
+				questions.add(q);
+				x++;
+			}
+			
+			try {
+				questionnaireService.createQuestionnaire(p.getId(), questionnaireDate, questions);
+			} catch (BadRetrievalException e) {
+				ctx.setVariable("errorMsg", e.getMessage());
+				templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
+				return;
+			}
+			
+			String path = getServletContext().getContextPath() + "/GoToAdminHomepage";
+			response.sendRedirect(path);
 		}
 		
 		else {
