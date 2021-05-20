@@ -7,22 +7,26 @@
 <body>
 
 	<div id="welcomediv">
-		<p th:text="${'Nice to see you again ' + session.user.firstname + ' ' + session.user.lastname}"></p>
+		Nice to see you again <b th:text="${session.user.username}" /> 
 	</div>
 	
+	<br>
 	
-		<form action="GoToInspectionPage">
-		    <input type="submit"  value="Inspect Data" />
-		</form>
-		<form action="GoToCreationPage">
-		    <input type="submit"  value="Create Questionnaire" />
-		</form>
-		<form  action="GoToDeletionPage">
-		    <input type="submit"  value="Delete Questionnaire" />
-		</form>
-		<form  action="Logout">
-		    <input type="submit"  value="Logout" />
-		</form>
+	<form action="GoToInspectionPage">
+	    <input type="submit"  value="Inspect Data" />
+	</form>
+	<br>
+	<form action="GoToCreationPage">
+	    <input type="submit"  value="Create Questionnaire" />
+	</form>
+	<br>
+	<form  action="GoToDeletionPage">
+	    <input type="submit"  value="Delete Questionnaire" />
+	</form>
+	<br>
+	<form  action="Logout">
+	    <input type="submit"  value="Logout" />
+	</form>
 
 </body>
 </html>

@@ -26,13 +26,13 @@
 				<td th:text="${s.user.username}"></td>
 				<td th:text="${s.user.firstname}"></td>
 				<td th:text="${s.user.lastname}"></td>
-				<td th:text="${#dates.format(s.accesstime,'dd/MM/yyyy hh:mm')}"></td>
+				<td th:text="${#dates.format(s.accesstime,'dd/MM/yyyy HH:mm')}"></td>
 				<td><a th:href="@{/GetAnswers(questionnaireid=${s.questionnaire.id},userid=${s.user.id})}">See Answers</a></td>
 			</tr>
 		</tbody>
 	</table>
 	
-	<h1> List of users that have canceled the questionnaire</h1>
+	<h1> List of cancelled questionnaires</h1>
 
 	<table>
 		<thead>
@@ -48,7 +48,7 @@
 				<td th:text="${c.user.username}"></td>
 				<td th:text="${c.user.firstname}"></td>
 				<td th:text="${c.user.lastname}"></td>
-				<td th:text="${#dates.format(c.accesstime,'dd/MM/yyyy hh:mm')}"></td>
+				<td th:text="${#dates.format(c.accesstime,'dd/MM/yyyy HH:mm')}"></td>
 			</tr>
 		</tbody>
 	</table>

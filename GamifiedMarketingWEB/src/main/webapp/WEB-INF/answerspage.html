@@ -12,15 +12,18 @@
 	<br>
 	<table>
 		<thead>
-			<tr>
+			<tr> 
+				<th>Section</th>
 				<th>Question</th>
 				<th>Answer</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="a : ${answers}">
+				<td th:if="${a.question.getSection()} == '1'" th:text="Marketing" />
+				<td th:if="${a.question.getSection()} == '2'" th:text="Statistical" />
 				<td th:text="${a.question.text}"></td>
-				<td th:text="${a.text }"></td>
+				<td th:text="${a.text}"></td>
 			</tr>
 		</tbody>
 	</table>	
