@@ -12,7 +12,6 @@ import entities.User;
 import exceptions.BadRetrievalException;
 import exceptions.CreateProfileException;
 import exceptions.CredentialsException;
-import exceptions.UpdateProfileException;
 
 @Stateless
 public class UserService {
@@ -88,29 +87,9 @@ public class UserService {
 		throw new NonUniqueResultException("More than one user registered with same credentials, please contact system administrator.");
 	}
 	
-	/*
-	public User findByEmail(String email) throws BadRetrievalException {
-		
-		List<User> uList = null;
-		try {
-			uList = (List<User>) em.createQuery("SELECT u FROM User u WHERE u.email=?1", User.class)
-					.setParameter(1, email).getResultList();
-		} catch (PersistenceException e) {
-			//e.printStackTrace();
-			throw new BadRetrievalException("Could not retrieve user information");
-		}
-		if (uList.isEmpty())
-			return null;
-		else if (uList.size() == 1)
-			return uList.get(0);
-		throw new NonUniqueResultException("More than one user registered with same credentials");
-	}
-	*/
 	
-	public List<User> getUsersOrderedByPoints() throws BadRetrievalException {
+	public List<User> getUsersOrderedByPoints(int userId) throws BadRetrievalException {
 		
-	
-		em.clear();
 		List<User> uList = null;
 		try {
 			uList = (List<User>) em.createQuery("SELECT u FROM User u WHERE u.isBanned =?1 AND u.isAdmin =?2 ORDER BY u.totalPoints DESC", User.class)
@@ -120,11 +99,20 @@ public class UserService {
 		} catch (PersistenceException e) {
 			throw new BadRetrievalException("Could not retrieve user information");
 		}
+		
 		if (uList.isEmpty())
 			return null;
-		else
+		else {
+			for(int i=0;i<uList.size();i++) {
+				
+				if(uList.get(i).getId()==userId) {
+					em.persist(uList.get(i));
+					em.refresh(uList.get(i));
+				}
+				
+			}
 			return uList;
-		
+		}	
 	}
 	
 	public void banUser(int userId) {
@@ -134,26 +122,5 @@ public class UserService {
 		em.persist(user);
 
 	}
-	
-	
-	
-	/* 
-	public User updateUser(String username, String newusername, String firstname, String lastname, String password, Supermarket favSupermarket) throws UpdateProfileException, BadRetrievalException{
-		
-		User user = findByUserName(username);
-		if(firstname!=null) user.setFirstname(firstname);
-		if(lastname!=null) user.setLastname(lastname);
-		if(newusername!=null) user.setUsername(newusername);
-		if(password!=null) user.setPassword(email);
-		if(password!=null) user.setPassword(password);
-		if(favSupermarket!=null) user.setFavouriteSupermarket(favSupermarket);
-		try {
-			em.persist(user);
-		} catch (PersistenceException e) {
-			//e.printStackTrace();
-			throw new UpdateProfileException("Could not update profile");
-		}
-		return user;
-	}
-	*/	
+
 }

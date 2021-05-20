@@ -10,9 +10,7 @@ public class LogId implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private int user;
-	
-	private Timestamp accessTime;
+	private int user;  Timestamp accessTime;
 	
 	private int questionnaire;
 
