@@ -40,7 +40,7 @@ public class Questionnaire {
 	@JoinColumn(name="productid")
 	private Product product;
 	
-	@OneToMany(mappedBy="questionnaire", fetch=FetchType.EAGER, cascade={CascadeType.PERSIST,CascadeType.REMOVE})
+	@OneToMany(mappedBy="questionnaire", /*fetch=FetchType.EAGER,*/ cascade={CascadeType.PERSIST,CascadeType.REMOVE})
 	private List<QuestionOne> questions; //eager?
 	
 	@OneToMany(mappedBy="questionnaire", cascade={CascadeType.REMOVE})

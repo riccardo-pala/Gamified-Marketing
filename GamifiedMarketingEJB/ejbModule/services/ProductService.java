@@ -41,21 +41,17 @@ public class ProductService {
 			return p.get(0);		
 	}
 	
-	public Product getProductById(int productId) throws BadRetrievalException {
+	public boolean checkProduct(int productId) throws BadRetrievalException {
 		
-		List<Product> p = null;
+		Product p = null;
 		
 		try {
-			p = em.createNamedQuery("Product.findById", Product.class)
-					.setParameter(1, productId).getResultList();			
+			p = em.find(Product.class, productId);		
 		} catch(PersistenceException e) {
 			throw new BadRetrievalException("Unable to retrieve the product.");
 		}
 		
-		if(p.isEmpty())
-			return null;
-		else
-			return p.get(0);		
+		return p != null;
 	}
 	
 	public List<Product> getAllProducts() throws BadRetrievalException {
@@ -82,6 +78,13 @@ public class ProductService {
 		else {
 			throw new CreateProductException("A product with the same name already exists. Please choose another one.");
 		}
+	}
+	
+	public void removeProduct(int productId) {
+		
+		Product p = em.find(Product.class, productId);
+		
+		if(p != null) em.remove(p);
 	}
 	
 }

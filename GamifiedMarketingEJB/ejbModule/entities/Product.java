@@ -19,7 +19,6 @@ import javax.persistence.Table;
 @Table(name = "products", schema = "gmdb")
 @NamedQueries({
 	@NamedQuery(name="Product.findByName", query="SELECT p FROM Product p WHERE p.name=?1"),
-	@NamedQuery(name="Product.findById", query="SELECT p FROM Product p WHERE p.id=?1"),
 	@NamedQuery(name="Product.findAll", query="SELECT p FROM Product p")
 })
 public class Product {

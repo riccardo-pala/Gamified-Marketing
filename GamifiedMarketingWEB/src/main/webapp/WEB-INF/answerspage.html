@@ -5,7 +5,8 @@
 <title>answers Page</title>
 </head>
 <body>
-	<form action="GetQuestionnaireDetails">
+	<form action="GetQuestionnaireDetails" method="POST">
+		<input type="hidden" name="questionnaireid" th:value="${questionnaireid}" />
 	    <input type="submit" value="<- Go Back" />
 	</form>
 	<br>

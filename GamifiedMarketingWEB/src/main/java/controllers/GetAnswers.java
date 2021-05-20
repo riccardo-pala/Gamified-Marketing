@@ -71,6 +71,7 @@ public class GetAnswers extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
 		ctx.setVariable("answers", answers);
+		ctx.setVariable("questionnaireid", questionnaireId);
 		templateEngine.process("/WEB-INF/answerspage.html", ctx, response.getWriter());
 	}
 
