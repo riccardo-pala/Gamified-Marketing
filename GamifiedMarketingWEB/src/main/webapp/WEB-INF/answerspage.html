@@ -21,9 +21,13 @@
 		<tbody>
 			<tr th:each="a : ${answers}">
 				<td th:if="${a.question.getSection()} == '1'" th:text="Marketing" />
+				<td th:if="${a.question.getSection()} == '1'" th:text="${a.question.text}"></td>
+				<td th:if="${a.question.getSection()} == '1'" th:text="${a.text}"></td>
+			</tr>
+			<tr th:each="a : ${answers}">
 				<td th:if="${a.question.getSection()} == '2'" th:text="Statistical" />
-				<td th:text="${a.question.text}"></td>
-				<td th:text="${a.text}"></td>
+				<td th:if="${a.question.getSection()} == '2'" th:text="${a.question.text}"></td>
+				<td th:if="${a.question.getSection()} == '2'" th:text="${a.text}"></td>
 			</tr>
 		</tbody>
 	</table>	
