@@ -6,8 +6,10 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
 import entities.BadWord;
+import exceptions.BadRetrievalException;
 
 @Stateless
 public class BadWordService {
@@ -16,18 +18,20 @@ public class BadWordService {
 	private EntityManager em;
 	
 	
-	public boolean checkOffensiveWords(ArrayList<String> answers) {
+	public boolean checkOffensiveWords(ArrayList<String> answers) throws BadRetrievalException {
 		
 		List<BadWord> words = null;
-		words=em.createNamedQuery("BadWord.findAll",BadWord.class).getResultList();
 		
-		for(String answer : answers) {
-			
-			for(BadWord word : words) {
-				if(answer.contains(word.getWord()))
-				return false;
-			}
+		try {
+			words = em.createNamedQuery("BadWord.findAll", BadWord.class).getResultList();
+		} catch (PersistenceException e) {
+			throw new BadRetrievalException("Failed to retrieve some information.");
 		}
+		
+		for(String answer : answers)
+			for(BadWord word : words)
+				if(answer.contains(word.getWord()))
+					return false;
 	
 		return true;
 	}

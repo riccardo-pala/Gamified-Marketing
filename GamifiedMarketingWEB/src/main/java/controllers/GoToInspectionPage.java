@@ -18,6 +18,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Questionnaire;
+import exceptions.BadRetrievalException;
 import services.QuestionnaireService;
 
 /**
@@ -48,7 +49,6 @@ public class GoToInspectionPage extends HttpServlet {
         super();
     }
 
-	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String loginpath = getServletContext().getContextPath() + "/index.html";
@@ -59,11 +59,16 @@ public class GoToInspectionPage extends HttpServlet {
 			response.sendRedirect(loginpath);
 			return;
 		}
-		
-		List<Questionnaire> questionnaires = questionnaireService.getAllQuestionnaire();
-		
+
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		
+		List<Questionnaire> questionnaires = null;
+		try {
+			questionnaires = questionnaireService.getAllQuestionnaires();
+		} catch (BadRetrievalException e) {
+			ctx.setVariable("errorMsg", e.getMessage());
+		}
 		
 		ctx.setVariable("questionnaires", questionnaires);
 		templateEngine.process("/WEB-INF/inspectionpage.html", ctx, response.getWriter());

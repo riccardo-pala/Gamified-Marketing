@@ -1,8 +1,6 @@
 package services;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -11,11 +9,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
 import entities.Log;
-import entities.Product;
 import entities.Questionnaire;
 import entities.User;
+import exceptions.BadRequestException;
 import exceptions.BadRetrievalException;
-import exceptions.CredentialsException;
 
 @Stateless
 public class AccessService {
@@ -27,10 +24,20 @@ public class AccessService {
 	public AccessService() {
 	}
 	
-	public void insertAccess(int userId, int questionnaireId) throws BadRetrievalException {
+	public void insertAccess(int userId, int questionnaireId) throws BadRetrievalException, BadRequestException {
 		
-		User user = em.find(User.class, userId);
-		Questionnaire questionnaire = em.find(Questionnaire.class, questionnaireId);
+		User user = null;
+		Questionnaire questionnaire = null;
+		
+		try {
+			user = em.find(User.class, userId);
+			questionnaire = em.find(Questionnaire.class, questionnaireId);
+		} catch (PersistenceException e) {
+			throw new BadRetrievalException("Failed to retrieve some information.");
+		}
+		
+		if (user == null || questionnaire == null)
+			throw new BadRequestException("Malformed request or missing data.");
 		
 		Log access = new Log(user, new Timestamp(System.currentTimeMillis()), questionnaire, false);
 		
@@ -38,34 +45,53 @@ public class AccessService {
 		em.persist(user);
 	}
 	
-	public void updateAccessAfterSubmit(int userId, int questionnaireId) throws BadRetrievalException {
+	public void updateAccessAfterSubmit(int userId, int questionnaireId) throws BadRetrievalException, BadRequestException {
 		
-		User user = em.find(User.class, userId);
-		Questionnaire questionnaire = em.find(Questionnaire.class, questionnaireId);
+		User user = null;
+		Questionnaire questionnaire = null;
+		List<Log> logs = null;
 		
-		List<Log> logs = em.createQuery("SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.user.id=?2 ORDER BY a.accessTime DESC", Log.class)
-				.setParameter(1, questionnaireId).setParameter(2, userId).getResultList();
+		try {
+			user = em.find(User.class, userId);
+			questionnaire = em.find(Questionnaire.class, questionnaireId);
+			logs = em.createNamedQuery("Log.findByQuestionnaireAndUser", Log.class)
+					.setParameter(1, questionnaireId).setParameter(2, userId).getResultList();
+		} catch (PersistenceException e) {
+			throw new BadRetrievalException("Failed to retrieve some information.");
+		}
+		
+		if (user == null || questionnaire == null || logs == null || logs.isEmpty())
+			throw new BadRequestException("Malformed request or missing data.");
 		
 		Log submittedAccess = null;
-		if(logs != null) {
-			user.removeAccess(logs.get(0));
-			submittedAccess = logs.get(0);
-			submittedAccess.setSubmitted(true);
-			user.addAccess(submittedAccess);
-		}
+		
+		user.removeAccess(logs.get(0));
+		submittedAccess = logs.get(0);
+		submittedAccess.setSubmitted(true);
+		user.addAccess(submittedAccess);
+		
 		em.persist(user);
 	}
 	
-	public boolean checkSubmittedAccess(int userId, int questionnaireId) throws BadRetrievalException {
+	public boolean checkSubmittedAccess(int userId, int questionnaireId) throws BadRetrievalException, BadRequestException {
 		
-		User user = em.find(User.class, userId);
-		List<Log> submittedAccesses= em.createNamedQuery("Log.findByQuestionnaireSubmitted",Log.class)
-				.setParameter(1, questionnaireId).getResultList();
+		User user = null;
+		List<Log> submittedAccesses = null;
+		
+		try {
+			user = em.find(User.class, userId);
+			submittedAccesses = em.createNamedQuery("Log.findByQuestionnaireSubmitted",Log.class)
+					.setParameter(1, questionnaireId).getResultList();
+		} catch (PersistenceException e) {
+			throw new BadRetrievalException("Failed to retrieve some information.");
+		}
 
-		for(Log access : submittedAccesses) {
+		if (user == null || submittedAccesses == null)
+			throw new BadRequestException("Malformed request or missing data.");
+		
+		for(Log access : submittedAccesses)
 			if(access.getUser().equals(user) && access.getSubmitted())
 				return true; // l'utente ha già compilato e inviato il questionario
-		}
 		
 		return false;
 	}
@@ -75,7 +101,8 @@ public class AccessService {
 		List<Log> submittedAccesses= null;
 		
 		try {
-			submittedAccesses = em.createNamedQuery("Log.findByQuestionnaireSubmitted",Log.class).setParameter(1, questionnaireId).getResultList();
+			submittedAccesses = em.createNamedQuery("Log.findByQuestionnaireSubmitted",Log.class)
+					.setParameter(1, questionnaireId).getResultList();
 		} catch (PersistenceException e) {
 			throw new BadRetrievalException("Failed to retrieve accesses information.");
 		}
@@ -89,7 +116,7 @@ public class AccessService {
 		
 		try {
 			submittedAccesses = em.createNamedQuery("Log.findByQuestionnaireCanceled",Log.class).setParameter(1, questionnaireId).getResultList();
-			} catch (PersistenceException e) {
+		} catch (PersistenceException e) {
 			throw new BadRetrievalException("Failed to retrieve accesses information.");
 		}
 		

@@ -18,6 +18,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Answer;
+import exceptions.BadRetrievalException;
 import services.AnswerService;
 import services.QuestionnaireService;
 
@@ -48,7 +49,6 @@ public class GetAnswers extends HttpServlet {
         super();
     }
 
-	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String loginpath = getServletContext().getContextPath() + "/index.html";
@@ -61,19 +61,22 @@ public class GetAnswers extends HttpServlet {
 		int questionnaireId = Integer.parseInt(request.getParameter("questionnaireid"));
 		int userId = Integer.parseInt(request.getParameter("userid"));
 		
-		List<Answer> answers = answerService.getAnswersByQuestionnaireAndUser(questionnaireId, userId);
-		
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		
+		List<Answer> answers = null;
+		try {
+			answers = answerService.getAnswersByQuestionnaireAndUser(questionnaireId, userId);
+		} catch (BadRetrievalException e) {
+			ctx.setVariable("errorMsg", e.getMessage());
+		}
 		
 		ctx.setVariable("answers", answers);
 		ctx.setVariable("questionnaireid", questionnaireId);
 		templateEngine.process("/WEB-INF/answerspage.html", ctx, response.getWriter());
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-
 }

@@ -20,6 +20,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.User;
 import exceptions.BadRetrievalException;
+import exceptions.BadUpdateException;
 import services.UserService;
 
 @WebServlet("/GoToLeaderboard")
@@ -52,7 +53,9 @@ public class GoToLeaderboard extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		
-		if (session.isNew() || session.getAttribute("user") == null) {
+		User u = (User) session.getAttribute("user");
+		
+		if (session.isNew() || u == null) {
 			response.sendRedirect(loginpath);
 			return;
 		}
@@ -61,27 +64,19 @@ public class GoToLeaderboard extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
 		List<User> users = null;
-		User u = (User) session.getAttribute("user");
 		
 		try {
 			users = userService.getUsersOrderedByPoints(u.getId());
-			
-			
-		} catch (BadRetrievalException e) {
+		} catch (BadRetrievalException | BadUpdateException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
 	     
 		if(users != null) {
-		
 			ctx.setVariable("ordered_users", users);
 			ctx.setVariable("curr_username", u.getUsername());
 		}
-		for(User i : users)
-			System.out.println(i.getId()+" "+i.getTotalPoints());
-		
 		
 		templateEngine.process("/WEB-INF/leaderboard.html", ctx, response.getWriter());
-	
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -20,6 +20,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Questionnaire;
+import exceptions.BadUpdateException;
 import services.QuestionnaireService;
 
 /**
@@ -61,24 +62,23 @@ private static final long serialVersionUID = 1L;
 			return;
 		}
 		
-		int questionnaireId= Integer.parseInt(request.getParameter("questionnaireid"));
-	
-		questionnaireService.deleteQuestionnaire(questionnaireId);
+		int questionnaireId = Integer.parseInt(request.getParameter("questionnaireid"));
 		
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		
+	
+		try {
+			questionnaireService.deleteQuestionnaire(questionnaireId);
+		} catch (BadUpdateException e) {
+			String path = getServletContext().getContextPath() + "/GoToDeletionPage";
+			response.sendRedirect(path);
+			return;
+		}
 		
 		templateEngine.process("/WEB-INF/adminhomepage.html", ctx, response.getWriter());
-		
-	
-		
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-
-
 }

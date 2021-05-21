@@ -9,6 +9,7 @@ import javax.persistence.PersistenceException;
 
 import entities.QuestionOne;
 import entities.QuestionTwo;
+import exceptions.BadRequestException;
 import exceptions.BadRetrievalException;
 
 @Stateless
@@ -21,24 +22,26 @@ public class QuestionService {
 	public QuestionService() {
 	}
 	
-	
-	public List<QuestionOne> getSectionOneQuestions(int questionnaireId) throws BadRetrievalException {
+	public List<QuestionOne> getSectionOneQuestions(int questionnaireId) throws BadRetrievalException, BadRequestException {
 		
 		List<QuestionOne> qList = null;
 		
 		try {
 			qList = em.createNamedQuery("QuestionOne.findByQuestionnaire", QuestionOne.class)
 					.setParameter(1, questionnaireId).getResultList();
-			// TODO: check if not null
 		}
 		catch(PersistenceException | NullPointerException e) {
 			throw new BadRetrievalException("Unable to retrieve the questions.");
 		}
 		
+		if (qList == null || qList.isEmpty()) {
+			throw new BadRequestException("It seems that questionnaire has no Marketing questions! Please contact system administrator.");
+		}
+		
 		return qList;
 	}
 	
-	public List<QuestionTwo> getSectionTwoQuestions() throws BadRetrievalException {
+	public List<QuestionTwo> getSectionTwoQuestions() throws BadRetrievalException, BadRequestException {
 		
 		List<QuestionTwo> qList = null;
 		
@@ -50,8 +53,10 @@ public class QuestionService {
 			throw new BadRetrievalException("Unable to retrieve the questions.");
 		}
 		
+		if (qList == null || qList.isEmpty()) {
+			throw new BadRequestException("It seems that questionnaire has no Statistical questions! Please contact system administrator.");
+		}
+		
 		return qList;		
 	}
-	
-	
 }

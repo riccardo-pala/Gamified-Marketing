@@ -90,11 +90,13 @@ public class GoToHomepage extends HttpServlet {
 			List<QuestionOne> q_questions = qotd.getQuestions();
 			ctx.setVariable("questions", q_questions);
 			
-			List<Answer> q_answers = answerService.getAnswersByQuestionnaire(qotd.getId());
+			List<Answer> q_answers = null;
+			try {
+				q_answers = answerService.getAnswersByQuestionnaire(qotd.getId());
+			} catch (BadRetrievalException e) {
+				ctx.setVariable("errorMsg", e.getMessage());
+			}
 			ctx.setVariable("answers", q_answers);
-			
-			System.out.println(qotd.getDate()+"   "+qotd.getProduct().getName());
-			
 		}
 		else {
 			ctx.setVariable("noPotdMsg", "There is no Product of the Day for the current date!");

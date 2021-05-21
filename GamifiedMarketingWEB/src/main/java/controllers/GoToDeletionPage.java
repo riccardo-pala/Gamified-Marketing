@@ -52,7 +52,6 @@ public class GoToDeletionPage extends HttpServlet {
         super();
     }
 
-	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String loginpath = getServletContext().getContextPath() + "/index.html";
@@ -64,35 +63,36 @@ public class GoToDeletionPage extends HttpServlet {
 			return;
 		}
 		
-		List<Questionnaire> questionnaires = questionnaireService.getAllQuestionnaire();
+		ServletContext servletContext = getServletContext();
+		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		Date date= new Date();
+		List<Questionnaire> questionnaires = null;
+		try {
+			questionnaires = questionnaireService.getAllQuestionnaires();
+		} catch (BadRetrievalException e) {
+			ctx.setVariable("errorMsg", e.getMessage());
+			templateEngine.process("/WEB-INF/deletionpage.html", ctx, response.getWriter());
+			return;
+		}
+		
+		Date date = new Date();
 		date.setHours(0);
 		date.setMinutes(0);
 		date.setSeconds(0);
 		
-		System.out.println(date.toString());
 		ArrayList<Questionnaire> questionn= new ArrayList<Questionnaire>();
 		
-		for(Questionnaire quest : questionnaires) {
+		for(Questionnaire quest : questionnaires)
 			if(quest.getDate().before(date) && !quest.getDate().toString().equals(date.toString())) {
 				questionn.add(quest);
 				System.out.println(quest.getDate().toString());
 			}
-		}
-		
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
 		ctx.setVariable("questionnaires", questionn);
 		templateEngine.process("/WEB-INF/deletionpage.html", ctx, response.getWriter());
-		
-		
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-
 }

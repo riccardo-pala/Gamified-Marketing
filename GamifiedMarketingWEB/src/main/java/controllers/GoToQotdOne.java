@@ -22,6 +22,7 @@ import entities.Product;
 import entities.QuestionOne;
 import entities.Questionnaire;
 import entities.User;
+import exceptions.BadRequestException;
 import exceptions.BadRetrievalException;
 import services.AccessService;
 import services.ProductService;
@@ -91,7 +92,7 @@ public class GoToQotdOne extends HttpServlet {
 				}
 				// altrimenti procediamo iniziando a salveare l' accesso in tabella
 				accessService.insertAccess(u.getId(), qotd.getId());
-			} catch (BadRetrievalException e) {
+			} catch (BadRetrievalException | BadRequestException e) {
 				ctx.setVariable("errorMsg", e.getMessage());
 			}
 			
@@ -99,7 +100,7 @@ public class GoToQotdOne extends HttpServlet {
 			
 			try {
 				questions1 = questionService.getSectionOneQuestions(qotd.getId());
-			} catch (BadRetrievalException e) {
+			} catch (BadRetrievalException | BadRequestException e) {
 				ctx.setVariable("errorMsg", e.getMessage());
 			}
 			

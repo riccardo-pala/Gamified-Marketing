@@ -18,6 +18,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import exceptions.BadRetrievalException;
+import exceptions.BadUpdateException;
 import exceptions.CreateProductException;
 import services.ProductService;
 import utils.ImageUtils;
@@ -64,11 +65,7 @@ public class CreateProduct extends HttpServlet {
 		
 		try {
 			productService.createProduct(productname, imgByteArray);
-		} catch (BadRetrievalException e) {
-			ctx.setVariable("errorMsg", e.getMessage());
-			templateEngine.process("/WEB-INF/productcreation.html", ctx, response.getWriter());
-			return;
-		} catch (CreateProductException e) {
+		} catch (BadRetrievalException | CreateProductException | BadUpdateException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 			templateEngine.process("/WEB-INF/productcreation.html", ctx, response.getWriter());
 			return;

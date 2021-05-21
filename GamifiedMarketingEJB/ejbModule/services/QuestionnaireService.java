@@ -13,6 +13,7 @@ import entities.Product;
 import entities.QuestionOne;
 import entities.Questionnaire;
 import exceptions.BadRetrievalException;
+import exceptions.BadUpdateException;
 
 @Stateless
 public class QuestionnaireService {
@@ -25,25 +26,27 @@ public class QuestionnaireService {
 	}
 	
 	public Questionnaire getQuestionnaireOfTheDay() throws BadRetrievalException {
-		
-		
-		Questionnaire q = null;
+
+		List<Questionnaire> qList = null;
 		
 		Date today = new Date(); // new instance of Date object returns the current date
 		
 		try {
-			List<Questionnaire> qList = em.createNamedQuery("Questionnaire.findByDate", Questionnaire.class)
+			qList = em.createNamedQuery("Questionnaire.findByDate", Questionnaire.class)
 					.setParameter(1, today).getResultList();
-			if(!qList.isEmpty())
-				q = qList.get(0);
 		} catch(PersistenceException | NullPointerException e) {
 			throw new BadRetrievalException("Unable to retrieve the questionnaire of the day.");
 		}
+
+		Questionnaire q = null;
+		
+		if(!qList.isEmpty())
+			q = qList.get(0);
 		
 		return q;
 	}
 	
-	public void createQuestionnaire(int productId, Date date, ArrayList<QuestionOne> questions) throws BadRetrievalException {
+	public void createQuestionnaire(int productId, Date date, ArrayList<QuestionOne> questions) throws BadRetrievalException, BadUpdateException {
 		
 		Product p = null;
 		 
@@ -58,33 +61,51 @@ public class QuestionnaireService {
 		
 		for(int i=0; i<questions.size(); i++) {
 			questionnaire.addQuestion(questions.get(i));
-			System.out.println(questions.get(i).getText());
 		}
 		
-		em.persist(questionnaire);
+		try {
+			em.persist(questionnaire);
+		}
+		catch(PersistenceException | NullPointerException e) {
+			throw new BadUpdateException("Problems during the creation of the questionnaire, retry.");
+		}
+		
 	}
 	
-	public List<Questionnaire> getAllQuestionnaire() {
+	public List<Questionnaire> getAllQuestionnaires() throws BadRetrievalException {
 		
-		List<Questionnaire> p = em.createQuery("SELECT q FROM Questionnaire q ORDER BY q.date ASC", Questionnaire.class).getResultList();
+		List<Questionnaire> qList = null;
+		try {
+			qList = em.createNamedQuery("Questionnaire.findAll", Questionnaire.class).getResultList();
+		} catch (PersistenceException e) {
+			throw new BadRetrievalException("Unable to retrieve the questionnaires.");
+		}
 		
-		return p;
+		return qList;
 	}
 	
-	public void deleteQuestionnaire(int questionnaireId) {
+	public void deleteQuestionnaire(int questionnaireId) throws BadUpdateException {
+
+		Questionnaire q = null;
 		
-		Questionnaire q = em.find(Questionnaire.class, questionnaireId);
-		em.remove(q);
+		try {
+			q = em.find(Questionnaire.class, questionnaireId);
+			em.remove(q);
+		} catch (PersistenceException e) {
+			throw new BadUpdateException("Unable to delete the questionnaire.");
+		}
 	}
 	
-	public boolean checkDateOfQuestionnaire(Date date) {
+	public boolean checkDateOfQuestionnaire(Date date) throws BadRetrievalException {
 		
-	List<Questionnaire> list= null;
-	list= em.createNamedQuery("Questionnaire.findByDate",Questionnaire.class).setParameter(1,date).getResultList();
-	
-	if(list.isEmpty())
-		return true;
-	else 
-		return false;
+		List<Questionnaire> qList = null;
+		
+		try {
+			qList = em.createNamedQuery("Questionnaire.findByDate",Questionnaire.class).setParameter(1,date).getResultList();
+		} catch (PersistenceException e) {
+			throw new BadRetrievalException("Problems during the creation of the questionnaire, retry.");
+		}
+		
+		return qList.isEmpty();
 	}
 }

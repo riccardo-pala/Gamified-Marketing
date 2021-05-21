@@ -10,6 +10,7 @@ import javax.persistence.PersistenceException;
 
 import entities.User;
 import exceptions.BadRetrievalException;
+import exceptions.BadUpdateException;
 import exceptions.CreateProfileException;
 import exceptions.CredentialsException;
 
@@ -52,7 +53,7 @@ public class UserService {
 			emailList = em.createQuery("SELECT u FROM User u WHERE u.email = ?1", User.class)
 					.setParameter(1, email).getResultList();
 		} catch (PersistenceException e) {
-			throw new CredentialsException("Could not verify credentials, retry");
+			throw new CredentialsException("Could not verify credentials, retry.");
 		}
 
 		if (!usernameList.isEmpty())
@@ -77,7 +78,7 @@ public class UserService {
 			uList = (List<User>) em.createQuery("SELECT u FROM User u WHERE u.username=?1", User.class)
 					.setParameter(1, username).getResultList();
 		} catch (PersistenceException e) {
-			throw new BadRetrievalException("Could not retrieve user information");
+			throw new BadRetrievalException("Could not retrieve user information.");
 		}
 		if (uList.isEmpty())
 			return null;
@@ -88,7 +89,7 @@ public class UserService {
 	}
 	
 	
-	public List<User> getUsersOrderedByPoints(int userId) throws BadRetrievalException {
+	public List<User> getUsersOrderedByPoints(int userId) throws BadRetrievalException, BadUpdateException {
 		
 		List<User> uList = null;
 		try {
@@ -97,30 +98,42 @@ public class UserService {
 					.setParameter(2,false)
 					.getResultList();
 		} catch (PersistenceException e) {
-			throw new BadRetrievalException("Could not retrieve user information");
+			throw new BadRetrievalException("Could not retrieve user information.");
 		}
 		
 		if (uList.isEmpty())
 			return null;
 		else {
-			for(int i=0;i<uList.size();i++) {
-				
-				if(uList.get(i).getId()==userId) {
-					em.persist(uList.get(i));
-					em.refresh(uList.get(i));
+			for(int i=0;i<uList.size();i++)
+				if(uList.get(i).getId() == userId) {
+					try {
+						em.persist(uList.get(i));
+						em.refresh(uList.get(i));
+					} catch (PersistenceException e) {
+						throw new BadUpdateException("Could not update user information.");
+					}
 				}
-				
-			}
 			return uList;
 		}	
 	}
 	
-	public void banUser(int userId) {
+	public void banUser(int userId) throws BadRetrievalException, BadUpdateException {
 		
-		User user = em.find(User.class,userId);
+		User user = null;
+		
+		try {
+			user = em.find(User.class,userId);
+		} catch (PersistenceException e) {
+			throw new BadRetrievalException("Could not retrieve user information");
+		}
+		
 		user.setIsBanned(true);
-		em.persist(user);
-
+		
+		try {
+			em.persist(user);
+		} catch (PersistenceException e) {
+			throw new BadUpdateException("Could not update user information.");
+		}
 	}
 
 }

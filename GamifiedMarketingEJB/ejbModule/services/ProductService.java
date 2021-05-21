@@ -11,6 +11,7 @@ import javax.persistence.PersistenceException;
 import entities.Product;
 import entities.Questionnaire;
 import exceptions.BadRetrievalException;
+import exceptions.BadUpdateException;
 import exceptions.CreateProductException;
 
 @Stateless
@@ -61,18 +62,22 @@ public class ProductService {
 		try {
 			p = em.createNamedQuery("Product.findAll", Product.class)
 					.getResultList();			
-		} catch(PersistenceException e) {
+		} catch (PersistenceException e) {
 			throw new BadRetrievalException("Unable to retrieve the product list, try again.");
 		}
 		
 		return p;		
 	}
 	
-	public Product createProduct(String productname, byte[] photo) throws BadRetrievalException, CreateProductException {
+	public Product createProduct(String productname, byte[] photo) throws BadRetrievalException, CreateProductException, BadUpdateException {
 		
 		if(getProductByName(productname) == null) {
 			Product p = new Product(productname, photo);
-			em.persist(p);
+			try {
+				em.persist(p);
+			} catch (PersistenceException e) {
+				throw new BadUpdateException("Unable to retrieve the product list, try again.");
+			}
 			return p;
 		}
 		else {
@@ -80,11 +85,22 @@ public class ProductService {
 		}
 	}
 	
-	public void removeProduct(int productId) {
+	public void removeProduct(int productId) throws BadRetrievalException {
 		
-		Product p = em.find(Product.class, productId);
+		Product p = null;
+		try {
+			p = em.find(Product.class, productId);
+		} catch(PersistenceException e) {
+			throw new BadRetrievalException("Unable to retrieve the product.");
+		}
 		
-		if(p != null) em.remove(p);
+		if(p != null) {
+			try {
+				em.remove(p);
+			} catch(PersistenceException e) {
+				throw new BadRetrievalException("Unable to delete the product, try again.");
+			}
+		}
 	}
 	
 }

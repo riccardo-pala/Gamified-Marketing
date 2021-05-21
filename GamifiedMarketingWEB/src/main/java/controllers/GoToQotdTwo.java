@@ -22,6 +22,7 @@ import entities.QuestionOne;
 import entities.QuestionTwo;
 import entities.Questionnaire;
 import entities.User;
+import exceptions.BadRequestException;
 import exceptions.BadRetrievalException;
 import services.AccessService;
 import services.QuestionService;
@@ -83,11 +84,9 @@ public class GoToQotdTwo extends HttpServlet {
 				templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
 				return;
 			}
-			
-		} catch (BadRetrievalException e) {
+		} catch (BadRetrievalException | BadRequestException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
-		
 		
 		String[] answers1 = request.getParameterValues("answers1");
 		List<String> session_answers1 = new ArrayList<String>();
@@ -103,7 +102,7 @@ public class GoToQotdTwo extends HttpServlet {
 			List<QuestionTwo> questions2 = null;
 			try {
 				questions2 = questionService.getSectionTwoQuestions();
-			} catch (BadRetrievalException e) {
+			} catch (BadRetrievalException | BadRequestException e) {
 				ctx.setVariable("errorMsg", e.getMessage());
 			}
 			
