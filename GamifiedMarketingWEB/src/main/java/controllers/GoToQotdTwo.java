@@ -74,27 +74,6 @@ public class GoToQotdTwo extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		List<String> answers_text = null; // lista delle risposte
-		
-		if (session.getAttribute("answers1") != null)
-			answers_text = (List<String>) session.getAttribute("answers1"); // aggiungo prima risposte sezione 1 (mandatory)
-		
-		// CONTROLLO SU DOMANDE OBBLIGATORIE SEZIONE 1
-		for(String mandatory_answer : answers_text)
-			if(mandatory_answer.isBlank()) {
-				List<String> questions1 = null;
-				if (session.getAttribute("questions1") != null)
-					questions1 = (List<String>) session.getAttribute("questions1");
-
-				ctx.setVariable("questions1", questions1);
-				ctx.setVariable("answers1", answers_text);
-				ctx.setVariable("requiredMsg", "You MUST answer all the questions to submit the questionnaire!");
-				
-				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
-				
-				return;
-			}
-		
 		Questionnaire qotd = null;
 		try {
 			qotd = questionnaireService.getQuestionnaireOfTheDay();
@@ -117,6 +96,22 @@ public class GoToQotdTwo extends HttpServlet {
 				session_answers1.add(answers1[i]);
 		
 		session.setAttribute("answers1", session_answers1);
+		
+		// CONTROLLO SU DOMANDE OBBLIGATORIE SEZIONE 1
+		for(String mandatory_answer : session_answers1)
+			if(mandatory_answer.isBlank()) {
+				List<String> questions1 = null;
+				if (session.getAttribute("questions1") != null)
+					questions1 = (List<String>) session.getAttribute("questions1");
+
+				ctx.setVariable("questions1", questions1);
+				ctx.setVariable("answers1", session_answers1);
+				ctx.setVariable("requiredMsg", "You MUST answer all the questions to submit the questionnaire!");
+				
+				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
+				
+				return;
+			}
 		
 		if (qotd != null ) {
 			List<QuestionTwo> questions2 = null;

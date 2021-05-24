@@ -20,7 +20,7 @@
 			<br>
 		</div>
 		
-		<div style="border-left: solid black 1px; padding-left: 50px; height: 300px; overflow: auto;">
+		<div style="border-left: solid black 1px; padding-left: 50px; overflow: auto;">
 			<div style="width: 100%;"><h1>Reviews:</h1></div>
 			<div th:if="${questions!=null}" th:each="q, i : ${questions}">
 				<div th:text="${i.index + 1} + ') ' + ${q.text}" style="font-size: 16px"></div>

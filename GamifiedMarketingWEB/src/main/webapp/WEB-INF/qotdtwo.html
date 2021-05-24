@@ -21,13 +21,13 @@
 			
    			<td th:text="${questions2[0].text}" />
    			<br>
-   			<input th:if="${answers2} != null" type="number" name="answers2" th:value="${answers2[0]}" />
-   			<input th:if="${answers2} == null" type="number" name="answers2" />
+   			<input th:if="${answers2 != null}" type="number" name="answers2" th:value="${answers2[0]}" />
+   			<input th:if="${answers2 == null}" type="number" name="answers2" />
    			<br><br>
    			<td th:text="${questions2[1].text}" />
    			<br>
 			<select name="answers2">
-				<option th:if="${answers2} != null" value="${answers2[1]}" selected></option>
+				<option value="" selected></option>
 				<option value="Male">Male</option>
 				<option value="Female">Female</option>
 				<option value="Other">Other</option>
