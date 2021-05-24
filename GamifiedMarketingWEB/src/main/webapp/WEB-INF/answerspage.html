@@ -5,12 +5,14 @@
 <title>answers Page</title>
 </head>
 <body>
+	<p th:if="${errorMsg != null}" th:text="${errorMsg}" style="color: red"></p>
+	
 	<form action="GetQuestionnaireDetails" method="POST">
 		<input type="hidden" name="questionnaireid" th:value="${questionnaireid}" />
 	    <input type="submit" value="<- Go Back" />
 	</form>
 	<br>
-	<table>
+	<table th:if="${answers != null}">
 		<thead>
 			<tr> 
 				<th>Section</th>
@@ -30,6 +32,6 @@
 				<td th:if="${a.question.getSection()} == '2'" th:text="${a.text}"></td>
 			</tr>
 		</tbody>
-	</table>	
+	</table>
 </body>
 </html>

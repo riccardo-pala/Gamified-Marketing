@@ -77,7 +77,9 @@ public class ManageQuestionnaire extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		
-		if (session.isNew() || session.getAttribute("user") == null) {
+		User user = (User) session.getAttribute("user");
+		
+		if (session.isNew() || user == null) {
 			response.sendRedirect(loginpath);
 			return;
 		}
@@ -114,7 +116,6 @@ public class ManageQuestionnaire extends HttpServlet {
 				session_answers2.add(answers2[i]);
 		
 		session.setAttribute("answers2", session_answers2);
-		
 		
 		if (action.equals("Previous")) {
 
@@ -157,70 +158,79 @@ public class ManageQuestionnaire extends HttpServlet {
 					return;
 				}
 				
-				
 			for(String answer_text : session_answers2)
 				answers_text.add(answer_text); // poi aggiungo risposte sezione 2
 			
+			boolean goodAnswers;
+			
 			try {
-				if(!badWordService.checkOffensiveWords((ArrayList<String>) answers_text)) {
-					
-					User user = (User) session.getAttribute("user");
-					userService.banUser(user.getId());
-					
-					session.setAttribute("questions1", null);
-					session.setAttribute("answers1", null);
-					session.setAttribute("questions2", null);
-					session.setAttribute("answers2", null);
-					
-					ctx.setVariable("BanMsg", "Due to the insertion of offensive words in the answers you have provided, you are banned from the site");
-					templateEngine.process("/WEB-INF/bannedpage.html", ctx, response.getWriter());
-					
-					return;
-				}
-				else {
-					
-					List<Question> questions = new ArrayList<Question>(); // servono gli ID delle domande per salvare le risposte
-					try {
-						questions.addAll(questionService.getSectionOneQuestions(q.getId()));
-						questions.addAll(questionService.getSectionTwoQuestions());
-						
-						// controllo che combacino domande e risposte
-						if(answers_text.size() == questions.size()) {
-							// aggiungo domande
-							answerService.insertAnswers(u.getId(), q.getId(), answers_text, questions);
-							// aggiorno l'accesso vito che il questionario è stato inviato
-							accessService.updateAccessAfterSubmit(u.getId(),q.getId());
-						}
-						
-					} catch (BadRetrievalException | BadRequestException e) {
-						ctx.setVariable("errorMsg", e.getMessage());
-					}
-					
-					// cancello domande e risposte dalla sessione anche nel caso Submit non solo nel caso Cancel
-					session.setAttribute("questions1", null);
-					session.setAttribute("answers1", null);
-					session.setAttribute("questions2", null);
-					session.setAttribute("answers2", null);
-					
-					ctx.setVariable("submitted", true);
-					templateEngine.process("/WEB-INF/greetings.html", ctx, response.getWriter());
-					
-					return;
-				}
-			} catch (BadRetrievalException | BadUpdateException | IOException e) {
+				goodAnswers = badWordService.checkOffensiveWords((ArrayList<String>) answers_text);
+			} catch (BadRetrievalException e) {
 				
+				List<String> questions1 = null;
+				List<String> answers1 = null;
+				
+				if (session.getAttribute("questions1") != null)
+					questions1 = (List<String>) session.getAttribute("questions1");
+				
+				if (session.getAttribute("answers1") != null)
+					answers1 = (List<String>) session.getAttribute("answers1");
+
+				ctx.setVariable("questions1", questions1);
+				ctx.setVariable("answers1", answers1);
 				ctx.setVariable("errorMsg", e.getMessage());
+				
+				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
+				
+				return;
+			}
+			
+			if(!goodAnswers) {
+				
+				try {
+					userService.banUser(user.getId());
+				} catch (BadRetrievalException | BadUpdateException e) {
+					ctx.setVariable("errorMsg", e.getMessage());
+				}
 				
 				session.setAttribute("questions1", null);
 				session.setAttribute("answers1", null);
 				session.setAttribute("questions2", null);
 				session.setAttribute("answers2", null);
 				
-				String path = getServletContext().getContextPath() + "/GoToHomepage";
-				response.sendRedirect(path);
+				ctx.setVariable("BanMsg", "Due to the insertion of offensive words in the answers you have provided, you are banned from the site");
+				templateEngine.process("/WEB-INF/bannedpage.html", ctx, response.getWriter());
 				
 				return;
 			}
+			
+			List<Question> questions = new ArrayList<Question>(); // servono gli ID delle domande per salvare le risposte
+			try {
+				questions.addAll(questionService.getSectionOneQuestions(q.getId()));
+				questions.addAll(questionService.getSectionTwoQuestions());
+				
+				// controllo che combacino domande e risposte
+				if(answers_text.size() == questions.size()) {
+					// aggiungo domande
+					answerService.insertAnswers(u.getId(), q.getId(), answers_text, questions);
+					// aggiorno l'accesso vito che il questionario è stato inviato
+					accessService.updateAccessAfterSubmit(u.getId(),q.getId());
+				}
+				
+			} catch (BadRetrievalException | BadRequestException e) {
+				ctx.setVariable("errorMsg", e.getMessage());
+			}
+			
+			// cancello domande e risposte dalla sessione anche nel caso Submit non solo nel caso Cancel
+			session.setAttribute("questions1", null);
+			session.setAttribute("answers1", null);
+			session.setAttribute("questions2", null);
+			session.setAttribute("answers2", null);
+			
+			ctx.setVariable("submitted", true);
+			templateEngine.process("/WEB-INF/greetings.html", ctx, response.getWriter());
+			
+			return;
 		}
 		
 		else if (action.equals("Cancel")) {

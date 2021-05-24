@@ -40,6 +40,8 @@
 	}
 	
 	</script>
+		
+	<p th:if="${errorMsg != null}" th:text="${errorMsg}" style="color: red"></p>
 
 	<form  action="GoToAdminHomepage">
 	    <input type="submit"  value="<- Go back" />
@@ -62,7 +64,7 @@
 	
 	<br>
 	
-	<form  action="CreateQuestionnaire" id="questionnaire" method="POST" enctype="multipart/form-data">
+	<form action="CreateQuestionnaire" id="questionnaire" method="POST" enctype="multipart/form-data">
 		
 		<div id="existingproductdiv">
 			<select
@@ -70,7 +72,7 @@
 			id="existingproductselect"
 			required>
 				<option disabled id="noneselect" selected value> -- select an option -- </option>
-				<option th:if="${p.id!=1}" th:each="p : ${products}" th:text="${p.name}"  th:attr="value = ${p.id}">
+				<option th:if="${products != null}" th:each="p : ${products}" th:text="${p.name}"  th:attr="value = ${p.id}">
 			</select>
 		</div>
 		
@@ -92,9 +94,7 @@
 		<br>
 		
 		<input type="submit" value="Submit">
-		
-		<p th:text=" ${errorMsg}"></p>
-		
+				
 	</form>
 
 	<button class="add_question_button">Add Question</button>

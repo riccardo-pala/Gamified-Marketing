@@ -5,6 +5,8 @@
 <title>Deletion Page</title>
 </head>
 <body>
+	<p th:if="${errorMsg != null}" th:text="${errorMsg}" style="color: red"></p>
+	
 	<form action="GoToAdminHomepage">
 	    <input type="submit" value="<- Go Back" />
 	</form>
@@ -17,7 +19,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="q : ${questionnaires}">
+			<tr th:if="${questionnaires != null}" th:each="q : ${questionnaires}">
 				<td th:text="${#dates.format(q.date,'dd/MM/yyyy')}"></td>
 				<td th:text="${q.product.name}"></td>
 				<td><a th:href="@{/EraseQuestionnaire(questionnaireid=${q.id})}">Erase</a></td>

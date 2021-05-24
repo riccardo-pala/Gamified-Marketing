@@ -6,6 +6,8 @@
 </head>
 <body>
 
+	<p th:if="${errorMsg != null}" th:text="${errorMsg}" style="color: red"></p>
+	
 	<div id="welcomediv">
 		Nice to see you again <b th:text="${session.user.username}" /> 
 	</div>

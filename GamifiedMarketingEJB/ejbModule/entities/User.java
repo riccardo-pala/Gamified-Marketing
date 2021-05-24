@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -16,7 +17,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "users", schema = "gmdb")
-@NamedQuery(name = "User.checkCredentials", query = "SELECT r FROM User r  WHERE r.username = ?1 and r.password = ?2")
+@NamedQueries({
+	@NamedQuery(name = "User.checkCredentials", query = "SELECT r FROM User r  WHERE r.username = ?1 and r.password = ?2"),
+	@NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = ?1"),
+	@NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = ?1")
+})
+
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;

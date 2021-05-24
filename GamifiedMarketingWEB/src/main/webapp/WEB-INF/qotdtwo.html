@@ -8,10 +8,9 @@
 
 	
 	<div>
-		<!-- TODO: errorMsg -->
 		
 		<form th:if="${warningMsg != null}" action="GoToHomepage" method="GET">
-			<p th:text="${warningMsg}" />
+			<p th:text="${warningMsg}" style="font-weight: bold" />
 			<br>
 		    <input type="submit" value="Home" />
 		</form>
@@ -19,20 +18,38 @@
 		<form th:if="${warningMsg == null}" action="ManageQuestionnaire" method="POST">
 			<h1>Section 2 - Statistical questions</h1>
 			<h2>Some statistical data:</h2>
-			<tr th:each="question, iter : ${questions2}">
-    			<td th:text="${question.text}" />
-    			<br>
-    			<input th:if="${answers2} != null" type="text" name="answers2" th:value="${answers2[iter.index]}" />
-    			<input th:if="${answers2} == null" type="text" name="answers2" />
-    			<br><br>
-			</tr>
-			<br><br>
+			
+   			<td th:text="${questions2[0].text}" />
+   			<br>
+   			<input th:if="${answers2} != null" type="number" name="answers2" th:value="${answers2[0]}" />
+   			<input th:if="${answers2} == null" type="number" name="answers2" />
+   			<br><br>
+   			<td th:text="${questions2[1].text}" />
+   			<br>
+			<select name="answers2">
+				<option th:if="${answers2} != null" value="${answers2[1]}" selected></option>
+				<option value="Male">Male</option>
+				<option value="Female">Female</option>
+				<option value="Other">Other</option>
+			</select>
+   			<br><br>
+   			<td th:text="${questions2[2].text}" />
+   			<br>
+			<input type="radio" name="answers2" value="Low">
+			<label>Low</label>
+			<input type="radio" name="answers2" value="Medium">
+			<label>Medium</label>
+			<input type="radio" name="answers2" value="High">
+			<label>High</label>
+   			<br><br>
 			<tr>
 				<td><input type="submit" name="button" value="Previous" /></td>
 				<td><input type="submit" name="button" value="Submit" /></td>
 				<td><input type="submit" name="button" value="Cancel" /></td>
 			</tr>
 		</form>
+		
+		<p th:if="${errorMsg != null}" th:text="${errorMsg}" style="color: red"></p>
 	</div>
 </body>
 </html>

@@ -48,9 +48,9 @@ public class UserService {
 		List<User> emailList = null;
 		
 		try {
-			usernameList = em.createQuery("SELECT u FROM User u WHERE u.username = ?1", User.class)
+			usernameList = em.createNamedQuery("User.findByUsername", User.class)
 					.setParameter(1, username).getResultList();
-			emailList = em.createQuery("SELECT u FROM User u WHERE u.email = ?1", User.class)
+			emailList = em.createNamedQuery("User.findByEmail", User.class)
 					.setParameter(1, email).getResultList();
 		} catch (PersistenceException e) {
 			throw new CredentialsException("Could not verify credentials, retry.");
@@ -75,7 +75,7 @@ public class UserService {
 		
 		List<User> uList = null;
 		try {
-			uList = (List<User>) em.createQuery("SELECT u FROM User u WHERE u.username=?1", User.class)
+			uList = (List<User>) em.createNamedQuery("User.findByUsername", User.class)
 					.setParameter(1, username).getResultList();
 		} catch (PersistenceException e) {
 			throw new BadRetrievalException("Could not retrieve user information.");
