@@ -59,32 +59,30 @@ public class CheckLogin extends HttpServlet {
 		username = request.getParameter("username");
 		password = request.getParameter("password");
 		
+		String path = "/index.html";
+		
 		if (username == null || password == null ||
 				username.isEmpty() || password.isEmpty()) {
 			ctx.setVariable("errorMsg", "Missing credential values!");
+			templateEngine.process(path, ctx, response.getWriter());
 		}
 		
 		User user = null;
 		
 		try {
 			user = userService.checkCredentials(username, password);
-		} catch (NonUniqueResultException e) {
+		} catch (NonUniqueResultException | CredentialsException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
-		} catch (CredentialsException e) {
-			ctx.setVariable("errorMsg", e.getMessage());
+			templateEngine.process(path, ctx, response.getWriter());
+			return;
 		}
-		
-		
-		String path;
 		
 		if (user == null) {
 			ctx.setVariable("errorMsg", "Incorrect username or password");
-			path = "/index.html";
 			templateEngine.process(path, ctx, response.getWriter());
 		} 
 		else if(user.getIsBanned()) {
 			ctx.setVariable("errorMsg", "You are not allowed to log in since you were banned from this site");
-			path = "/index.html";
 			templateEngine.process(path, ctx, response.getWriter());
 		}
 		else if (!user.getIsAdmin()) {

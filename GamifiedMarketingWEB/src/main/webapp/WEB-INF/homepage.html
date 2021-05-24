@@ -7,8 +7,9 @@
 <body>
 	<h1>Homepage</h1>
 	
-	<div th:if="${potd!=null}" style="display: flex; border-top: solid black 1px; border-bottom: solid black 1px;">
+	<p th:if="${errorMsg!=null}" th:text="${errorMsg}" style="color: red">
 	
+	<div th:if="${potd!=null}" style="display: flex">
 		<div>
 			<h1>Product of the day:</h1>
 			<p th:text="${potd.name}" style="font-size: 25px; text-align: center; font-weight: bold;"></p>
@@ -19,12 +20,12 @@
 			<br>
 		</div>
 		
-		<div style="border-left: solid black 1px; padding-left: 50px;">
+		<div style="border-left: solid black 1px; padding-left: 50px; height: 300px; overflow: auto;">
 			<div style="width: 100%;"><h1>Reviews:</h1></div>
-			<div th:each="q, i : ${questions}">
+			<div th:if="${questions!=null}" th:each="q, i : ${questions}">
 				<div th:text="${i.index + 1} + ') ' + ${q.text}" style="font-size: 16px"></div>
 				<ul>
-					<div th:each="a : ${answers}">
+					<div th:if="${answers!=null}" th:each="a : ${answers}">
 			  			<li th:if="${q.id == a.question.id}" th:text="'- [' + ${a.user.username} + ']  ' + ${a.text}" style="font-style: italic"></li>	
 					</div>
 				</ul>
@@ -33,9 +34,8 @@
 		
 	</div>
 	
-	<p th:if="${potd==null && noPotdMsg!=null}" th:text="${errorMsg}" style="font-weight: bold">
+	<p th:if="${potd==null && noPotdMsg!=null}" th:text="${noPotdMsg}" style="font-weight: bold">
 	
-	<p th:if="${errorMsg!=null}" th:text="${errorMsg}" style="color: red">
 	
 	<div style="padding-top: 30px;">
 	

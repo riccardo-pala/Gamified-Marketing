@@ -76,6 +76,8 @@ public class GoToHomepage extends HttpServlet {
 			qotd = questionnaireService.getQuestionnaireOfTheDay();
 		} catch (BadRetrievalException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
+			templateEngine.process("/WEB-INF/homepage.html", ctx, response.getWriter());	
+			return;
 		}
 		
 		if (qotd != null ) {

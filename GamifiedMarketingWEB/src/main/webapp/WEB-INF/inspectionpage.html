@@ -9,21 +9,24 @@
 	    <input type="submit" value="<- Go Back" />
 	</form>
 	<br>
+	
+	<p th:if="${errorMsg != null}" th:text="${errorMsg}" style="color: red">
+	
 	<table>
 		<thead>
 			<tr>
 				<th>Date</th>
 				<th>Name of Product</th>
-				
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="q : ${questionnaires}">
+			<tr th:if="${questionnaires!=null}" th:each="q : ${questionnaires}">
 				<td th:text="${#dates.format(q.date,'dd/MM/yyyy')}"></td>
 				<td th:text="${q.product.name}"></td>
 				<td><a th:href="@{/GetQuestionnaireDetails(questionnaireid=${q.id})}">Details</a></td>
 			</tr>
 		</tbody>
 	</table>
+
 </body>
 </html>

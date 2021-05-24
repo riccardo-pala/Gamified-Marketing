@@ -97,7 +97,6 @@ public class GoToQotdOne extends HttpServlet {
 			}
 			
 			List<QuestionOne> questions1 = null;
-			
 			try {
 				questions1 = questionService.getSectionOneQuestions(qotd.getId());
 			} catch (BadRetrievalException | BadRequestException e) {

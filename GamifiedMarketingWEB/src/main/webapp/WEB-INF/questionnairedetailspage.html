@@ -10,9 +10,10 @@
 	</form>
 	<br>
 	
-	<h1> List of users that have submitted the questionnaire</h1>
+	<p th:if="${errorMsg!=null}" th:text="${errorMsg}" style="color: red">
 	
 	<table>
+		<h1>List of users that have submitted the questionnaire</h1>
 		<thead>
 			<tr>
 				<th>Username</th>
@@ -31,10 +32,9 @@
 			</tr>
 		</tbody>
 	</table>
-	
-	<h1> List of cancelled questionnaires</h1>
 
 	<table>
+		<h1> List of cancelled questionnaires</h1>
 		<thead>
 			<tr>
 				<th>Username</th>
@@ -44,7 +44,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="c : ${canceled}">
+			<tr th:each="c : ${cancelled}">
 				<td th:text="${c.user.username}"></td>
 				<td th:text="${c.user.firstname}"></td>
 				<td th:text="${c.user.lastname}"></td>

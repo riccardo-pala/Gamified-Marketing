@@ -61,13 +61,13 @@ public class GetQuestionnaireDetails extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
 		List<Log> submitted = null;
-		List<Log> canceled = null;
+		List<Log> cancelled = null;
 		
 		int questionnaireId = Integer.parseInt(request.getParameter("questionnaireid"));
 		
 		try {
 			submitted = accessService.getAllSubmittedQuestionnaire(questionnaireId);
-			canceled = accessService.getAllCancelledQuestionnaire(questionnaireId);
+			cancelled = accessService.getAllCancelledQuestionnaire(questionnaireId);
 		} catch (BadRetrievalException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
@@ -75,7 +75,7 @@ public class GetQuestionnaireDetails extends HttpServlet {
 		String path = "/WEB-INF/questionnairedetailspage.html";
 		
 		ctx.setVariable("submitted", submitted);
-		ctx.setVariable("canceled", canceled);
+		ctx.setVariable("cancelled", cancelled);
 		
 		templateEngine.process(path, ctx, response.getWriter());
 	}

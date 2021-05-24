@@ -60,29 +60,23 @@ public class CheckRegistration extends HttpServlet {
 		String email = null;
 		String password = null;
 		
-		try {
-			firstname= request.getParameter("firstname");
-			lastname= request.getParameter("lastname");
-			username = request.getParameter("username");
-			email = request.getParameter("email");
-			password = request.getParameter("password");
-			if (firstname==null || lastname==null || username == null || email==null || password == null ||
-					firstname.isEmpty() || lastname.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-				throw new Exception("Missing or empty credential value");
-			}
-		} catch (Exception e) {
-			ctx.setVariable("errorMsg", e.getMessage());
+		firstname= request.getParameter("firstname");
+		lastname= request.getParameter("lastname");
+		username = request.getParameter("username");
+		email = request.getParameter("email");
+		password = request.getParameter("password");
+		if (firstname==null || lastname==null || username == null || email==null || password == null ||
+				firstname.isEmpty() || lastname.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+			ctx.setVariable("errorMsg", "Missing or empty credential value.");
 			templateEngine.process("/registration.html", ctx, response.getWriter());
 			return;
 		}
-		
+
 		User user = null;
 		
 		try {
 			user = userService.insertNewUser(firstname, lastname, username, email, password);
-		} catch (CredentialsException e) {
-			ctx.setVariable("errorMsg", e.getMessage());
-		} catch (CreateProfileException e) {
+		} catch (CredentialsException | CreateProfileException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
 

@@ -6,31 +6,31 @@
 </head>
 <body>
 	
-	<div>
-		<form th:if="${warningMsg != null}" action="GoToHomepage" method="GET">
-			<p th:text="${warningMsg}" />
-			<br>
-		    <input type="submit" value="Home" />
-		</form>
-		
-		
-		<form th:if="${warningMsg == null}" action="GoToQotdTwo" method="POST">
-			<h1>Section 1 - Marketing questions</h1>
-			<h2>Answer the following mandatory questions about the POTD:</h2>
-			<tr th:each="question, iter : ${questions1}">
-    			<td th:text="'Question n.' + ${iter.index + 1} + ': ' + ${question.text}" />
-    			<br>
-    			<input th:if="${answers1} != null" type="text" name="answers1" th:value="${answers1[iter.index]}" />
-    			<input th:if="${answers1} == null" type="text" name="answers1" />
-    			<br><br>
-			</tr>
+	<p th:if="${errorMsg!=null}" th:text="${errorMsg}" style="color: red">
+	
+	<form th:if="${warningMsg!=null}" action="GoToHomepage" method="GET">
+		<p th:text="${warningMsg}" style="font-weight: bold" />
+		<br>
+	    <input type="submit" value="Home" />
+	</form>
+	
+	
+	<form th:if="${warningMsg==null}" action="GoToQotdTwo" method="POST">
+		<h1>Section 1 - Marketing questions</h1>
+		<h2>Answer the following mandatory questions about the POTD:</h2>
+		<tr th:if="${questions1!=null}" th:each="question, iter : ${questions1}">
+   			<td th:text="'Question n.' + ${iter.index+1} + ': ' + ${question.text}" />
+   			<br>
+   			<input th:if="${answers1}!=null" type="text" name="answers1" th:value="${answers1[iter.index]}" />
+   			<input th:if="${answers1}==null" type="text" name="answers1" />
+   			<br><br>
+		</tr>
 
-			<p th:if="${requiredMsg != null}" style="color: red" th:text="${requiredMsg}" />
-			<br><br>
-				
-		    <input type="submit" value="Next" />
-		</form>
-		
-	</div>
+		<p th:if="${requiredMsg!=null}" style="color: red" th:text="${requiredMsg}" />
+		<br><br>
+			
+	    <input type="submit" value="Next" />
+	</form>
+
 </body>
 </html>
