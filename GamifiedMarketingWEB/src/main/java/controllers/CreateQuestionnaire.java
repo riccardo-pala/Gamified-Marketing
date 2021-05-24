@@ -3,7 +3,6 @@ package controllers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +23,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Product;
 import entities.QuestionOne;
+import exceptions.BadRequestException;
 import exceptions.BadRetrievalException;
 import exceptions.BadUpdateException;
 import exceptions.CreateProductException;
@@ -75,16 +75,41 @@ public class CreateQuestionnaire extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
 		List<Product> products = null;
+		Date questionnaireDate = null;
+		
+		/*---- Check the date ----*/
 		
 		try {
+			questionnaireDate = Date.valueOf(request.getParameter("questionnairedate"));
 			products = productService.getAllProducts();
-		} catch (BadRetrievalException e) {
+			ctx.setVariable("products", products);
+			questionnaireService.checkDateOfQuestionnaire(questionnaireDate);
+		} catch (BadRetrievalException | BadRequestException | IllegalArgumentException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
 			return;
 		}
 		
-		ctx.setVariable("products", products);
+		/*---- Check the questions ----*/
+		
+		ArrayList<QuestionOne> questions = new ArrayList<QuestionOne>();
+				
+		String[] reqQuestions = request.getParameterValues("questions");
+		
+		if (reqQuestions != null)
+			for(int i=0; i<reqQuestions.length; i++)
+				if(!reqQuestions[i].isBlank()) {
+					QuestionOne q = new QuestionOne(reqQuestions[i]);
+					questions.add(q);
+				}
+		
+		if(questions.size()<1) {
+			ctx.setVariable("errorMsg", "Please, insert at least one question.");
+			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
+			return;
+		}
+		
+		/*---- Check the product ----*/
 		
 		String newProductName = request.getParameter("newproductname");
 
@@ -112,7 +137,7 @@ public class CreateQuestionnaire extends HttpServlet {
 			
 			if (p != null) productid = p.getId();
 		}
-		else {
+		else if(request.getParameter("productid") != null) {
 			
 			boolean productExists = false;
 			
@@ -135,6 +160,11 @@ public class CreateQuestionnaire extends HttpServlet {
 				return;
 			}
 		}
+		else {
+			ctx.setVariable("errorMsg", "Invalid data, please retry.");
+			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
+			return;
+		}
 		
 		if (productid <= 0) {
 			ctx.setVariable("errorMsg", "There was a problem during the creation of the questionnaire, please retry.");
@@ -142,71 +172,26 @@ public class CreateQuestionnaire extends HttpServlet {
 			return;
 		}
 		
-		ArrayList<QuestionOne> questions = new ArrayList<QuestionOne>();
-		
-		Date questionnaireDate = Date.valueOf(request.getParameter("questionnairedate"));
-		
-		Date date = Date.valueOf(LocalDate.now());
-		
-		if(questionnaireDate.equals(date) || questionnaireDate.before(date)) {
-			if(isNewProduct) {
-				try {
-					productService.removeProduct(productid);
-				} catch (BadRetrievalException e) {
-					ctx.setVariable("errorMsg", e.getMessage());
-					templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
-					return;
-				}
-			}
-			ctx.setVariable("errorMsg","You can only create questionnaires starting from tomorrow!");
-			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
-			return;	
-		}
+		/*---- Create the questionnaire ----*/
 		
 		try {
-			if(questionnaireService.checkDateOfQuestionnaire(questionnaireDate)) {
-				
-				int x = 1;
-				
-				while(request.getParameter("quest" + x + "") != null) {
-					QuestionOne q = new QuestionOne(request.getParameter("quest" + x + ""));
-					questions.add(q);
-					x++;
-				}
-				
-				try {
-					questionnaireService.createQuestionnaire(productid, questionnaireDate, questions);
-				} catch (BadRetrievalException e) {
-					if(isNewProduct) productService.removeProduct(productid);
-					ctx.setVariable("errorMsg", e.getMessage());
-					templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
-					return;
-				}
-				
-				String path = getServletContext().getContextPath() + "/GoToAdminHomepage";
-				response.sendRedirect(path);
-			}
-			
-			else {
-				if(isNewProduct) productService.removeProduct(productid);
-				ctx.setVariable("errorMsg","In the selected date there is already a questionnaire");
-				templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
-				return;
-			}
-		} catch (BadRetrievalException | IOException e) {
-			if(isNewProduct)
-				try {
-					productService.removeProduct(productid);
-				} catch (BadRetrievalException e1) {
-					//e1.printStackTrace();
-				}
+			questionnaireService.createQuestionnaire(productid, questionnaireDate, questions);
+		} catch (BadRetrievalException | BadUpdateException e) {
+			if(isNewProduct) deleteNewProduct(productid);
 			ctx.setVariable("errorMsg", e.getMessage());
 			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
 			return;
-		} catch (BadUpdateException e) {
-			ctx.setVariable("errorMsg", e.getMessage());
-			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
-			return;
+		}
+		
+		String path = getServletContext().getContextPath() + "/GoToAdminHomepage";
+		response.sendRedirect(path);
+	}
+	
+	private void deleteNewProduct(int productid) {
+		try {
+			productService.removeProduct(productid);
+		} catch (BadRetrievalException e1) {
+			//do nothing
 		}
 	}
 }

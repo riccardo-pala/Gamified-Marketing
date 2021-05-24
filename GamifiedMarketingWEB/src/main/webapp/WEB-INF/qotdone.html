@@ -21,8 +21,8 @@
 		<tr th:if="${questions1!=null}" th:each="question, iter : ${questions1}">
    			<td th:text="'Question n.' + ${iter.index+1} + ': ' + ${question.text}" />
    			<br>
-   			<input th:if="${answers1}!=null" type="text" name="answers1" th:value="${answers1[iter.index]}" />
-   			<input th:if="${answers1}==null" type="text" name="answers1" />
+   			<input th:if="${answers1!=null}" type="text" name="answers1" th:value="${answers1[iter.index]}" />
+   			<input th:if="${answers1==null}" type="text" name="answers1" />
    			<br><br>
 		</tr>
 

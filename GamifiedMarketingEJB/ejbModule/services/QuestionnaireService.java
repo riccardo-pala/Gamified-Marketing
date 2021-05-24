@@ -1,7 +1,8 @@
 package services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -12,6 +13,7 @@ import javax.persistence.PersistenceException;
 import entities.Product;
 import entities.QuestionOne;
 import entities.Questionnaire;
+import exceptions.BadRequestException;
 import exceptions.BadRetrievalException;
 import exceptions.BadUpdateException;
 
@@ -29,7 +31,7 @@ public class QuestionnaireService {
 
 		List<Questionnaire> qList = null;
 		
-		Date today = new Date(); // new instance of Date object returns the current date
+		Date today = Date.valueOf(LocalDate.now());
 		
 		try {
 			qList = em.createNamedQuery("Questionnaire.findByDate", Questionnaire.class)
@@ -96,16 +98,26 @@ public class QuestionnaireService {
 		}
 	}
 	
-	public boolean checkDateOfQuestionnaire(Date date) throws BadRetrievalException {
+	public void checkDateOfQuestionnaire(Date questionnaireDate) throws BadRetrievalException, BadRequestException {
+		
+		if (questionnaireDate == null)
+			throw new BadRequestException("Invalid or missing date.");
 		
 		List<Questionnaire> qList = null;
 		
+		Date today = Date.valueOf(LocalDate.now());
+		
 		try {
-			qList = em.createNamedQuery("Questionnaire.findByDate",Questionnaire.class).setParameter(1,date).getResultList();
+			qList = em.createNamedQuery("Questionnaire.findByDate",Questionnaire.class)
+					.setParameter(1, questionnaireDate).getResultList();
 		} catch (PersistenceException e) {
 			throw new BadRetrievalException("Problems during the creation of the questionnaire, retry.");
 		}
 		
-		return qList.isEmpty();
+		if (qList != null && !qList.isEmpty())
+			throw new BadRequestException("A questionnaire on the specified date already exists.");
+		
+		if(questionnaireDate.equals(today) || questionnaireDate.before(today))
+			throw new BadRequestException("You can only create questionnaires starting from tomorrow.");
 	}
 }

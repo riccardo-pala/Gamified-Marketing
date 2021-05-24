@@ -36,6 +36,7 @@
 		document.getElementById("newproductimage").required = false;
 		document.getElementById("newproductname").required = false;
 		
+		document.getElementById("newproductimage").value = null;
 		document.getElementById("newproductname").value = "";
 	}
 	
@@ -91,6 +92,10 @@
 		placeholder="Date of the questionnaire"
 		required>
 		
+		<br><br>
+		
+		<div class="input_fields_wrap"></div>
+		
 		<br>
 		
 		<input type="submit" value="Submit">
@@ -100,8 +105,6 @@
 	<button class="add_question_button">Add Question</button>
 	
 	<button class="remove_question_button">Remove Question</button>
-	
-	<div class="input_fields_wrap"></div>
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -111,7 +114,7 @@
 	$(document).ready(
 		function() {
 		
-		    var add_button = $(".add_question_button"); //Add button ID
+			var add_button = $(".add_question_button"); //Add button ID
 		    var remove_button = $(".remove_question_button"); //Add button ID
 		    var wrapper = $(".input_fields_wrap"); //Fields wrapper
 		
@@ -122,10 +125,8 @@
 			        e.preventDefault();
 			        x++; //text box increment
 			        $(wrapper).append(
-			        	'<div class="div' + x + '">' +
-			            '<p name="mytext' + x + '">Question' + x + '<br>' +
-			            '<textarea name="quest' + x + '" form="questionnaire"></textarea>' +
-			            '</div>');
+			            '<label>Question' + x + '</label><br>' +
+			            '<textarea name="questions" id="q' + x + '" required></textarea><br>');
 			    }
 		    );
 		
@@ -133,7 +134,7 @@
 	    		function(e){ //user click on remove text
 			        e.preventDefault();
 	    			if (x>0) {
-				    	$(".div"+x).remove();
+				    	document.getElementById("q" + x).remove();
 				    	x--;
 	    			}
 			    }
