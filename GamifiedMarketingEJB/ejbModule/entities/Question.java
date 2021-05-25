@@ -80,6 +80,15 @@ public abstract class Question {
 		this.answers = answers;
 	}
 	
+	public void addAnswer(Answer answer) {
+		this.getAnswers().add(answer);
+		answer.setQuestion(this);
+	}
+	
+	public void removeAnswer(Answer answer) {
+		this.getAnswers().remove(answer);
+	}
+	
 	@Transient
 	public String getSection() {
 	    return this.getClass().getAnnotation(DiscriminatorValue.class).value();

@@ -38,7 +38,7 @@ public class AnswerService {
 		return answers;
 	}
 	
-	public void insertAnswers(int userId, int questionnaireId, List<String> answersText, List<Question> questions) throws BadRetrievalException {
+	public void insertAnswersOfSectionOne(int userId, int questionnaireId, List<String> answersText) throws BadRetrievalException {
 		
 		User user = null;
 		Questionnaire questionnaire = null;
@@ -51,15 +51,13 @@ public class AnswerService {
 		}
 		
 		Answer answer;
-		//check empty text
-		for(int i = 0; i < questions.size(); i++) { 
-			//System.out.println(questions.get(i).getText()+"--------"+questionnaire.getQuestions().get(i).getText());
+		for(int i = 0; i < questionnaire.getQuestions().size(); i++) { 
 			if(i <answersText.size() && !answersText.get(i).isBlank()) {
-				answer = new Answer(user, questions.get(i), questionnaire, answersText.get(i));
-				user.addAnswer(answer);
+				answer = new Answer(user, questionnaire.getQuestions().get(i), questionnaire, answersText.get(i));
+				questionnaire.getQuestions().get(i).addAnswer(answer);
 			}
 		}
 		
-		em.persist(user);
+		em.persist(questionnaire);
 	}
 }

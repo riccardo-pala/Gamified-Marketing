@@ -148,13 +148,14 @@ public class ManageQuestionnaire extends HttpServlet {
 		
 		else if (action.equals("Submit")) {
 			
-			List<String> answers_text = null; // lista delle risposte
+			List<String> answers_text_one = null;
+			List<String> answers_text_two = null;
 			
 			if (session.getAttribute("answers1") != null)
-				answers_text = (List<String>) session.getAttribute("answers1"); // aggiungo prima risposte sezione 1 (mandatory)
+				answers_text_one = (List<String>) session.getAttribute("answers1"); // aggiungo prima risposte sezione 1 (mandatory)
 			
 			// CONTROLLO SU DOMANDE OBBLIGATORIE SEZIONE 1
-			for(String mandatory_answer : answers_text)
+			for(String mandatory_answer : answers_text_one)
 				if(mandatory_answer.isBlank()) {
 					// stesso comportamento di action = "Previous"
 					List<String> questions1 = null;
@@ -162,7 +163,7 @@ public class ManageQuestionnaire extends HttpServlet {
 						questions1 = (List<String>) session.getAttribute("questions1");
 
 					ctx.setVariable("questions1", questions1);
-					ctx.setVariable("answers1", answers_text);
+					ctx.setVariable("answers1", answers_text_one);
 					ctx.setVariable("requiredMsg", "You MUST answer all the questions to submit the questionnaire!");
 					
 					templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
@@ -170,13 +171,13 @@ public class ManageQuestionnaire extends HttpServlet {
 					return;
 				}
 				
-			for(String answer_text : session_answers2)
-				answers_text.add(answer_text); // poi aggiungo risposte sezione 2
+			/*for(String answer_text : session_answers2)
+				answers_text_two.add(answer_text); // poi aggiungo risposte sezione 2*/
 			
 			boolean goodAnswers;
 			
 			try {
-				goodAnswers = badWordService.checkOffensiveWords((ArrayList<String>) answers_text);
+				goodAnswers = badWordService.checkOffensiveWords((ArrayList<String>) answers_text_one);
 			} catch (BadRetrievalException e) {
 				
 				List<QuestionOne> questions1 = null;
@@ -213,14 +214,12 @@ public class ManageQuestionnaire extends HttpServlet {
 				return;
 			}
 			
-			List<Question> questions = new ArrayList<Question>(); // servono gli ID delle domande per salvare le risposte
+			
 			try {
-				questions.addAll(questionService.getSectionOneQuestions(qotd.getId()));
-				questions.addAll(questionService.getSectionTwoQuestions());
-				
 				// aggiungo domande
-				answerService.insertAnswers(user.getId(), qotd.getId(), answers_text, questions);
-				// aggiorno l'accesso vito che il questionario è stato inviato
+				answerService.insertAnswersOfSectionOne(user.getId(), qotd.getId(), answers_text_one);
+				questionService.associateAnswerAndQuestionOfSection2(user.getId(),qotd.getId(),session_answers2);
+				// aggiorno l'accesso visto che il questionario è stato inviato
 				accessService.updateAccessAfterSubmit(user.getId(), qotd.getId());
 				
 			} catch (BadRetrievalException | BadRequestException e) {
