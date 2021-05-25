@@ -34,7 +34,7 @@ public class Log implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name="userid")
 	private User user;
 	
@@ -42,7 +42,7 @@ public class Log implements Serializable {
 	private Timestamp accessTime;
 	
 	@Id
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name="questionnaireid")
 	private Questionnaire questionnaire;
 

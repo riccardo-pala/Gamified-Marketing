@@ -25,8 +25,8 @@
 			<div th:if="${questions!=null}" th:each="q, i : ${questions}">
 				<div th:text="${i.index + 1} + ') ' + ${q.text}" style="font-size: 16px"></div>
 				<ul>
-					<div th:if="${answers!=null}" th:each="a : ${answers}">
-			  			<li th:if="${q.id == a.question.id}" th:text="'- [' + ${a.user.username} + ']  ' + ${a.text}" style="font-style: italic"></li>	
+					<div th:each="a : ${q.answers}">
+			  			<li th:text="'- [' + ${a.user.username} + ']  ' + ${a.text}" style="font-style: italic"></li>	
 					</div>
 				</ul>
 			</div>

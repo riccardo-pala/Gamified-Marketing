@@ -6,14 +6,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -24,11 +23,6 @@ import javax.persistence.Transient;
 @DiscriminatorColumn(name="section")
 public abstract class Question {
 	
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * CONSTRUCTORS
-	 */
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,13 +34,9 @@ public abstract class Question {
 	@JoinColumn(name="questionnaireid")
 	private Questionnaire questionnaire;
 	
-	@OneToMany(mappedBy="question", cascade= CascadeType.REMOVE)
+	@OneToMany(mappedBy="question", cascade={CascadeType.REMOVE,CascadeType.REFRESH})
 	private List<Answer> answers;
 	
-	
-	/**
-	 * CONSTRUCTORS
-	 */
 	
 	public Question() {
 	}
@@ -56,9 +46,7 @@ public abstract class Question {
 	}
 	
 	
-	/**
-	 * GETTERS & SETTERS
-	 */
+	
 	
 	public int getId() {
 		return id;

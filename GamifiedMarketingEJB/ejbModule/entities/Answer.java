@@ -28,7 +28,7 @@ public class Answer implements Serializable {
 	private User user;
 	
 	@Id
-	@ManyToOne //(cascade=CascadeType.PERSIST) lo levo perché salvando le answers crea delle questions nuove anzichè prendere l'id di quelle esistenti
+	@ManyToOne 
 	@JoinColumn(name="questionid")
 	private Question question;
 	

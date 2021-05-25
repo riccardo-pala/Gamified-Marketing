@@ -23,19 +23,6 @@ public class AnswerService {
 	public AnswerService() {
 	}
 	
-	public List<Answer> getAnswersByQuestionnaire(int questionnaireId) throws BadRetrievalException{
-		
-		List<Answer> answers = null;
-		
-		try {
-			answers = em.createNamedQuery("Answer.findByQuestionnaire", Answer.class)
-					.setParameter(1, questionnaireId).getResultList();
-		} catch (PersistenceException e) {
-			throw new BadRetrievalException("Failed to retrieve list of answers.");
-		}
-		
-		return answers;
-	}
 	
 	public List<Answer> getAnswersByQuestionnaireAndUser(int questionnaireId, int userId) throws BadRetrievalException{
 		
@@ -65,7 +52,7 @@ public class AnswerService {
 		
 		Answer answer;
 		//check empty text
-		for(int i = 0; i < questions.size(); i++) // la dimensione dei due array dovrebbe essere la stessa
+		for(int i = 0; i < questions.size(); i++) 
 			if(!answersText.get(i).isBlank()) {
 				answer = new Answer(user, questions.get(i), questionnaire, answersText.get(i));
 				user.addAnswer(answer);

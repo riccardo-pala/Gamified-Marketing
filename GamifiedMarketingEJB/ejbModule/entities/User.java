@@ -1,4 +1,4 @@
-package entities;
+	package entities;
 
 import java.io.Serializable;
 import java.util.List;
@@ -49,13 +49,11 @@ public class User implements Serializable {
 	private Boolean isAdmin;
 	
 	private int totalPoints;
-	                                     /* PERSIST non ha senso perchè non ci servirà mai avere tutti gli accessi di un user ma solo
-										 di un determinato questionnaire*/
-	// AccessService.insertAccess funzionerebbe lo stesso se non ci fosse Cascade.PERSIST? L'ho aggiunto perché l'ho fatto in quel modo
-	@OneToMany(mappedBy="user", cascade= {CascadeType.PERSIST,CascadeType.REMOVE})
+	                                    
+	@OneToMany(mappedBy="user", cascade=CascadeType.PERSIST)
 	private List<Log> accesses;
 	
-	@OneToMany(mappedBy="user", cascade= {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OneToMany(mappedBy="user",cascade=CascadeType.PERSIST)
 	private List<Answer> answers;
 
 

@@ -69,7 +69,7 @@ public class AccessService {
 		submittedAccess = logs.get(0);
 		submittedAccess.setSubmitted(true);
 		user.addAccess(submittedAccess);
-		
+
 		em.persist(user);
 	}
 	

@@ -14,10 +14,6 @@ public class QuestionTwo extends Question implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	
-	/**
-	 * CONSTRUCTORS
-	 */
-	
 	public QuestionTwo() {
 		super();
 	}

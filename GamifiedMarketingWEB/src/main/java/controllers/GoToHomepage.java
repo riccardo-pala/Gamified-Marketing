@@ -18,13 +18,14 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import entities.Answer;
 import entities.Product;
 import entities.QuestionOne;
 import entities.Questionnaire;
+import exceptions.BadRequestException;
 import exceptions.BadRetrievalException;
 import services.AnswerService;
 import services.ProductService;
+import services.QuestionService;
 import services.QuestionnaireService;
 
 
@@ -43,6 +44,9 @@ public class GoToHomepage extends HttpServlet {
 	
 	@EJB(name = "services/ProductService")
 	private ProductService productService;
+	
+	@EJB(name = "services/QuestionService")
+	private QuestionService questionService;
 	
 	public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
@@ -88,17 +92,9 @@ public class GoToHomepage extends HttpServlet {
 			ctx.setVariable("img", imgStr);
 			
 			// Users REVIEW of the current product
+				
+			ctx.setVariable("questions",qotd.getQuestions());
 			
-			List<QuestionOne> q_questions = qotd.getQuestions();
-			ctx.setVariable("questions", q_questions);
-			
-			List<Answer> q_answers = null;
-			try {
-				q_answers = answerService.getAnswersByQuestionnaire(qotd.getId());
-			} catch (BadRetrievalException e) {
-				ctx.setVariable("errorMsg", e.getMessage());
-			}
-			ctx.setVariable("answers", q_answers);
 		}
 		else {
 			ctx.setVariable("noPotdMsg", "There is no Product of the Day for the current date!");

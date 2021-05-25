@@ -44,11 +44,8 @@ public class Questionnaire {
 	@JoinColumn(name="productid")
 	private Product product;
 	
-	@OneToMany(mappedBy="questionnaire",cascade={CascadeType.PERSIST,CascadeType.REMOVE})
-	private List<QuestionOne> questions; //eager?
-	
-	@OneToMany(mappedBy="questionnaire", cascade={CascadeType.REMOVE})
-	private List<Answer> answers; 
+	@OneToMany(mappedBy="questionnaire",cascade={CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.REFRESH})
+	private List<QuestionOne> questions; 
 	
 	
 	public Questionnaire() {
@@ -99,14 +96,6 @@ public class Questionnaire {
 	public void setQuestions(List<QuestionOne> questions) {
 		this.questions = questions;
 	}	
-	
-	public List<Answer> getAnswers() {
-		return answers;
-	}
-
-	public void setAnswers(List<Answer> answers) {
-		this.answers = answers;
-	}
 
 	public void addQuestion(QuestionOne question) {
 		getQuestions().add(question);

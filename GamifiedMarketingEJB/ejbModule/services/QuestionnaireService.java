@@ -42,8 +42,10 @@ public class QuestionnaireService {
 
 		Questionnaire q = null;
 		
-		if(!qList.isEmpty())
+		if(!qList.isEmpty()) { 
 			q = qList.get(0);
+			em.refresh(q);
+		}
 		
 		return q;
 	}
