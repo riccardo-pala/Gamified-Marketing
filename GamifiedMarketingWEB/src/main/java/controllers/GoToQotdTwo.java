@@ -61,11 +61,8 @@ public class GoToQotdTwo extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String loginpath = getServletContext().getContextPath() + "/index.html";
-		
 		HttpSession session = request.getSession();
-		
 		User u = (User) session.getAttribute("user");
-		
 		if (session.isNew() || u == null) {
 			response.sendRedirect(loginpath);
 			return;
@@ -73,11 +70,28 @@ public class GoToQotdTwo extends HttpServlet {
 
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+
+		List<QuestionOne> questions1 = (List<QuestionOne>) session.getAttribute("questions1");
+		
+		String[] reqAnswers1 = request.getParameterValues("answers1");
+		List<String> answers1 = new ArrayList<String>();
+		
+		if (reqAnswers1 != null)
+			for(int i = 0; i < reqAnswers1.length; i++)
+				answers1.add(reqAnswers1[i]);
 		
 		Questionnaire qotd = null;
 		try {
 			qotd = questionnaireService.getQuestionnaireOfTheDay();
-			
+			if (qotd == null) {
+				session.setAttribute("questions1", null);
+				session.setAttribute("answers1", null);
+				session.setAttribute("questions2", null);
+				session.setAttribute("answers2", null);
+				ctx.setVariable("errorMsg", "There is no questionnaire of the day.");
+				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
+				return;
+			}
 			if(accessService.checkSubmittedAccess(u.getId(), qotd.getId())) { 
 				// l'utente ha già compilato il questionario
 				ctx.setVariable("warningMsg", "You have already filled the questionnaire today!");
@@ -85,45 +99,32 @@ public class GoToQotdTwo extends HttpServlet {
 				return;
 			}
 		} catch (BadRetrievalException | BadRequestException e) {
+			ctx.setVariable("questions1", questions1);
+			ctx.setVariable("answers1", answers1);
 			ctx.setVariable("errorMsg", e.getMessage());
+			templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
+			return;
 		}
 		
-		String[] answers1 = request.getParameterValues("answers1");
-		List<String> session_answers1 = new ArrayList<String>();
-		
-		if (answers1 != null)
-			for(int i = 0; i < answers1.length; i++)
-				session_answers1.add(answers1[i]);
-		
-		session.setAttribute("answers1", session_answers1);
-		
 		// CONTROLLO SU DOMANDE OBBLIGATORIE SEZIONE 1
-		for(String mandatory_answer : session_answers1)
+		for(String mandatory_answer : answers1)
 			if(mandatory_answer.isBlank()) {
-				List<String> questions1 = null;
-				if (session.getAttribute("questions1") != null)
-					questions1 = (List<String>) session.getAttribute("questions1");
-
 				ctx.setVariable("questions1", questions1);
-				ctx.setVariable("answers1", session_answers1);
+				ctx.setVariable("answers1", answers1);
 				ctx.setVariable("requiredMsg", "You MUST answer all the questions to submit the questionnaire!");
-				
 				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
-				
 				return;
 			}
 		
-		if (qotd != null ) {
-			List<QuestionTwo> questions2 = null;
-			try {
-				questions2 = questionService.getSectionTwoQuestions();
-			} catch (BadRetrievalException | BadRequestException e) {
-				ctx.setVariable("errorMsg", e.getMessage());
-			}
-			
-			session.setAttribute("questions2", questions2);
-			ctx.setVariable("questions2", questions2);
+		List<QuestionTwo> questions2 = null;
+		try {
+			questions2 = questionService.getSectionTwoQuestions();
+		} catch (BadRetrievalException | BadRequestException e) {
+			ctx.setVariable("errorMsg", e.getMessage());
 		}
+		
+		session.setAttribute("questions2", questions2);
+		ctx.setVariable("questions2", questions2);
 		
 		List<String> answers2 = null;
 		

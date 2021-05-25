@@ -73,12 +73,9 @@ public class ManageQuestionnaire extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String loginpath = getServletContext().getContextPath() + "/index.html"; 
-		
+		String loginpath = getServletContext().getContextPath() + "/index.html";
 		HttpSession session = request.getSession();
-		
 		User user = (User) session.getAttribute("user");
-		
 		if (session.isNew() || user == null) {
 			response.sendRedirect(loginpath);
 			return;
@@ -87,27 +84,44 @@ public class ManageQuestionnaire extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		String action = null;
-		User u = (User) session.getAttribute("user");
-		
-		Questionnaire q = null;
+		Questionnaire qotd = null;
 		try {
-			q = questionnaireService.getQuestionnaireOfTheDay();
-		} catch (BadRetrievalException e) {
+			qotd = questionnaireService.getQuestionnaireOfTheDay();
+			if (qotd == null) {
+				session.setAttribute("questions1", null);
+				session.setAttribute("answers1", null);
+				session.setAttribute("questions2", null);
+				session.setAttribute("answers2", null);
+				ctx.setVariable("errorMsg", "There is no questionnaire of the day.");
+				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
+				return;
+			}
+			if(accessService.checkSubmittedAccess(user.getId(), qotd.getId())) { 
+				// l'utente ha già compilato il questionario
+				ctx.setVariable("warningMsg", "You have already filled the questionnaire today!");
+				templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
+				return;
+			}
+		} catch (BadRetrievalException | BadRequestException e) {
+			List<String> answers2 = (List<String>) session.getAttribute("answers2");
+			ctx.setVariable("answers2", answers2);
 			ctx.setVariable("errorMsg", e.getMessage());
+			templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
+			return;
 		}
 		
+		String action = null;
 		if (request.getParameter("button") != null) {
 			action = request.getParameter("button");
 		}
-		else { // perché se il button è nullo si va nella pagina della sezione 1? non dovrebbe dare errore?
+		else {
 			String path = getServletContext().getContextPath() + "/GoToQotdOne";
 			response.sendRedirect(path);
 			return;
 		}
 	
 		// salviamo in sessione le risposte della sezione 1 in caso si tornasse indietro
-		
+
 		String[] answers2 = request.getParameterValues("answers2");
 		List<String> session_answers2 = new ArrayList<String>();
 		
@@ -119,19 +133,17 @@ public class ManageQuestionnaire extends HttpServlet {
 		
 		if (action.equals("Previous")) {
 
-			List<String> questions1 = null;
+			List<QuestionOne> questions1 = null;
 			List<String> answers1 = null;
 			
-			if (session.getAttribute("questions1") != null)
-				questions1 = (List<String>) session.getAttribute("questions1");
-			
-			if (session.getAttribute("answers1") != null)
-				answers1 = (List<String>) session.getAttribute("answers1");
-
+			questions1 = (List<QuestionOne>) session.getAttribute("questions1");
+			answers1 = (List<String>) session.getAttribute("answers1");
 			ctx.setVariable("questions1", questions1);
 			ctx.setVariable("answers1", answers1);
 			
 			templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
+			
+			return;
 		}
 		
 		else if (action.equals("Submit")) {
@@ -170,11 +182,8 @@ public class ManageQuestionnaire extends HttpServlet {
 				List<String> questions1 = null;
 				List<String> answers1 = null;
 				
-				if (session.getAttribute("questions1") != null)
-					questions1 = (List<String>) session.getAttribute("questions1");
-				
-				if (session.getAttribute("answers1") != null)
-					answers1 = (List<String>) session.getAttribute("answers1");
+				questions1 = (List<String>) session.getAttribute("questions1");
+				answers1 = (List<String>) session.getAttribute("answers1");
 
 				ctx.setVariable("questions1", questions1);
 				ctx.setVariable("answers1", answers1);
@@ -206,15 +215,15 @@ public class ManageQuestionnaire extends HttpServlet {
 			
 			List<Question> questions = new ArrayList<Question>(); // servono gli ID delle domande per salvare le risposte
 			try {
-				questions.addAll(questionService.getSectionOneQuestions(q.getId()));
+				questions.addAll(questionService.getSectionOneQuestions(qotd.getId()));
 				questions.addAll(questionService.getSectionTwoQuestions());
 				
 				// controllo che combacino domande e risposte
 				if(answers_text.size() == questions.size()) {
 					// aggiungo domande
-					answerService.insertAnswers(u.getId(), q.getId(), answers_text, questions);
+					answerService.insertAnswers(user.getId(), qotd.getId(), answers_text, questions);
 					// aggiorno l'accesso vito che il questionario è stato inviato
-					accessService.updateAccessAfterSubmit(u.getId(),q.getId());
+					accessService.updateAccessAfterSubmit(user.getId(), qotd.getId());
 				}
 				
 			} catch (BadRetrievalException | BadRequestException e) {
