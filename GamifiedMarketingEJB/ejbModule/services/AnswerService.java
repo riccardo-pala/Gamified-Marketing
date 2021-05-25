@@ -52,11 +52,13 @@ public class AnswerService {
 		
 		Answer answer;
 		//check empty text
-		for(int i = 0; i < questions.size(); i++) 
+		for(int i = 0; i < questions.size(); i++) { 
+			System.out.println(questions.get(i).getText()+"--------"+questionnaire.getQuestions().get(i).getText());
 			if(!answersText.get(i).isBlank()) {
 				answer = new Answer(user, questions.get(i), questionnaire, answersText.get(i));
 				user.addAnswer(answer);
 			}
+		}
 		
 		em.persist(user);
 	}

@@ -123,6 +123,7 @@ public class GoToQotdTwo extends HttpServlet {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
 		
+		session.setAttribute("answers1", answers1);
 		session.setAttribute("questions2", questions2);
 		ctx.setVariable("questions2", questions2);
 		

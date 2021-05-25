@@ -41,8 +41,8 @@ public class AccessService {
 		
 		Log access = new Log(user, new Timestamp(System.currentTimeMillis()), questionnaire, false);
 		
-		user.addAccess(access);
-		em.persist(user);
+		questionnaire.addAccess(access);
+		em.persist(questionnaire);
 	}
 	
 	public void updateAccessAfterSubmit(int userId, int questionnaireId) throws BadRetrievalException, BadRequestException {
@@ -65,12 +65,12 @@ public class AccessService {
 		
 		Log submittedAccess = null;
 		
-		user.removeAccess(logs.get(0));
+		questionnaire.removeAccess(logs.get(0));
 		submittedAccess = logs.get(0);
 		submittedAccess.setSubmitted(true);
-		user.addAccess(submittedAccess);
+		questionnaire.addAccess(submittedAccess);
 
-		em.persist(user);
+		em.persist(questionnaire);
 	}
 	
 	public boolean checkSubmittedAccess(int userId, int questionnaireId) throws BadRetrievalException, BadRequestException {

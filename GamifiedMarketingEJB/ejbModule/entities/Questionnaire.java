@@ -37,7 +37,7 @@ public class Questionnaire {
 	@Temporal(value=TemporalType.DATE)
 	private Date date;
 	
-	@OneToMany(mappedBy="questionnaire", cascade={CascadeType.REMOVE})
+	@OneToMany(mappedBy="questionnaire", cascade={CascadeType.REMOVE,CascadeType.PERSIST})
 	private List<Log> accesses;
 	
 	@ManyToOne
@@ -104,5 +104,14 @@ public class Questionnaire {
 
 	public void removeQuestion(QuestionOne question) {
 		getQuestions().remove(question);
+	}
+	
+	public void addAccess(Log access) {
+		this.getAccesses().add(access);
+		access.setQuestionnaire(this);
+	}
+	
+	public void removeAccess(Log access) {
+		this.getAccesses().remove(access);
 	}
 }

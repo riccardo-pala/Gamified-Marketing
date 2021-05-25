@@ -34,7 +34,7 @@ public abstract class Question {
 	@JoinColumn(name="questionnaireid")
 	private Questionnaire questionnaire;
 	
-	@OneToMany(mappedBy="question", cascade={CascadeType.REMOVE,CascadeType.REFRESH})
+	@OneToMany(mappedBy="question", cascade={CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.PERSIST})
 	private List<Answer> answers;
 	
 	

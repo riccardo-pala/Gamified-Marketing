@@ -120,7 +120,7 @@ public class ManageQuestionnaire extends HttpServlet {
 			return;
 		}
 	
-		// salviamo in sessione le risposte della sezione 1 in caso si tornasse indietro
+		// salviamo in sessione le risposte della sezione 2 in caso si tornasse indietro
 
 		String[] answers2 = request.getParameterValues("answers2");
 		List<String> session_answers2 = new ArrayList<String>();
@@ -179,10 +179,10 @@ public class ManageQuestionnaire extends HttpServlet {
 				goodAnswers = badWordService.checkOffensiveWords((ArrayList<String>) answers_text);
 			} catch (BadRetrievalException e) {
 				
-				List<String> questions1 = null;
+				List<QuestionOne> questions1 = null;
 				List<String> answers1 = null;
-				
-				questions1 = (List<String>) session.getAttribute("questions1");
+				//WARNING:PRIMA VENGONO PASSATI OGGETTI E ORA STRINGHE??
+				questions1 = (List<QuestionOne>) session.getAttribute("questions1");
 				answers1 = (List<String>) session.getAttribute("answers1");
 
 				ctx.setVariable("questions1", questions1);

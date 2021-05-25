@@ -93,7 +93,7 @@ public class GoToQotdOne extends HttpServlet {
 				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
 				return;
 			}
-			// altrimenti procediamo iniziando a salveare l' accesso in tabella
+			// altrimenti procediamo iniziando a salvare l' accesso in tabella
 			accessService.insertAccess(user.getId(), qotd.getId());
 		} catch (BadRetrievalException | BadRequestException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
