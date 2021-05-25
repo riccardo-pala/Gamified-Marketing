@@ -1,5 +1,6 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -62,6 +63,7 @@ public class QuestionService {
 		
 		return qList;		
 	}
+	
 	
 	public void associateAnswerAndQuestionOfSection2(int userId, int questionnaireId,List<String> answer_text) throws BadRetrievalException, BadRequestException {
 		

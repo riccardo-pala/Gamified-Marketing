@@ -108,7 +108,6 @@ public class GoToQotdOne extends HttpServlet {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
 		
-		session.setAttribute("questions1", questions1);
 		ctx.setVariable("questions1", questions1);
 		
 		templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());		

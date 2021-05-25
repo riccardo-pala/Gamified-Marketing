@@ -21,6 +21,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Question;
 import entities.QuestionOne;
+import entities.QuestionTwo;
 import entities.Questionnaire;
 import entities.User;
 import exceptions.BadRequestException;
@@ -84,18 +85,19 @@ public class ManageQuestionnaire extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
+		List<QuestionTwo> questions2 = null;
 		Questionnaire qotd = null;
 		try {
 			qotd = questionnaireService.getQuestionnaireOfTheDay();
 			if (qotd == null) {
-				session.setAttribute("questions1", null);
 				session.setAttribute("answers1", null);
-				session.setAttribute("questions2", null);
 				session.setAttribute("answers2", null);
 				ctx.setVariable("errorMsg", "There is no questionnaire of the day.");
 				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
 				return;
 			}
+			questions2 = questionService.getSectionTwoQuestions();
+			
 			if(accessService.checkSubmittedAccess(user.getId(), qotd.getId())) { 
 				// l'utente ha già compilato il questionario
 				ctx.setVariable("warningMsg", "You have already filled the questionnaire today!");
@@ -105,39 +107,44 @@ public class ManageQuestionnaire extends HttpServlet {
 		} catch (BadRetrievalException | BadRequestException e) {
 			List<String> answers2 = (List<String>) session.getAttribute("answers2");
 			ctx.setVariable("answers2", answers2);
+			ctx.setVariable("questions2", questions2);
 			ctx.setVariable("errorMsg", e.getMessage());
 			templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
 			return;
 		}
 		
-		String action = null;
-		if (request.getParameter("button") != null) {
-			action = request.getParameter("button");
-		}
-		else {
+		String action = request.getParameter("button");
+		if (action == null) {
 			String path = getServletContext().getContextPath() + "/GoToQotdOne";
 			response.sendRedirect(path);
 			return;
 		}
 	
 		// salviamo in sessione le risposte della sezione 2 in caso si tornasse indietro
+		String[] request_answers2 = request.getParameterValues("answers2");
+		List<String> answers2 = new ArrayList<String>();
+		
+		if (request_answers2 != null)
+			for(int i = 0; i < request_answers2.length; i++)
+				answers2.add(request_answers2[i]);
+		
+		session.setAttribute("answers2", answers2);
+		
 
-		String[] answers2 = request.getParameterValues("answers2");
-		List<String> session_answers2 = new ArrayList<String>();
-		
-		if (answers2 != null)
-			for(int i = 0; i < answers2.length; i++)
-				session_answers2.add(answers2[i]);
-		
-		session.setAttribute("answers2", session_answers2);
+		List<QuestionOne> questions1;
+		try {
+			questions1 = questionService.getSectionOneQuestions(qotd.getId());
+		} catch (BadRetrievalException | BadRequestException e) {
+			ctx.setVariable("answers2", answers2);
+			ctx.setVariable("questions2", questions2);
+			ctx.setVariable("errorMsg", e.getMessage());
+			templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
+			return;
+		}
+		List<String> answers1 = (List<String>) session.getAttribute("answers1");
 		
 		if (action.equals("Previous")) {
 
-			List<QuestionOne> questions1 = null;
-			List<String> answers1 = null;
-			
-			questions1 = (List<QuestionOne>) session.getAttribute("questions1");
-			answers1 = (List<String>) session.getAttribute("answers1");
 			ctx.setVariable("questions1", questions1);
 			ctx.setVariable("answers1", answers1);
 			
@@ -148,54 +155,41 @@ public class ManageQuestionnaire extends HttpServlet {
 		
 		else if (action.equals("Submit")) {
 			
-			List<String> answers_text_one = null;
-			List<String> answers_text_two = null;
-			
-			if (session.getAttribute("answers1") != null)
-				answers_text_one = (List<String>) session.getAttribute("answers1"); // aggiungo prima risposte sezione 1 (mandatory)
+			if (answers1 == null) {
+				String path = getServletContext().getContextPath() + "/GoToQotdOne";
+				response.sendRedirect(path);
+				return;
+			}
 			
 			// CONTROLLO SU DOMANDE OBBLIGATORIE SEZIONE 1
-			for(String mandatory_answer : answers_text_one)
-				if(mandatory_answer.isBlank()) {
+			for(String a : answers1) {
+				if(a.isBlank()) {
 					// stesso comportamento di action = "Previous"
-					List<String> questions1 = null;
-					if (session.getAttribute("questions1") != null)
-						questions1 = (List<String>) session.getAttribute("questions1");
-
+					
 					ctx.setVariable("questions1", questions1);
-					ctx.setVariable("answers1", answers_text_one);
+					ctx.setVariable("answers1", answers1);
 					ctx.setVariable("requiredMsg", "You MUST answer all the questions to submit the questionnaire!");
 					
 					templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
 					
 					return;
 				}
-				
-			/*for(String answer_text : session_answers2)
-				answers_text_two.add(answer_text); // poi aggiungo risposte sezione 2*/
+			}
 			
-			boolean goodAnswers;
-			
+			boolean areGoodAnswers;
 			try {
-				goodAnswers = badWordService.checkOffensiveWords((ArrayList<String>) answers_text_one);
+				areGoodAnswers = badWordService.checkOffensiveWords((ArrayList<String>) answers1);
 			} catch (BadRetrievalException e) {
-				
-				List<QuestionOne> questions1 = null;
-				List<String> answers1 = null;
-				//WARNING:PRIMA VENGONO PASSATI OGGETTI E ORA STRINGHE??
-				questions1 = (List<QuestionOne>) session.getAttribute("questions1");
-				answers1 = (List<String>) session.getAttribute("answers1");
-
-				ctx.setVariable("questions1", questions1);
-				ctx.setVariable("answers1", answers1);
+				ctx.setVariable("questions2", questions2);
+				ctx.setVariable("answers2", answers2);
 				ctx.setVariable("errorMsg", e.getMessage());
 				
-				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
+				templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
 				
 				return;
 			}
 			
-			if(!goodAnswers) {
+			if(!areGoodAnswers) {
 				
 				try {
 					userService.banUser(user.getId());
@@ -203,12 +197,10 @@ public class ManageQuestionnaire extends HttpServlet {
 					ctx.setVariable("errorMsg", e.getMessage());
 				}
 				
-				session.setAttribute("questions1", null);
 				session.setAttribute("answers1", null);
-				session.setAttribute("questions2", null);
 				session.setAttribute("answers2", null);
 				
-				ctx.setVariable("BanMsg", "Due to the insertion of offensive words in the answers you have provided, you are banned from the site");
+				ctx.setVariable("BanMsg", "Due to the insertion of offensive words in the answers which you have provided, you are banned from the site");
 				templateEngine.process("/WEB-INF/bannedpage.html", ctx, response.getWriter());
 				
 				return;
@@ -217,8 +209,10 @@ public class ManageQuestionnaire extends HttpServlet {
 			
 			try {
 				// aggiungo domande
-				answerService.insertAnswersOfSectionOne(user.getId(), qotd.getId(), answers_text_one);
-				questionService.associateAnswerAndQuestionOfSection2(user.getId(),qotd.getId(),session_answers2);
+				answerService.insertAnswers(user.getId(), qotd.getId(), answers1, answers2, questions2);
+				//
+				questionService.associateAnswerAndQuestionOfSection2(user.getId(), qotd.getId(), answers2);
+				//
 				// aggiorno l'accesso visto che il questionario è stato inviato
 				accessService.updateAccessAfterSubmit(user.getId(), qotd.getId());
 				
@@ -227,9 +221,7 @@ public class ManageQuestionnaire extends HttpServlet {
 			}
 			
 			// cancello domande e risposte dalla sessione anche nel caso Submit non solo nel caso Cancel
-			session.setAttribute("questions1", null);
 			session.setAttribute("answers1", null);
-			session.setAttribute("questions2", null);
 			session.setAttribute("answers2", null);
 			
 			ctx.setVariable("submitted", true);
@@ -240,9 +232,7 @@ public class ManageQuestionnaire extends HttpServlet {
 		
 		else if (action.equals("Cancel")) {
 			
-			session.setAttribute("questions1", null);
 			session.setAttribute("answers1", null);
-			session.setAttribute("questions2", null);
 			session.setAttribute("answers2", null);
 			
 			String path = getServletContext().getContextPath() + "/GoToHomepage";

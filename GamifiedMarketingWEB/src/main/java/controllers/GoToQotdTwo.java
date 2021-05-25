@@ -70,28 +70,27 @@ public class GoToQotdTwo extends HttpServlet {
 
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-
-		List<QuestionOne> questions1 = (List<QuestionOne>) session.getAttribute("questions1");
 		
-		String[] reqAnswers1 = request.getParameterValues("answers1");
+		String[] request_answers1 = request.getParameterValues("answers1");
 		List<String> answers1 = new ArrayList<String>();
 		
-		if (reqAnswers1 != null)
-			for(int i = 0; i < reqAnswers1.length; i++)
-				answers1.add(reqAnswers1[i]);
+		if (request_answers1 != null)
+			for(int i = 0; i < request_answers1.length; i++)
+				answers1.add(request_answers1[i]);
 		
+		List<QuestionOne> questions1 = null;
 		Questionnaire qotd = null;
 		try {
 			qotd = questionnaireService.getQuestionnaireOfTheDay();
 			if (qotd == null) {
-				session.setAttribute("questions1", null);
 				session.setAttribute("answers1", null);
-				session.setAttribute("questions2", null);
 				session.setAttribute("answers2", null);
 				ctx.setVariable("errorMsg", "There is no questionnaire of the day.");
 				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
 				return;
 			}
+			questions1 = questionService.getSectionOneQuestions(qotd.getId());
+			
 			if(accessService.checkSubmittedAccess(u.getId(), qotd.getId())) { 
 				// l'utente ha già compilato il questionario
 				ctx.setVariable("warningMsg", "You have already filled the questionnaire today!");
@@ -107,14 +106,15 @@ public class GoToQotdTwo extends HttpServlet {
 		}
 		
 		// CONTROLLO SU DOMANDE OBBLIGATORIE SEZIONE 1
-		for(String mandatory_answer : answers1)
-			if(mandatory_answer.isBlank()) {
+		for(String a : answers1) {
+			if(a.isBlank()) {
 				ctx.setVariable("questions1", questions1);
 				ctx.setVariable("answers1", answers1);
 				ctx.setVariable("requiredMsg", "You MUST answer all the questions to submit the questionnaire!");
 				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
 				return;
 			}
+		}
 		
 		List<QuestionTwo> questions2 = null;
 		try {
@@ -124,15 +124,10 @@ public class GoToQotdTwo extends HttpServlet {
 		}
 		
 		session.setAttribute("answers1", answers1);
-		session.setAttribute("questions2", questions2);
 		ctx.setVariable("questions2", questions2);
 		
-		List<String> answers2 = null;
-		
-		if (session.getAttribute("answers2") != null) {
-			answers2 = (List<String>) session.getAttribute("answers2");
-			ctx.setVariable("answers2", answers2);
-		}
+		List<String> answers2 = (List<String>) session.getAttribute("answers2");
+		ctx.setVariable("answers2", answers2);
 		
 		templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());		
 	}

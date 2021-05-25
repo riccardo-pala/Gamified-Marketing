@@ -9,6 +9,7 @@ import javax.persistence.PersistenceException;
 
 import entities.Answer;
 import entities.Question;
+import entities.QuestionTwo;
 import entities.Questionnaire;
 import entities.User;
 import exceptions.BadRetrievalException;
@@ -38,7 +39,7 @@ public class AnswerService {
 		return answers;
 	}
 	
-	public void insertAnswersOfSectionOne(int userId, int questionnaireId, List<String> answersText) throws BadRetrievalException {
+	public void insertAnswers(int userId, int questionnaireId, List<String> answers1, List<String> answers2, List<QuestionTwo> questions2) throws BadRetrievalException {
 		
 		User user = null;
 		Questionnaire questionnaire = null;
@@ -50,14 +51,22 @@ public class AnswerService {
 			throw new BadRetrievalException("Failed to retrieve some information.");
 		}
 		
-		Answer answer;
-		for(int i = 0; i < questionnaire.getQuestions().size(); i++) { 
-			if(i <answersText.size() && !answersText.get(i).isBlank()) {
-				answer = new Answer(user, questionnaire.getQuestions().get(i), questionnaire, answersText.get(i));
-				questionnaire.getQuestions().get(i).addAnswer(answer);
-			}
+		for(int i=0; i<questionnaire.getQuestions().size(); i++) { 
+			Answer a = new Answer(user, questionnaire.getQuestions().get(i), questionnaire, answers1.get(i));
+			questionnaire.getQuestions().get(i).addAnswer(a);
 		}
 		
 		em.persist(questionnaire);
+		
+		/*
+		
+		for(int i=0; i<questions2.size(); i++) {
+			if(!answers2.get(i).isBlank()) {
+				Answer a = new Answer(user, questions2.get(i), questionnaire, answers2.get(i));
+				QuestionTwo q = questions2.get(i);
+				q.addAnswer(a);
+				em.persist(q);
+			}
+		} */
 	}
 }
