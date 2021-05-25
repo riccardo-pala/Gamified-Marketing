@@ -218,13 +218,10 @@ public class ManageQuestionnaire extends HttpServlet {
 				questions.addAll(questionService.getSectionOneQuestions(qotd.getId()));
 				questions.addAll(questionService.getSectionTwoQuestions());
 				
-				// controllo che combacino domande e risposte
-				if(answers_text.size() == questions.size()) {
-					// aggiungo domande
-					answerService.insertAnswers(user.getId(), qotd.getId(), answers_text, questions);
-					// aggiorno l'accesso vito che il questionario è stato inviato
-					accessService.updateAccessAfterSubmit(user.getId(), qotd.getId());
-				}
+				// aggiungo domande
+				answerService.insertAnswers(user.getId(), qotd.getId(), answers_text, questions);
+				// aggiorno l'accesso vito che il questionario è stato inviato
+				accessService.updateAccessAfterSubmit(user.getId(), qotd.getId());
 				
 			} catch (BadRetrievalException | BadRequestException e) {
 				ctx.setVariable("errorMsg", e.getMessage());
