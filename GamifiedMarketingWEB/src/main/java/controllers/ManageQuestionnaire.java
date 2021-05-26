@@ -211,7 +211,7 @@ public class ManageQuestionnaire extends HttpServlet {
 				// aggiungo domande
 				answerService.insertAnswers(user.getId(), qotd.getId(), answers1, answers2, questions2);
 				//
-				questionService.associateAnswerAndQuestionOfSection2(user.getId(), qotd.getId(), answers2);
+				//questionService.associateAnswerAndQuestionOfSection2(user.getId(), qotd.getId(), answers2);
 				//
 				// aggiorno l'accesso visto che il questionario è stato inviato
 				accessService.updateAccessAfterSubmit(user.getId(), qotd.getId());

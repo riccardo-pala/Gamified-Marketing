@@ -58,15 +58,11 @@ public class AnswerService {
 		
 		em.persist(questionnaire);
 		
-		/*
-		
 		for(int i=0; i<questions2.size(); i++) {
 			if(!answers2.get(i).isBlank()) {
 				Answer a = new Answer(user, questions2.get(i), questionnaire, answers2.get(i));
-				QuestionTwo q = questions2.get(i);
-				q.addAnswer(a);
-				em.persist(q);
+				em.persist(a);
 			}
-		} */
+		}
 	}
 }
