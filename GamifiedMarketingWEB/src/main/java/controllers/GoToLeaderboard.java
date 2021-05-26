@@ -1,7 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -20,7 +19,6 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.User;
 import exceptions.BadRetrievalException;
-import exceptions.BadUpdateException;
 import services.UserService;
 
 @WebServlet("/GoToLeaderboard")

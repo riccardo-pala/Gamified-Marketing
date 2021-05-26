@@ -21,9 +21,7 @@ import entities.Questionnaire;
 import exceptions.BadRetrievalException;
 import services.QuestionnaireService;
 
-/**
- * Servlet implementation class GoToInspectionPage
- */
+
 @WebServlet("/GoToInspectionPage")
 public class GoToInspectionPage extends HttpServlet {
 	

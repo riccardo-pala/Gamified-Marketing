@@ -101,7 +101,7 @@ public class UserService {
 			throw new BadRetrievalException("Could not retrieve user information.");
 		}
 		
-		if (uList.isEmpty())
+		if (uList == null || uList.isEmpty())
 			return null;
 		else {
 			for(int i=0;i<uList.size();i++)

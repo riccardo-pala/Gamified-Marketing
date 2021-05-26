@@ -9,7 +9,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
 import entities.Product;
-import entities.Questionnaire;
 import exceptions.BadRetrievalException;
 import exceptions.BadUpdateException;
 import exceptions.CreateProductException;

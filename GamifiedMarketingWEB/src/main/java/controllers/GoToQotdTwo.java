@@ -84,7 +84,6 @@ public class GoToQotdTwo extends HttpServlet {
 			qotd = questionnaireService.getQuestionnaireOfTheDay();
 			if (qotd == null) {
 				session.setAttribute("answers1", null);
-				session.setAttribute("answers2", null);
 				ctx.setVariable("errorMsg", "There is no questionnaire of the day.");
 				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
 				return;
@@ -114,6 +113,8 @@ public class GoToQotdTwo extends HttpServlet {
 				return;
 			}
 		}
+
+		session.setAttribute("answers1", answers1);
 		
 		List<QuestionTwo> questions2 = null;
 		try {
@@ -122,11 +123,7 @@ public class GoToQotdTwo extends HttpServlet {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
 		
-		session.setAttribute("answers1", answers1);
 		ctx.setVariable("questions2", questions2);
-		
-		List<String> answers2 = (List<String>) session.getAttribute("answers2");
-		ctx.setVariable("answers2", answers2);
 		
 		templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());		
 	}

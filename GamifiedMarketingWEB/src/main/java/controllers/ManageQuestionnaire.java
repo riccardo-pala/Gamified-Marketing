@@ -1,7 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,6 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import entities.Question;
 import entities.QuestionOne;
 import entities.QuestionTwo;
 import entities.Questionnaire;
@@ -91,7 +89,6 @@ public class ManageQuestionnaire extends HttpServlet {
 			qotd = questionnaireService.getQuestionnaireOfTheDay();
 			if (qotd == null) {
 				session.setAttribute("answers1", null);
-				session.setAttribute("answers2", null);
 				ctx.setVariable("errorMsg", "There is no questionnaire of the day.");
 				templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
 				return;
@@ -105,8 +102,6 @@ public class ManageQuestionnaire extends HttpServlet {
 				return;
 			}
 		} catch (BadRetrievalException | BadRequestException e) {
-			List<String> answers2 = (List<String>) session.getAttribute("answers2");
-			ctx.setVariable("answers2", answers2);
 			ctx.setVariable("questions2", questions2);
 			ctx.setVariable("errorMsg", e.getMessage());
 			templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
@@ -127,14 +122,10 @@ public class ManageQuestionnaire extends HttpServlet {
 			for(int i = 0; i < request_answers2.length; i++)
 				answers2.add(request_answers2[i]);
 		
-		session.setAttribute("answers2", answers2);
-		
-
 		List<QuestionOne> questions1;
 		try {
 			questions1 = questionService.getSectionOneQuestions(qotd.getId());
 		} catch (BadRetrievalException | BadRequestException e) {
-			ctx.setVariable("answers2", answers2);
 			ctx.setVariable("questions2", questions2);
 			ctx.setVariable("errorMsg", e.getMessage());
 			templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
@@ -167,7 +158,6 @@ public class ManageQuestionnaire extends HttpServlet {
 					ctx.setVariable("requiredMsg", "You MUST answer all the questions to submit the questionnaire!");
 					
 					templateEngine.process("/WEB-INF/qotdone.html", ctx, response.getWriter());
-					
 					return;
 				}
 			}
@@ -177,7 +167,6 @@ public class ManageQuestionnaire extends HttpServlet {
 				areGoodAnswers = badWordService.checkOffensiveWords((ArrayList<String>) answers1);
 			} catch (BadRetrievalException e) {
 				ctx.setVariable("questions2", questions2);
-				ctx.setVariable("answers2", answers2);
 				ctx.setVariable("errorMsg", e.getMessage());
 				
 				templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
@@ -194,14 +183,12 @@ public class ManageQuestionnaire extends HttpServlet {
 				}
 				
 				session.setAttribute("answers1", null);
-				session.setAttribute("answers2", null);
 				
 				ctx.setVariable("BanMsg", "Due to the insertion of offensive words in the answers which you have provided, you are banned from the site");
 				templateEngine.process("/WEB-INF/bannedpage.html", ctx, response.getWriter());
 				
 				return;
 			}
-			
 			
 			try {
 				answerService.insertAnswers(user.getId(), qotd.getId(), answers1, answers2, questions2);
@@ -211,7 +198,6 @@ public class ManageQuestionnaire extends HttpServlet {
 			}
 			
 			session.setAttribute("answers1", null);
-			session.setAttribute("answers2", null);
 			
 			ctx.setVariable("submitted", true);
 			templateEngine.process("/WEB-INF/greetings.html", ctx, response.getWriter());
@@ -222,7 +208,6 @@ public class ManageQuestionnaire extends HttpServlet {
 		else if (action.equals("Cancel")) {
 			
 			session.setAttribute("answers1", null);
-			session.setAttribute("answers2", null);
 			
 			String path = getServletContext().getContextPath() + "/GoToHomepage";
 			response.sendRedirect(path);

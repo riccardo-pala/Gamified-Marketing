@@ -1,10 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.List;
-
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -19,13 +15,10 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import entities.Questionnaire;
 import exceptions.BadUpdateException;
 import services.QuestionnaireService;
 
-/**
- * Servlet implementation class EraseQuestionnaire
- */
+
 @WebServlet("/EraseQuestionnaire")
 public class EraseQuestionnaire extends HttpServlet {
 private static final long serialVersionUID = 1L;

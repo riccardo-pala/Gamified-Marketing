@@ -19,9 +19,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import services.ProductService;
 import services.QuestionnaireService;
 
-/**
- * Servlet implementation class GoToAdminHomepage
- */
+
 @WebServlet("/GoToAdminHomepage")
 public class GoToAdminHomepage extends HttpServlet {
 	

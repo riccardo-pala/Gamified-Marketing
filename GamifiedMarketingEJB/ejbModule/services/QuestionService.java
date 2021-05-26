@@ -1,6 +1,5 @@
 package services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -8,11 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
-import entities.Answer;
 import entities.QuestionOne;
 import entities.QuestionTwo;
-import entities.Questionnaire;
-import entities.User;
 import exceptions.BadRequestException;
 import exceptions.BadRetrievalException;
 

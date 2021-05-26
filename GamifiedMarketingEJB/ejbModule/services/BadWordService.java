@@ -28,9 +28,9 @@ public class BadWordService {
 			throw new BadRetrievalException("Failed to retrieve some information.");
 		}
 		
-		for(String answer : answers)
-			for(BadWord word : words)
-				if(answer.contains(word.getWord()))
+		for(String a : answers)
+			for(BadWord w : words)
+				if(a.contains(w.getWord()))
 					return false;
 	
 		return true;

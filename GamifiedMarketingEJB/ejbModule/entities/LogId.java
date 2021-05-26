@@ -3,14 +3,14 @@ package entities;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
-
 
 public class LogId implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private int user;  Timestamp accessTime;
+	private int user;
+	
+	private Timestamp accessTime;
 	
 	private int questionnaire;
 

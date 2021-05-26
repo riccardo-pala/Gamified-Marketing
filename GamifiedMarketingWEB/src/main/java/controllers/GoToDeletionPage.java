@@ -3,7 +3,6 @@ package controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -24,9 +23,7 @@ import entities.Questionnaire;
 import exceptions.BadRetrievalException;
 import services.QuestionnaireService;
 
-/**
- * Servlet implementation class GoToDeletionPage
- */
+
 @WebServlet("/GoToDeletionPage")
 public class GoToDeletionPage extends HttpServlet {
 
@@ -75,20 +72,18 @@ public class GoToDeletionPage extends HttpServlet {
 			return;
 		}
 		
-		Date date = new Date();
-		date.setHours(0);
-		date.setMinutes(0);
-		date.setSeconds(0);
+		Date today = new Date();
+		today.setHours(0);
+		today.setMinutes(0);
+		today.setSeconds(0);
 		
-		ArrayList<Questionnaire> questionn= new ArrayList<Questionnaire>();
+		ArrayList<Questionnaire> beforeTodayQ = new ArrayList<Questionnaire>();
 		
-		for(Questionnaire quest : questionnaires)
-			if(quest.getDate().before(date) && !quest.getDate().toString().equals(date.toString())) {
-				questionn.add(quest);
-				System.out.println(quest.getDate().toString());
-			}
+		for(Questionnaire q : questionnaires)
+			if(q.getDate().before(today) && !q.getDate().toString().equals(today.toString()))
+				beforeTodayQ.add(q);
 		
-		ctx.setVariable("questionnaires", questionn);
+		ctx.setVariable("questionnaires", beforeTodayQ);
 		templateEngine.process("/WEB-INF/deletionpage.html", ctx, response.getWriter());
 	}
 

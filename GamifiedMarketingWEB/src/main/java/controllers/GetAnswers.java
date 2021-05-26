@@ -20,11 +20,8 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import entities.Answer;
 import exceptions.BadRetrievalException;
 import services.AnswerService;
-import services.QuestionnaireService;
 
-/**
- * Servlet implementation class GetAnswers
- */
+
 @WebServlet("/GetAnswers")
 public class GetAnswers extends HttpServlet {
 	

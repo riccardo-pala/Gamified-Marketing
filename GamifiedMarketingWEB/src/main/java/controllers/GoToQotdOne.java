@@ -1,7 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -18,14 +17,12 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-import entities.Product;
 import entities.QuestionOne;
 import entities.Questionnaire;
 import entities.User;
 import exceptions.BadRequestException;
 import exceptions.BadRetrievalException;
 import services.AccessService;
-import services.ProductService;
 import services.QuestionService;
 import services.QuestionnaireService;
 

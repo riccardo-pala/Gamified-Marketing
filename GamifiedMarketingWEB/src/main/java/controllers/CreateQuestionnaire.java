@@ -32,9 +32,7 @@ import services.QuestionService;
 import services.QuestionnaireService;
 import utils.ImageUtils;
 
-/**
- * Servlet implementation class CreateQuestionnaire
- */
+
 @WebServlet("/CreateQuestionnaire")
 @MultipartConfig
 public class CreateQuestionnaire extends HttpServlet {
@@ -90,12 +88,12 @@ public class CreateQuestionnaire extends HttpServlet {
 		
 		ArrayList<QuestionOne> questions = new ArrayList<QuestionOne>();
 				
-		String[] reqQuestions = request.getParameterValues("questions");
+		String[] request_questions = request.getParameterValues("questions");
 		
-		if (reqQuestions != null)
-			for(int i=0; i<reqQuestions.length; i++)
-				if(!reqQuestions[i].isBlank()) {
-					QuestionOne q = new QuestionOne(reqQuestions[i]);
+		if (request_questions != null)
+			for(int i=0; i<request_questions.length; i++)
+				if(!request_questions[i].isBlank()) {
+					QuestionOne q = new QuestionOne(request_questions[i]);
 					questions.add(q);
 				}
 		
@@ -104,7 +102,6 @@ public class CreateQuestionnaire extends HttpServlet {
 			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
 			return;
 		}
-		
 		
 		String newProductName = request.getParameter("newproductname");
 
@@ -162,11 +159,11 @@ public class CreateQuestionnaire extends HttpServlet {
 		}
 		
 		if (productid <= 0) {
+			if(isNewProduct) deleteNewProduct(productid);
 			ctx.setVariable("errorMsg", "There was a problem during the creation of the questionnaire, please retry.");
 			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
 			return;
 		}
-		
 		
 		try {
 			questionnaireService.createQuestionnaire(productid, questionnaireDate, questions);

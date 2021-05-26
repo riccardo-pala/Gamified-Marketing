@@ -112,15 +112,15 @@ public class AccessService {
 	
 	public List<Log> getAllCancelledQuestionnaire(int questionnaireId) throws BadRetrievalException {
 		
-		List<Log> submittedAccesses= null;
+		List<Log> cancelledAccesses= null;
 		
 		try {
-			submittedAccesses = em.createNamedQuery("Log.findByQuestionnaireCanceled",Log.class).setParameter(1, questionnaireId).getResultList();
+			cancelledAccesses = em.createNamedQuery("Log.findByQuestionnaireCancelled",Log.class).setParameter(1, questionnaireId).getResultList();
 		} catch (PersistenceException e) {
 			throw new BadRetrievalException("Failed to retrieve accesses information.");
 		}
 		
-		return submittedAccesses;
+		return cancelledAccesses;
 		
 	}
 	

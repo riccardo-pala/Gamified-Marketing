@@ -19,7 +19,6 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Product;
 import exceptions.BadRetrievalException;
-import services.AccessService;
 import services.ProductService;
 
 

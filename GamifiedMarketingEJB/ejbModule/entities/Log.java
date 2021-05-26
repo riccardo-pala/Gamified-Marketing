@@ -3,8 +3,6 @@ package entities;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -13,10 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 
 
@@ -26,7 +20,7 @@ import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 @IdClass(LogId.class)
 @NamedQueries({
 	@NamedQuery(name="Log.findByQuestionnaireSubmitted",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=true ORDER BY a.accessTime DESC"),
-	@NamedQuery(name="Log.findByQuestionnaireCanceled",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=false ORDER BY a.accessTime DESC"),
+	@NamedQuery(name="Log.findByQuestionnaireCancelled",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.submitted=false ORDER BY a.accessTime DESC"),
 	@NamedQuery(name="Log.findByQuestionnaireAndUser",query="SELECT a FROM Log a WHERE a.questionnaire.id=?1 AND a.user.id=?2 ORDER BY a.accessTime DESC")	
 })
 public class Log implements Serializable {

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.openjpa.persistence.NonUniqueResultException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -54,19 +53,14 @@ public class CheckRegistration extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		String firstname = null;
-		String lastname = null;
-		String username = null;
-		String email = null;
-		String password = null;
+		String firstname = request.getParameter("firstname");
+		String lastname = request.getParameter("lastname");
+		String username = request.getParameter("username");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
 		
-		firstname= request.getParameter("firstname");
-		lastname= request.getParameter("lastname");
-		username = request.getParameter("username");
-		email = request.getParameter("email");
-		password = request.getParameter("password");
 		if (firstname==null || lastname==null || username == null || email==null || password == null ||
-				firstname.isEmpty() || lastname.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+				firstname.isBlank() || lastname.isBlank() || username.isBlank() || email.isBlank() || password.isBlank()) {
 			ctx.setVariable("errorMsg", "Missing or empty credential value.");
 			templateEngine.process("/registration.html", ctx, response.getWriter());
 			return;

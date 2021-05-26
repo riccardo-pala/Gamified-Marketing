@@ -1,7 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -20,7 +19,6 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Log;
 import exceptions.BadRetrievalException;
-import exceptions.CredentialsException;
 import services.AccessService;
 
 

@@ -8,7 +8,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
 import entities.Answer;
-import entities.Question;
 import entities.QuestionTwo;
 import entities.Questionnaire;
 import entities.User;

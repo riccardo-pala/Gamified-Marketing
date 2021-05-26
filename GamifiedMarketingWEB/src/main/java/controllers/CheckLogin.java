@@ -62,7 +62,7 @@ public class CheckLogin extends HttpServlet {
 		String path = "/index.html";
 		
 		if (username == null || password == null ||
-				username.isEmpty() || password.isEmpty()) {
+				username.isBlank() || password.isBlank()) {
 			ctx.setVariable("errorMsg", "Missing credential values!");
 			templateEngine.process(path, ctx, response.getWriter());
 		}
@@ -78,7 +78,7 @@ public class CheckLogin extends HttpServlet {
 		}
 		
 		if (user == null) {
-			ctx.setVariable("errorMsg", "Incorrect username or password");
+			ctx.setVariable("errorMsg", "Wrong username or password.");
 			templateEngine.process(path, ctx, response.getWriter());
 		} 
 		else if(user.getIsBanned()) {

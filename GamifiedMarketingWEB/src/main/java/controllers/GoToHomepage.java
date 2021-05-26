@@ -1,8 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.util.List;
-
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -19,9 +17,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import entities.Product;
-import entities.QuestionOne;
 import entities.Questionnaire;
-import exceptions.BadRequestException;
 import exceptions.BadRetrievalException;
 import services.AnswerService;
 import services.ProductService;
@@ -91,7 +87,6 @@ public class GoToHomepage extends HttpServlet {
 			ctx.setVariable("potd", potd);
 			ctx.setVariable("img", imgStr);
 			
-				
 			ctx.setVariable("questions",qotd.getQuestions());
 			
 		}
