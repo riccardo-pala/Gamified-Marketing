@@ -67,7 +67,7 @@ public class GoToLeaderboard extends HttpServlet {
 		
 		try {
 			users = userService.getUsersOrderedByPoints(u.getId());
-		} catch (BadRetrievalException | BadUpdateException e) {
+		} catch (BadRetrievalException e) {
 			ctx.setVariable("errorMsg", e.getMessage());
 		}
 	     

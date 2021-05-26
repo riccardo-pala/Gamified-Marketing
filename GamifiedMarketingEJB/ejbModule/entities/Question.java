@@ -46,8 +46,6 @@ public abstract class Question {
 	}
 	
 	
-	
-	
 	public int getId() {
 		return id;
 	}

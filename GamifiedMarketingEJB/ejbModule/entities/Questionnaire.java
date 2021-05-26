@@ -45,8 +45,11 @@ public class Questionnaire {
 	private Product product;
 	
 	@OneToMany(mappedBy="questionnaire",cascade={CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.REFRESH})
-	private List<QuestionOne> questions; 
-	
+	private List<QuestionOne> questions;
+	/*
+	@OneToMany(mappedBy="questionnaire",cascade=CascadeType.REMOVE)
+	private List<Answer> answers;
+	*/
 	
 	public Questionnaire() {
 	}

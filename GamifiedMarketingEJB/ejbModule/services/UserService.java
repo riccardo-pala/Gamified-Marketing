@@ -89,7 +89,7 @@ public class UserService {
 	}
 	
 	
-	public List<User> getUsersOrderedByPoints(int userId) throws BadRetrievalException, BadUpdateException {
+	public List<User> getUsersOrderedByPoints(int userId) throws BadRetrievalException {
 		
 		List<User> uList = null;
 		try {
@@ -105,14 +105,7 @@ public class UserService {
 			return null;
 		else {
 			for(int i=0;i<uList.size();i++)
-				if(uList.get(i).getId() == userId) {
-					try {
-						em.persist(uList.get(i));
-						em.refresh(uList.get(i));
-					} catch (PersistenceException e) {
-						throw new BadUpdateException("Could not update user information.");
-					}
-				}
+				em.refresh(uList.get(i));
 			return uList;
 		}	
 	}
