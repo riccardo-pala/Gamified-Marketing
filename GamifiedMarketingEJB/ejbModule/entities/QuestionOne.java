@@ -18,17 +18,7 @@ public class QuestionOne extends Question implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	/*non lo avevamo implementato ma è fondamentale per poter eliminare tutte le risposte
-	 * senza di questo non è possibile eliminarle perchè si viola il constraints delle foreign keys question_answer
-	 *
-	@OneToMany(mappedBy="question", cascade= CascadeType.REMOVE)
-	private List<Answer> answers; 
-	*/ //non basta quello nella classe padre?
-	
-	/**
-	 * CONSTRUCTORS
-	 */
-	
+
 	public QuestionOne() {
 		super();
 	}

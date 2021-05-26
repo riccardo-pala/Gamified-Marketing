@@ -91,7 +91,6 @@ public class GoToHomepage extends HttpServlet {
 			ctx.setVariable("potd", potd);
 			ctx.setVariable("img", imgStr);
 			
-			// Users REVIEW of the current product
 				
 			ctx.setVariable("questions",qotd.getQuestions());
 			

@@ -95,15 +95,9 @@ public class QuestionnaireService {
 		
 		List<Answer> answers2 = em.createQuery("SELECT a FROM Answer a JOIN QuestionTwo q WHERE a.question.id = q.id and a.questionnaire.id = ?1", Answer.class)
 				.setParameter(1, questionnaireId).getResultList();
-		/*
-		for (Answer a : answers2)
-			if(a.getQuestion().getSection().equals("1"))
-				answers2.remove(a);
-		*/
+
 		for (Answer a : answers2)
 			em.remove(a);
-		
-		//em.flush();
 		
 		try {
 			q = em.find(Questionnaire.class, questionnaireId);

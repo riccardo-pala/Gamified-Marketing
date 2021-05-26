@@ -92,7 +92,7 @@ public class GoToQotdTwo extends HttpServlet {
 			questions1 = questionService.getSectionOneQuestions(qotd.getId());
 			
 			if(accessService.checkSubmittedAccess(u.getId(), qotd.getId())) { 
-				// l'utente ha già compilato il questionario
+
 				ctx.setVariable("warningMsg", "You have already filled the questionnaire today!");
 				templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
 				return;
@@ -105,7 +105,6 @@ public class GoToQotdTwo extends HttpServlet {
 			return;
 		}
 		
-		// CONTROLLO SU DOMANDE OBBLIGATORIE SEZIONE 1
 		for(String a : answers1) {
 			if(a.isBlank()) {
 				ctx.setVariable("questions1", questions1);

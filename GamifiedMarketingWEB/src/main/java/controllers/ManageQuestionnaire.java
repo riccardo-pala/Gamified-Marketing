@@ -99,7 +99,7 @@ public class ManageQuestionnaire extends HttpServlet {
 			questions2 = questionService.getSectionTwoQuestions();
 			
 			if(accessService.checkSubmittedAccess(user.getId(), qotd.getId())) { 
-				// l'utente ha già compilato il questionario
+
 				ctx.setVariable("warningMsg", "You have already filled the questionnaire today!");
 				templateEngine.process("/WEB-INF/qotdtwo.html", ctx, response.getWriter());
 				return;
@@ -120,7 +120,6 @@ public class ManageQuestionnaire extends HttpServlet {
 			return;
 		}
 	
-		// salviamo in sessione le risposte della sezione 2 in caso si tornasse indietro
 		String[] request_answers2 = request.getParameterValues("answers2");
 		List<String> answers2 = new ArrayList<String>();
 		
@@ -161,11 +160,8 @@ public class ManageQuestionnaire extends HttpServlet {
 				return;
 			}
 			
-			// CONTROLLO SU DOMANDE OBBLIGATORIE SEZIONE 1
 			for(String a : answers1) {
 				if(a.isBlank()) {
-					// stesso comportamento di action = "Previous"
-					
 					ctx.setVariable("questions1", questions1);
 					ctx.setVariable("answers1", answers1);
 					ctx.setVariable("requiredMsg", "You MUST answer all the questions to submit the questionnaire!");
@@ -208,19 +204,12 @@ public class ManageQuestionnaire extends HttpServlet {
 			
 			
 			try {
-				// aggiungo domande
 				answerService.insertAnswers(user.getId(), qotd.getId(), answers1, answers2, questions2);
-				//
-				//questionService.associateAnswerAndQuestionOfSection2(user.getId(), qotd.getId(), answers2);
-				//
-				// aggiorno l'accesso visto che il questionario è stato inviato
 				accessService.updateAccessAfterSubmit(user.getId(), qotd.getId());
-				
 			} catch (BadRetrievalException | BadRequestException e) {
 				ctx.setVariable("errorMsg", e.getMessage());
 			}
 			
-			// cancello domande e risposte dalla sessione anche nel caso Submit non solo nel caso Cancel
 			session.setAttribute("answers1", null);
 			session.setAttribute("answers2", null);
 			

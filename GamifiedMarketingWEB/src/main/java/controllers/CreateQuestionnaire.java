@@ -77,8 +77,6 @@ public class CreateQuestionnaire extends HttpServlet {
 		List<Product> products = null;
 		Date questionnaireDate = null;
 		
-		/*---- Check the date ----*/
-		
 		try {
 			questionnaireDate = Date.valueOf(request.getParameter("questionnairedate"));
 			products = productService.getAllProducts();
@@ -89,8 +87,6 @@ public class CreateQuestionnaire extends HttpServlet {
 			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
 			return;
 		}
-		
-		/*---- Check the questions ----*/
 		
 		ArrayList<QuestionOne> questions = new ArrayList<QuestionOne>();
 				
@@ -109,7 +105,6 @@ public class CreateQuestionnaire extends HttpServlet {
 			return;
 		}
 		
-		/*---- Check the product ----*/
 		
 		String newProductName = request.getParameter("newproductname");
 
@@ -172,7 +167,6 @@ public class CreateQuestionnaire extends HttpServlet {
 			return;
 		}
 		
-		/*---- Create the questionnaire ----*/
 		
 		try {
 			questionnaireService.createQuestionnaire(productid, questionnaireDate, questions);

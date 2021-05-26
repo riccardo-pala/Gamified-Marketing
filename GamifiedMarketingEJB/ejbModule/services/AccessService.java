@@ -91,7 +91,7 @@ public class AccessService {
 		
 		for(Log access : submittedAccesses)
 			if(access.getUser().equals(user) && access.getSubmitted())
-				return true; // l'utente ha già compilato e inviato il questionario
+				return true;
 		
 		return false;
 	}

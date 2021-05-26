@@ -60,9 +60,11 @@ public class AnswerService {
 		
 		for(int i=0; i<questions2.size(); i++) {
 			if(!answers2.get(i).isBlank()) {
-				Answer a = new Answer(user, questions2.get(i), questionnaire, answers2.get(i));
-				em.persist(a);
+				QuestionTwo q = em.find(QuestionTwo.class, questions2.get(i).getId());
+				Answer a = new Answer(user, q, questionnaire, answers2.get(i));
+				q.addAnswer(a);
+				em.persist(q);
 			}
-		}
+		} 
 	}
 }

@@ -64,19 +64,4 @@ public class QuestionService {
 		return qList;		
 	}
 	
-	
-	public void associateAnswerAndQuestionOfSection2(int userId, int questionnaireId, List<String> answer_text) throws BadRetrievalException, BadRequestException {
-		
-		List<QuestionTwo> questionSecTwo = this.getSectionTwoQuestions();
-		User user = em.find(User.class, userId);
-		Questionnaire qotd = em.find(Questionnaire.class,questionnaireId);
-		
-		for(int i=0; i<questionSecTwo.size(); i++) {
-			if(!answer_text.get(i).isBlank()) {
-				Answer answer= new Answer(user,questionSecTwo.get(i),qotd,answer_text.get(i));
-				questionSecTwo.get(i).addAnswer(answer);
-				em.persist(questionSecTwo.get(i));
-			}
-		}
-	}
 }

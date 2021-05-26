@@ -2,8 +2,9 @@ package entities;
 
 
 
+import java.io.Serializable;
+
 import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 	@NamedQuery(name="Product.findByName", query="SELECT p FROM Product p WHERE p.name=?1"),
 	@NamedQuery(name="Product.findAll", query="SELECT p FROM Product p")
 })
-public class Product {
+public class Product implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	

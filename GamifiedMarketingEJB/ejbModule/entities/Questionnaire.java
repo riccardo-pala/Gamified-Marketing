@@ -1,5 +1,6 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,7 @@ import javax.persistence.TemporalType;
 	@NamedQuery(name="Questionnaire.findByDate",query="SELECT q FROM Questionnaire q WHERE q.date=?1"),
 	@NamedQuery(name="Questionnaire.findAll",query="SELECT q FROM Questionnaire q ORDER BY q.date ASC")
 })
-public class Questionnaire {
+public class Questionnaire implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -46,10 +47,7 @@ public class Questionnaire {
 	
 	@OneToMany(mappedBy="questionnaire",cascade={CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.REFRESH})
 	private List<QuestionOne> questions;
-	/*
-	@OneToMany(mappedBy="questionnaire",cascade=CascadeType.REMOVE)
-	private List<Answer> answers;
-	*/
+
 	
 	public Questionnaire() {
 	}
