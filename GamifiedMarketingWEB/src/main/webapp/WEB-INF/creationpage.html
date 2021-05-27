@@ -125,7 +125,7 @@
 			        e.preventDefault();
 			        x++; //text box increment
 			        $(wrapper).append(
-			            '<label>Question' + x + '</label><br>' +
+			            '<label id="l' + x + '">Question' + x + '</label><br>' +
 			            '<textarea name="questions" id="q' + x + '" required></textarea><br>');
 			    }
 		    );
@@ -135,6 +135,7 @@
 			        e.preventDefault();
 	    			if (x>0) {
 				    	document.getElementById("q" + x).remove();
+				    	document.getElementById("l" + x).remove();
 				    	x--;
 	    			}
 			    }
