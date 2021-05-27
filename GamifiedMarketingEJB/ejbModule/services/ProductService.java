@@ -41,19 +41,6 @@ public class ProductService {
 			return p.get(0);		
 	}
 	
-	public boolean checkProduct(int productId) throws BadRetrievalException {
-		
-		Product p = null;
-		
-		try {
-			p = em.find(Product.class, productId);		
-		} catch(PersistenceException e) {
-			throw new BadRetrievalException("Unable to retrieve the product.");
-		}
-		
-		return p != null;
-	}
-	
 	public List<Product> getAllProducts() throws BadRetrievalException {
 		
 		List<Product> p = null;

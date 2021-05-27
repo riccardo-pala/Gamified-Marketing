@@ -105,7 +105,7 @@ public class CreateQuestionnaire extends HttpServlet {
 		
 		String newProductName = request.getParameter("newproductname");
 
-		int productid = -1;
+		int productid=0;
 		
 		boolean isNewProduct = false;
 
@@ -130,27 +130,7 @@ public class CreateQuestionnaire extends HttpServlet {
 			if (p != null) productid = p.getId();
 		}
 		else if(request.getParameter("productid") != null) {
-			
-			boolean productExists = false;
-			
-			try {
-				productid = Integer.parseInt(request.getParameter("productid"));
-				productExists = productService.checkProduct(productid);
-			} catch (NumberFormatException e) {
-				ctx.setVariable("errorMsg", "Invalid data, please retry.");
-				templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
-				return;
-			} catch (BadRetrievalException e) {
-				ctx.setVariable("errorMsg", e.getMessage());
-				templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
-				return;
-			}
-			
-			if (!productExists) {
-				ctx.setVariable("errorMsg", "Selected product does not exist!");
-				templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
-				return;
-			}
+			productid = Integer.parseInt(request.getParameter("productid"));	
 		}
 		else {
 			ctx.setVariable("errorMsg", "Invalid data, please retry.");
@@ -158,17 +138,16 @@ public class CreateQuestionnaire extends HttpServlet {
 			return;
 		}
 		
-		if (productid <= 0) {
-			if(isNewProduct) deleteNewProduct(productid);
-			ctx.setVariable("errorMsg", "There was a problem during the creation of the questionnaire, please retry.");
-			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
-			return;
-		}
 		
 		try {
 			questionnaireService.createQuestionnaire(productid, questionnaireDate, questions);
 		} catch (BadRetrievalException | BadUpdateException e) {
-			if(isNewProduct) deleteNewProduct(productid);
+			if(isNewProduct)
+				try {
+					productService.removeProduct(productid);
+				} catch (BadRetrievalException e1) {
+					//do nothing
+				}
 			ctx.setVariable("errorMsg", e.getMessage());
 			templateEngine.process("/WEB-INF/creationpage.html", ctx, response.getWriter());
 			return;
@@ -178,11 +157,5 @@ public class CreateQuestionnaire extends HttpServlet {
 		response.sendRedirect(path);
 	}
 	
-	private void deleteNewProduct(int productid) {
-		try {
-			productService.removeProduct(productid);
-		} catch (BadRetrievalException e1) {
-			//do nothing
-		}
-	}
+	
 }

@@ -71,23 +71,6 @@ public class UserService {
 		}	
 	}
 	
-	public User findByUsername(String username) throws BadRetrievalException {
-		
-		List<User> uList = null;
-		try {
-			uList = (List<User>) em.createNamedQuery("User.findByUsername", User.class)
-					.setParameter(1, username).getResultList();
-		} catch (PersistenceException e) {
-			throw new BadRetrievalException("Could not retrieve user information.");
-		}
-		if (uList.isEmpty())
-			return null;
-		else if (uList.size() == 1)
-			return uList.get(0);
-		
-		throw new NonUniqueResultException("More than one user registered with same credentials, please contact system administrator.");
-	}
-	
 	
 	public List<User> getUsersOrderedByPoints(int userId) throws BadRetrievalException {
 		
