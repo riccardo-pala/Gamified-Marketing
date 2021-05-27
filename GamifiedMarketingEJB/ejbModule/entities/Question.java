@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -29,9 +27,6 @@ public abstract class Question {
 	
 	private String text;
 
-	@ManyToOne
-	@JoinColumn(name="questionnaireid")
-	private Questionnaire questionnaire;
 	
 	@OneToMany(mappedBy="question", cascade={CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.PERSIST})
 	private List<Answer> answers;
@@ -59,14 +54,6 @@ public abstract class Question {
 
 	public void setText(String text) {
 		this.text = text;
-	}
-
-	public Questionnaire getQuestionnaire() {
-		return questionnaire;
-	}
-
-	public void setQuestionnaire(Questionnaire questionnaire) {
-		this.questionnaire = questionnaire;
 	}
 	
 	public List<Answer> getAnswers() {
